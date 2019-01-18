@@ -1,11 +1,15 @@
 language: python
 python:
+  - '2.7'
   - "3.3"
   - "3.4"
   - "3.5"
   - "3.6"
+install:
+  - pip install -r requirements.txt
+  - pip install coverage
 script:
-  - python -m unittest discover -s tests -t tests
+  - coverage run -m unittest discover -s tests -t tests
 deploy:
   provider: pypi
   user: "techlee"
