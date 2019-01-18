@@ -7,6 +7,7 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
+  - pip install ipaddress
   - pip install coverage
 script:
   - coverage run -m unittest discover -s tests -t tests
