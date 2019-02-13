@@ -13,7 +13,7 @@ class RoleManager(RoleManager):
         self.max_hierarchy_level = max_hierarchy_level
 
     def has_role(self, name):
-        return name in self.all_roles.keys()
+        return name in list(self.all_roles.keys())
 
     def create_role(self, name):
         if name not in self.all_roles.keys():
