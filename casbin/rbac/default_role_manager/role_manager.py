@@ -16,7 +16,7 @@ class RoleManager(RoleManager):
         return name in list(self.all_roles.keys())
 
     def create_role(self, name):
-        if name not in self.all_roles.keys():
+        if name not in list(self.all_roles.keys()):
             self.all_roles[name] = Role(name)
 
         return self.all_roles[name]
