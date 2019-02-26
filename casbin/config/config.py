@@ -41,7 +41,7 @@ class Config:
         self._data[section][option] = value
 
     def _parse(self, fname):
-        with open(fname, 'rb') as f:
+        with open(fname, 'r') as f:
             self._parse_buffer(f)
 
     def _parse_buffer(self, f):
@@ -61,7 +61,7 @@ class Config:
                 if len(buf) > 0:
                     self._write(section, line_num, buf)
                 break
-            line = line.strip().decode()
+            line = line.strip()
 
             if '' == line or self.DEFAULT_COMMENT == line[0:1] or self.DEFAULT_COMMENT_SEM == line[0:1]:
                 can_write = True

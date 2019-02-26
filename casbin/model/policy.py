@@ -2,7 +2,8 @@ from casbin import log
 
 
 class Policy:
-    model = dict()
+    def __init__(self):
+        self.model = {}
 
     def build_role_links(self, rm):
         if "g" not in self.model.keys():
