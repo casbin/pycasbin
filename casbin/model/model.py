@@ -4,7 +4,6 @@ from .policy import Policy
 
 
 class Model(Policy):
-    model = dict()
 
     section_name_map = {
         'r': 'request_definition',
