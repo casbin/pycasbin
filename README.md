@@ -4,11 +4,11 @@ PyCasbin
 [![Build Status](https://www.travis-ci.org/casbin/pycasbin.svg?branch=master)](https://www.travis-ci.org/casbin/pycasbin)
 [![Coverage Status](https://coveralls.io/repos/github/casbin/pycasbin/badge.svg)](https://coveralls.io/github/casbin/pycasbin)
 [![Version](https://img.shields.io/pypi/v/casbin.svg)](https://pypi.org/project/casbin/)
+[![PyPI - Wheel](https://img.shields.io/pypi/wheel/casbin.svg)](https://pypi.org/project/casbin/)
 [![Pyversions](https://img.shields.io/pypi/pyversions/casbin.svg)](https://pypi.org/project/casbin/)
 [![Download](https://img.shields.io/pypi/dm/casbin.svg)](https://pypi.org/project/casbin/)
 [![License](https://img.shields.io/pypi/l/casbin.svg)](https://pypi.org/project/casbin/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
-[![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](http://www.patreon.com/yangluo)
 
 **News**: still worry about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
 
