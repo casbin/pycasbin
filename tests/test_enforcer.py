@@ -121,3 +121,11 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('bob', 'data1', 'write'))
         self.assertFalse(e.enforce('bob', 'data2', 'read'))
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
+
+    def test_enforce_abac_log_enabled(self):
+        e = get_enforcer(get_examples("abac_model.conf"), enable_log=True)
+        e.enable_log(True)
+
+        sub = 'alice'
+        obj = {'Owner': 'alice', 'id': 'data1'}
+        self.assertTrue(e.enforce(sub, obj, 'write'))

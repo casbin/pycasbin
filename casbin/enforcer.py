@@ -286,7 +286,7 @@ class Enforcer:
         # Log request.
         if log.get_logger().is_enabled():
             req_str = "Request: "
-            req_str = req_str + ", ".join(rvals)
+            req_str = req_str + ", ".join([str(v) for v in rvals])
 
             req_str = req_str + " ---> %s" % result
             log.log_print(req_str)
