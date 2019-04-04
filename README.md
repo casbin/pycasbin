@@ -38,7 +38,6 @@ production-ready | experimental | WIP | WIP
 - [Get started](#get-started)
 - [Policy management](#policy-management)
 - [Policy persistence](#policy-persistence)
-- [Policy consistence between multiple nodes](#policy-consistence-between-multiple-nodes)
 - [Role manager](#role-manager)
 - [Multi-threading](#multi-threading)
 - [Benchmarks](#benchmarks)
@@ -203,22 +202,6 @@ We also provide a web-based UI for model management and policy management:
 ## Policy persistence
 
 https://casbin.org/docs/en/adapters
-
-## Policy enforcement at scale
-
-Some adapters support filtered policy management. This means that the policy loaded by Casbin is a subset of the policy in storage based on a given filter. This allows for efficient policy enforcement in large, multi-tenant environments when parsing the entire policy becomes a performance bottleneck.
-
-To use filtered policies with a supported adapter, simply call the `LoadFilteredPolicy` method. The valid format for the filter parameter depends on the adapter used. To prevent accidental data loss, the `SavePolicy` method is disabled when a filtered policy is loaded.
-
-
-## Policy consistence between multiple nodes
-
-We support to use distributed messaging systems like [etcd](https://github.com/coreos/etcd) to keep consistence between multiple Casbin enforcer instances. So our users can concurrently use multiple Casbin enforcers to handle large number of permission checking requests.
-
-Similar to policy storage adapters, we don't put watcher code in the main library. Any support for a new messaging system should be implemented as a watcher. A complete list of Casbin watchers is provided as below. Any 3rd-party contribution on a new watcher is welcomed, please inform us and I will put it in this list:)
-
-Watcher | Type | Author | Description
-----|------|----|----
 
 ## Role manager
 
