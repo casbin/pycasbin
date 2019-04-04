@@ -44,6 +44,7 @@ production-ready | experimental | WIP | WIP
 - [Benchmarks](#benchmarks)
 - [Examples](#examples)
 - [How to use Casbin as a service?](#how-to-use-casbin-as-a-service)
+- [Middlewares](#middlewares)
 - [Our adopters](#our-adopters)
 
 ## Supported models
@@ -276,12 +277,13 @@ Priority | [priority_model.conf](https://github.com/casbin/casbin/blob/master/ex
 - [Go-Simple-API-Gateway](https://github.com/Soontao/go-simple-api-gateway): A simple API gateway written by golang, supports for authentication and authorization.
 - [middleware-acl](https://github.com/luk4z7/middleware-acl): RESTful access control middleware based on Casbin.
 
+## Middlewares
+
+Authz middlewares for web frameworks: https://casbin.org/docs/en/middlewares
+
 ## Our adopters
 
-### Web frameworks
-
-...
-
+https://casbin.org/docs/en/adopters
 
 ## License
 
