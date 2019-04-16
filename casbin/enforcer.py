@@ -271,7 +271,7 @@ class Enforcer:
             for j, token in enumerate(self.model.model["r"]["r"].tokens):
                 parameters[token] = rvals[j]
 
-            for token in enumerate(self.model.model["p"]["p"].tokens):
+            for token in self.model.model["p"]["p"].tokens:
                 parameters[token] = ""
 
             result = expression.evaluate(exp_string, parameters, functions)
