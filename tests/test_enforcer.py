@@ -86,6 +86,23 @@ class TestConfig(TestCase):
         e = get_enforcer(get_examples("priority_model.conf"), get_examples("priority_indeterminate_policy.csv"))
         self.assertFalse(e.enforce('alice', 'data1', 'read'))
 
+    def test_enforce_rbac(self):
+        e = get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
+        self.assertTrue(e.enforce('alice', 'data1', 'read'))
+        self.assertFalse(e.enforce('bob', 'data1', 'read'))
+        self.assertTrue(e.enforce('bob', 'data2', 'write'))
+        self.assertTrue(e.enforce('alice', 'data2', 'read'))
+        self.assertTrue(e.enforce('alice', 'data2', 'write'))
+        self.assertFalse(e.enforce('bogus', 'data2', 'write'))  # test non-existant subject
+
+    def test_enforce_rbac__empty_policy(self):
+        e = get_enforcer(get_examples("rbac_model.conf"), get_examples("empty_policy.csv"))
+        self.assertFalse(e.enforce('alice', 'data1', 'read'))
+        self.assertFalse(e.enforce('bob', 'data1', 'read'))
+        self.assertFalse(e.enforce('bob', 'data2', 'write'))
+        self.assertFalse(e.enforce('alice', 'data2', 'read'))
+        self.assertFalse(e.enforce('alice', 'data2', 'write'))
+
     def test_enforce_rbac_with_deny(self):
         e = get_enforcer(get_examples("rbac_with_deny_model.conf"), get_examples("rbac_with_deny_policy.csv"))
         self.assertTrue(e.enforce('alice', 'data1', 'read'))
