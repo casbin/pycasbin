@@ -39,7 +39,6 @@ production-ready | experimental | WIP | WIP
 - [Policy management](#policy-management)
 - [Policy persistence](#policy-persistence)
 - [Role manager](#role-manager)
-- [Multi-threading](#multi-threading)
 - [Benchmarks](#benchmarks)
 - [Examples](#examples)
 - [Middlewares](#middlewares)
@@ -206,12 +205,6 @@ https://casbin.org/docs/en/adapters
 ## Role manager
 
 https://casbin.org/docs/en/role-managers
-
-## Multi-threading
-
-If you use Casbin in a multi-threading manner, you can use the synchronized wrapper of the Casbin enforcer: https://github.com/casbin/casbin/blob/master/enforcer_synced.go.
-
-It also supports the ``AutoLoad`` feature, which means the Casbin enforcer will automatically load the latest policy rules from DB if it has changed. Call ``StartAutoLoadPolicy()`` to start automatically loading policy periodically and call ``StopAutoLoadPolicy()`` to stop it.
 
 ## Benchmarks
 
