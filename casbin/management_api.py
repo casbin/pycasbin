@@ -1,0 +1,131 @@
+from casbin.internal_api import InternalApi
+
+
+class ManagementApi(InternalApi):
+    def get_all_subjects(self):
+        """gets the list of subjects that show up in the current policy."""
+        return self.get_all_named_subjects('p')
+
+    def get_all_named_subjects(self, ptype):
+        """gets the list of subjects that show up in the current named policy."""
+        return self.model.get_values_for_field_in_policy('p', ptype, 0)
+
+    def get_all_objects(self):
+        """gets the list of objects that show up in the current policy."""
+        return self.get_all_named_objects('p')
+
+    def get_all_named_objects(self, ptype):
+        """gets the list of objects that show up in the current named policy."""
+        return self.model.get_values_for_field_in_policy('p', ptype, 1)
+
+    def get_all_actions(self):
+        """gets the list of actions that show up in the current policy."""
+        return self.get_all_named_actions('p')
+
+    def get_all_named_actions(self, ptype):
+        """gets the list of actions that show up in the current named policy."""
+        return self.model.get_values_for_field_in_policy('p', ptype, 2)
+
+    def get_all_roles(self):
+        """gets the list of roles that show up in the current named policy."""
+        return self.get_all_named_roles('g')
+
+    def get_all_named_roles(self, ptype):
+        """gets all the authorization rules in the policy."""
+        return self.model.get_values_for_field_in_policy('g', ptype, 1)
+
+    def get_policy(self):
+        """gets all the authorization rules in the policy."""
+        return self.get_named_policy('p')
+
+    def get_filtered_policy(self, field_index, *field_values):
+        """gets all the authorization rules in the policy, field filters can be specified."""
+        return self.get_filtered_named_policy('p', field_index, *field_values)
+
+    def get_named_policy(self, ptype):
+        """gets all the authorization rules in the named policy."""
+        return self.model.get_policy('p', ptype)
+
+    def get_filtered_named_policy(self, ptype, field_index, *field_values):
+        """gets all the authorization rules in the named policy, field filters can be specified."""
+        return self.model.get_filtered_policy('p', ptype, field_index, *field_values)
+
+    def get_grouping_policy(self):
+        """gets all the role inheritance rules in the policy."""
+        return self.get_named_grouping_policy('g')
+
+    def get_filtered_grouping_policy(self, field_index, *field_values):
+        """gets all the role inheritance rules in the policy, field filters can be specified."""
+        return self.get_filtered_named_grouping_policy("g", field_index, *field_values)
+
+    def get_named_grouping_policy(self, ptype):
+        """gets all the role inheritance rules in the policy."""
+        return self.model.get_policy('g', ptype)
+
+    def get_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
+        """gets all the role inheritance rules in the policy, field filters can be specified."""
+        return self.model.get_filtered_policy('g', ptype, field_index, *field_values)
+
+    def has_policy(self, *params):
+        """determines whether an authorization rule exists."""
+        return self.has_named_policy('p', *params)
+
+    def has_named_policy(self, ptype, *params):
+        """determines whether a named authorization rule exists."""
+        if len(params) == 1 and isinstance(params[0], list):
+            str_slice = params[0]
+            return self.model.has_policy('p', ptype, str_slice)
+
+        policy = []
+
+        for param in params:
+            policy.append(param)
+
+        return self.model.has_policy('p', ptype, policy)
+
+    def add_policy(self, *params):
+        """adds an authorization rule to the current policy.
+
+        If the rule already exists, the function returns false and the rule will not be added.
+        Otherwise the function returns true by adding the new rule.
+        """
+        return self.add_named_policy('p', *params)
+
+    def add_named_policy(self, ptype, *params):
+        """adds an authorization rule to the current named policy.
+
+        If the rule already exists, the function returns false and the rule will not be added.
+        Otherwise the function returns true by adding the new rule.
+        """
+
+        if len(params) == 1 and isinstance(params[0], list):
+            str_slice = params[0]
+            rule_added = self._add_policy('p', ptype, str_slice)
+        else:
+            policy = []
+
+            for param in params:
+                policy.append(param)
+
+            rule_added = self._add_policy('p', ptype, policy)
+
+        return rule_added
+
+    def has_grouping_policy(self, *params):
+        """determines whether a role inheritance rule exists."""
+
+        return self.has_named_grouping_policy("g", *params)
+
+    def has_named_grouping_policy(self, ptype, *params):
+        """determines whether a named role inheritance rule exists."""
+
+        if len(params) == 1 and isinstance(params[0], list):
+            str_slice = params[0]
+            return self.model.has_policy('g', ptype, str_slice)
+
+        policy = []
+
+        for param in params:
+            policy.append(param)
+
+        return self.model.has_policy('g', ptype, policy)

@@ -73,7 +73,7 @@ class RoleManager(RoleManager):
             return RuntimeError("error: domain should be 1 parameter")
 
         if not self.has_role(name):
-            return dict()
+            return []
 
         roles = self.create_role(name).get_roles()
         if len(domain) == 1:
@@ -89,7 +89,7 @@ class RoleManager(RoleManager):
         names = []
         for role in self.all_roles.values():
             if role.has_direct_role(name):
-                names.append(name)
+                names.append(role.name)
 
         return names
 
