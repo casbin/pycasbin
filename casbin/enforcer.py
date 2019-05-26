@@ -4,9 +4,10 @@ from casbin.model import Model, FunctionMap
 from casbin.rbac import default_role_manager
 from casbin.util import generate_g_function, expression
 from casbin.effect import DefaultEffector, Effector
+from casbin.rbac_api import RbacApi
 
 
-class Enforcer:
+class Enforcer(RbacApi):
     """creates an enforcer via file or DB.
 
     Uses:
@@ -14,7 +15,7 @@ class Enforcer:
         e = casbin.Enforcer("path/to/basic_model.conf", "path/to/basic_policy.csv")
         MySQL DB:
         a = mysqladapter.DBAdapter("mysql", "mysql_username:mysql_password@tcp(127.0.0.1:3306)/")
-        e = casbin.NewEnforcer("path/to/basic_model.conf", a)
+        e = casbin.Enforcer("path/to/basic_model.conf", a)
     """
 
     model_path = ""
