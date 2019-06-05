@@ -60,3 +60,28 @@ class TestManagementApi(TestCase):
         self.assertEqual(e.get_filtered_grouping_policy(0, '', 'data2_admin'), [['alice', 'data2_admin']])
         self.assertTrue(e.has_grouping_policy(['alice', 'data2_admin']))
         self.assertFalse(e.has_grouping_policy(['bob', 'data2_admin']))
+
+    def test_modify_policy_api(self):
+        e = get_enforcer(
+            get_examples("rbac_model.conf"),
+            get_examples("rbac_policy.csv"),
+            # True,
+        )
+
+        self.assertEqual(e.get_policy(), [
+            ['alice', 'data1', 'read'],
+            ['bob', 'data2', 'write'],
+            ['data2_admin', 'data2', 'read'],
+            ['data2_admin', 'data2', 'write'],
+        ])
+
+        e.add_policy('eve', 'data3', 'read')
+        e.add_named_policy('p', ['eve', 'data3', 'write'])
+        self.assertEqual(e.get_policy(), [
+            ['alice', 'data1', 'read'],
+            ['bob', 'data2', 'write'],
+            ['data2_admin', 'data2', 'read'],
+            ['data2_admin', 'data2', 'write'],
+            ['eve', 'data3', 'read'],
+            ['eve', 'data3', 'write'],
+        ])

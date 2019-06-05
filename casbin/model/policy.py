@@ -61,6 +61,15 @@ class Policy:
 
         return False
 
+    def add_policy(self, sec, ptype, rule):
+        """adds a policy rule to the model."""
+
+        if not self.has_policy(sec, ptype, rule):
+            self.model[sec][ptype].policy.append(rule)
+            return True
+
+        return False
+
     def get_values_for_field_in_policy(self, sec, ptype, field_index):
         """gets all values for a field for all rules in a policy, duplicated values are removed."""
 
