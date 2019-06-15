@@ -7,7 +7,6 @@ PyCasbin
 [![PyPI - Wheel](https://img.shields.io/pypi/wheel/casbin.svg)](https://pypi.org/project/casbin/)
 [![Pyversions](https://img.shields.io/pypi/pyversions/casbin.svg)](https://pypi.org/project/casbin/)
 [![Download](https://img.shields.io/pypi/dm/casbin.svg)](https://pypi.org/project/casbin/)
-[![License](https://img.shields.io/pypi/l/casbin.svg)](https://pypi.org/project/casbin/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
 
 **News**: still worry about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
