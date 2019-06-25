@@ -1,4 +1,11 @@
-class InternalApi:
+
+from casbin.core_enforcer import CoreEnforcer
+
+
+class InternalEnforcer(CoreEnforcer):
+    """
+        InternalEnforcer = CoreEnforcer + Internal API.
+    """
 
     def _add_policy(self, sec, ptype, rule):
         """adds a rule to the current policy."""
