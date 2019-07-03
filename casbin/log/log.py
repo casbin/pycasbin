@@ -5,6 +5,7 @@ logger = DefaultLogger()
 
 def set_logger(l):
     """sets the current logger."""
+    global logger
     logger = l
 
 
