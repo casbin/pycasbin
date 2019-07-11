@@ -1,3 +1,6 @@
+from collections import OrderedDict
+
+
 def escape_assertion(s):
     """escapes the dots in the assertion, because the expression evaluation doesn't support such variable names."""
 
@@ -19,15 +22,7 @@ def remove_comments(s):
 
 def array_remove_duplicates(s):
     """removes any duplicated elements in a string array."""
-    found = dict()
-    j = 0
-    for x in s:
-        if x not in found.keys():
-            found[x] = True
-            s[j] = x
-            j = j + 1
-
-    return s[:j]
+    return list(OrderedDict.fromkeys(s))
 
 
 def array_to_string(s):
