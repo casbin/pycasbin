@@ -21,6 +21,19 @@ class Policy:
             for key, ast in self.model[sec].items():
                 log.log_print(key, ": ", ast.value, ": ", ast.policy)
 
+    def remove_policy(self, sec, ptype, rule):
+        """remove a policy rule to the model."""
+        if sec not in self.model.keys():
+            return False
+        if ptype not in self.model[sec]:
+            return False
+
+        for i, r in enumerate(self.model[sec][ptype].policy):
+            if rule == r:
+                self.model[sec][ptype].policy.pop(i)
+                return True
+        return False
+
     def clear_policy(self):
         for sec in ["p", "g"]:
             if sec not in self.model.keys():
