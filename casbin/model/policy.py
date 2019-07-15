@@ -6,6 +6,8 @@ class Policy:
         self.model = {}
 
     def build_role_links(self, rm):
+        """initializes the roles in RBAC."""
+
         if "g" not in self.model.keys():
             return
 
@@ -13,6 +15,8 @@ class Policy:
             ast.build_role_links(rm)
 
     def print_policy(self):
+        """prints the policy to log."""
+
         log.log_print("Policy:")
         for sec in ["p", "g"]:
             if sec not in self.model.keys():
@@ -22,6 +26,8 @@ class Policy:
                 log.log_print(key, ": ", ast.value, ": ", ast.policy)
 
     def clear_policy(self):
+        """clears all current policy."""
+
         for sec in ["p", "g"]:
             if sec not in self.model.keys():
                 continue
@@ -30,6 +36,8 @@ class Policy:
                 self.model[sec][key].policy = []
 
     def get_policy(self, sec, ptype):
+        """gets all rules in a policy."""
+
         return self.model[sec][ptype].policy
 
     def get_filtered_policy(self, sec, ptype, field_index, *field_values):
@@ -55,11 +63,7 @@ class Policy:
         if ptype not in self.model[sec]:
             return False
 
-        for r in self.model[sec][ptype].policy:
-            if rule == r:
-                return True
-
-        return False
+        return rule in self.model[sec][ptype].policy
 
     def add_policy(self, sec, ptype, rule):
         """adds a policy rule to the model."""
@@ -69,6 +73,19 @@ class Policy:
             return True
 
         return False
+
+    def remove_policy(self, sec, ptype, rule):
+        """removePolicy removes a policy rule from the model."""
+
+        if sec not in self.model.keys():
+            return False
+        if ptype not in self.model[sec]:
+            return False
+
+        if not self.has_policy(sec, ptype, rule):
+            return False
+
+        return self.model[sec][ptype].policy.remove(rule)
 
     def get_values_for_field_in_policy(self, sec, ptype, field_index):
         """gets all values for a field for all rules in a policy, duplicated values are removed."""
