@@ -2,11 +2,12 @@ from casbin import log
 
 
 class Assertion:
-    key = ""
-    value = ""
-    tokens = []
-    policy = []
-    rm = None
+    def __init__(self):
+        self.key = ""
+        self.value = ""
+        self.tokens = []
+        self.policy = []
+        self.rm = None
 
     def build_role_links(self, rm):
         self.rm = rm
