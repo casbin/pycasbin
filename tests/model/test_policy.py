@@ -45,3 +45,22 @@ class TestPolicy(TestCase):
         m.remove_policy('p', 'p', rule)
         self.assertFalse(m.has_policy('p', 'p', rule))
         self.assertFalse(m.remove_policy('p', 'p', rule))
+
+    def test_add_role_policy(self):
+        m = Model()
+        m.load_model(get_examples("rbac_model.conf"))
+
+        p_rule1 = ['alice', 'data1', 'read']
+        m.add_policy('p', 'p', p_rule1)
+        self.assertTrue(m.has_policy('p', 'p', p_rule1))
+      
+        p_rule2 = ['data2_admin', 'data2', 'read']
+        m.add_policy('p', 'p', p_rule2)
+        self.assertTrue(m.has_policy('p', 'p', p_rule2))
+
+        g_rule = ['alice', 'data2_admin']
+        m.add_policy('g', 'g', g_rule)
+        self.assertTrue(m.has_policy('g', 'g', g_rule))
+
+        self.assertTrue(m.get_policy('p', 'p') == [p_rule1, p_rule2])
+        self.assertTrue(m.get_policy('g', 'g') == [g_rule])
