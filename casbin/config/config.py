@@ -41,7 +41,7 @@ class Config:
         self._data[section][option] = value
 
     def _parse(self, fname):
-        with open(fname, 'r') as f:
+        with open(fname, 'r', encoding='utf-8') as f:
             self._parse_buffer(f)
 
     def _parse_buffer(self, f):
