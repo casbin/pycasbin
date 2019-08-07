@@ -75,7 +75,7 @@ class Policy:
         return False
 
     def remove_policy(self, sec, ptype, rule):
-        """removePolicy removes a policy rule from the model."""
+        """removes a policy rule from the model."""
 
         if sec not in self.model.keys():
             return False
@@ -86,6 +86,32 @@ class Policy:
             return False
 
         return self.model[sec][ptype].policy.remove(rule)
+
+    def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
+        """removes policy rules based on field filters from the model."""
+        tmp = []
+        res = False
+
+        if sec not in self.model.keys():
+            return res
+        if ptype not in self.model[sec]:
+            return res
+
+        for rule in self.model[sec][ptype].policy:
+            matched = True
+            for i, field_value in enumerate(field_values):
+                if field_value != '' and rule[field_index + i] != field_value:
+                    matched = False
+                    break
+
+            if matched:
+                res = True
+            else:
+                tmp.append(rule)
+
+        self.model[sec][ptype].policy = tmp
+
+        return res
 
     def get_values_for_field_in_policy(self, sec, ptype, field_index):
         """gets all values for a field for all rules in a policy, duplicated values are removed."""
