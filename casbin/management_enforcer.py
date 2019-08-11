@@ -168,7 +168,7 @@ class ManagementEnforcer(InternalEnforcer):
         If the rule already exists, the function returns false and the rule will not be added.
         Otherwise the function returns true by adding the new rule.
         """
-        return self.add_named_grouping_policy('p', *params)
+        return self.add_named_grouping_policy('g', *params)
 
     def add_named_grouping_policy(self, ptype, *params):
         """adds a named role inheritance rule to the current policy.
