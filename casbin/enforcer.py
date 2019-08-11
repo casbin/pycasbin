@@ -54,7 +54,6 @@ class Enforcer(ManagementEnforcer):
     def add_role_for_user_in_domain(self, user, role, domain):
         """adds a role for a user inside a domain."""
         """Returns false if the user already has the role (aka not affected)."""
-        raise NotImplementedError
         return self.add_grouping_policy(user, role, domain)
 
     def delete_role_for_user(self, user, role):
@@ -70,7 +69,6 @@ class Enforcer(ManagementEnforcer):
     def delete_roles_for_user_in_domain(self, user, role, domain):
         """deletes a role for a user inside a domain."""
         """Returns false if the user does not have any roles (aka not affected)."""
-        raise NotImplementedError
         return self.remove_filtered_grouping_policy(0, user, role, domain)
 
     def delete_user(self, user):

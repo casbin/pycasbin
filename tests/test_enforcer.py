@@ -162,7 +162,8 @@ class TestConfig(TestCase):
                          get_examples("rbac_with_hierarchy_with_domains_policy.csv"))
 
         self.assertTrue(e.get_roles_for_user_in_domain('alice', 'domain1') == ['role:global_admin'])
-        self.assertTrue(e.get_implicit_roles_for_user('alice', 'domain1') == ["role:global_admin", "role:reader", "role:writer"])
+        self.assertTrue(
+            e.get_implicit_roles_for_user('alice', 'domain1') == ["role:global_admin", "role:reader", "role:writer"])
 
     def test_enforce_implicit_permissions_api(self):
         e = get_enforcer(get_examples("rbac_model.conf"),
@@ -197,9 +198,51 @@ class TestConfig(TestCase):
         self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain1') == [])
         self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain2') == ['bob'])
         self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain2') == [])
-        # e.delete_roles_for_user_in_domain('alice', 'admin', 'domain1')
-        # e.add_role_for_user_in_domain('bob', 'admin', 'domain1')
-        # self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain1') == ['bob'])
-        # self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain1') == [])
-        # self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain2') == ['bob'])
-        # self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain2') == [])
+        e.delete_roles_for_user_in_domain('alice', 'admin', 'domain1')
+        e.add_role_for_user_in_domain('bob', 'admin', 'domain1')
+        self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain1') == ['bob'])
+        self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain1') == [])
+        self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain2') == ['bob'])
+        self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain2') == [])
+
+    def test_enforce_user_api_with_domain(self):
+        e = get_enforcer(get_examples("rbac_with_domains_model.conf"),
+                         get_examples("rbac_with_domains_policy.csv"))
+        self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain1') == ['alice'])
+        self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain1') == [])
+        self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain2') == ['bob'])
+        self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain2') == [])
+
+        e.delete_roles_for_user_in_domain('alice', 'admin', 'domain1')
+        e.add_role_for_user_in_domain('bob', 'admin', 'domain1')
+
+        self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain1') == ['bob'])
+        self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain1') == [])
+        self.assertTrue(e.get_users_for_role_in_domain('admin', 'domain2') == ['bob'])
+        self.assertTrue(e.get_users_for_role_in_domain('non_exist', 'domain2') == [])
+
+    def test_enforce_get_roles_with_domain(self):
+        e = get_enforcer(get_examples("rbac_with_domains_model.conf"),
+                         get_examples("rbac_with_domains_policy.csv"))
+        self.assertTrue(e.get_roles_for_user_in_domain('alice', 'domain1') == ['admin'])
+        self.assertTrue(e.get_roles_for_user_in_domain('bob', 'domain1') == [])
+        self.assertTrue(e.get_roles_for_user_in_domain('admin', 'domain1') == [])
+        self.assertTrue(e.get_roles_for_user_in_domain('non_exist', 'domain1') == [])
+
+        self.assertTrue(e.get_roles_for_user_in_domain('alice', 'domain2') == [])
+        self.assertTrue(e.get_roles_for_user_in_domain('bob', 'domain2') == ['admin'])
+        self.assertTrue(e.get_roles_for_user_in_domain('admin', 'domain2') == [])
+        self.assertTrue(e.get_roles_for_user_in_domain('non_exist', 'domain2') == [])
+
+        e.delete_roles_for_user_in_domain('alice', 'admin', 'domain1')
+        e.add_role_for_user_in_domain('bob', 'admin', 'domain1')
+
+        self.assertTrue(e.get_roles_for_user_in_domain('alice', 'domain1') == [])
+        self.assertTrue(e.get_roles_for_user_in_domain('bob', 'domain1') == ['admin'])
+        self.assertTrue(e.get_roles_for_user_in_domain('admin', 'domain1') == [])
+        self.assertTrue(e.get_roles_for_user_in_domain('non_exist', 'domain1') == [])
+
+        self.assertTrue(e.get_roles_for_user_in_domain('alice', 'domain2') == [])
+        self.assertTrue(e.get_roles_for_user_in_domain('bob', 'domain2') == ['admin'])
+        self.assertTrue(e.get_roles_for_user_in_domain('admin', 'domain2') == [])
+        self.assertTrue(e.get_roles_for_user_in_domain('non_exist', 'domain2') == [])
