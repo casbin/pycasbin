@@ -89,12 +89,16 @@ class Enforcer(ManagementEnforcer):
     def add_permission_for_user(self, user, *permission):
         """adds a permission for a user or role."""
         """Returns false if the user or role already has the permission (aka not affected)."""
-        return self.add_policy(*permission)
+        params = [user, *permission]
+
+        return self.add_policy(*params)
 
     def delete_permission_for_user(self, user, *permission):
         """adds a permission for a user or role."""
         """Returns false if the user or role already has the permission (aka not affected)."""
-        return self.remove_policy(*permission)
+        params = [user, *permission]
+
+        return self.remove_policy(*params)
 
     def delete_permissions_for_user(self, user):
         """deletes permissions for a user or role."""
@@ -111,7 +115,9 @@ class Enforcer(ManagementEnforcer):
 
     def has_permission_for_user(self, user, *permission):
         """determines whether a user has a permission."""
-        return self.has_policy(*permission)
+        params = [user, *permission]
+
+        return self.has_policy(*params)
 
     def get_implicit_roles_for_user(self, user, domain=None):
         """
@@ -131,7 +137,6 @@ class Enforcer(ManagementEnforcer):
             res.extend(_roles)
         return res
 
-
     def get_implicit_permissions_for_user(self, user, domain=None):
         """
              gets implicit permissions for a user or role.
@@ -145,9 +150,12 @@ class Enforcer(ManagementEnforcer):
             But get_implicit_permissions_for_user("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
         """
         roles = self.get_implicit_roles_for_user(user, domain)
-        permissions = self.get_permissions_for_user_in_domain(user, domain) if domain else self.get_permissions_for_user(user)
+        permissions = self.get_permissions_for_user_in_domain(user,
+                                                              domain) if domain else self.get_permissions_for_user(user)
         for role in roles:
-            _permissions = self.get_permissions_for_user_in_domain(role, domain) if domain else self.get_permissions_for_user(role)
+            _permissions = self.get_permissions_for_user_in_domain(role,
+                                                                   domain) if domain else self.get_permissions_for_user(
+                role)
             for item in _permissions:
                 if item not in permissions:
                     permissions.append(item)

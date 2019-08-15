@@ -65,3 +65,43 @@ class TestRbacApi(TestCase):
         self.assertFalse(e.enforce('alice', 'write'))
         self.assertFalse(e.enforce('bob', 'read'))
         self.assertTrue(e.enforce('bob', 'write'))
+
+    def test_add_permission_for_user(self):
+        e = get_enforcer(get_examples("basic_without_resources_model.conf"),
+                         get_examples("basic_without_resources_policy.csv"))
+        e.delete_permission('read')
+        e.add_permission_for_user('bob', 'read')
+        self.assertTrue(e.enforce('bob', 'read'))
+        self.assertTrue(e.enforce('bob', 'write'))
+
+    def test_delete_permission_for_user(self):
+        e = get_enforcer(get_examples("basic_without_resources_model.conf"),
+                         get_examples("basic_without_resources_policy.csv"))
+        e.add_permission_for_user('bob', 'read')
+
+        self.assertTrue(e.enforce('bob', 'read'))
+        e.delete_permission_for_user('bob', 'read')
+        self.assertFalse(e.enforce('bob', 'read'))
+        self.assertTrue(e.enforce('bob', 'write'))
+
+    def test_delete_permissions_for_user(self):
+        e = get_enforcer(get_examples("basic_without_resources_model.conf"),
+                         get_examples("basic_without_resources_policy.csv"))
+        e.delete_permissions_for_user('bob')
+
+        self.assertTrue(e.enforce('alice', 'read'))
+        self.assertFalse(e.enforce('bob', 'read'))
+        self.assertFalse(e.enforce('bob', 'write'))
+
+    def test_get_permissions_for_user(self):
+        e = get_enforcer(get_examples("basic_without_resources_model.conf"),
+                         get_examples("basic_without_resources_policy.csv"))
+        self.assertEqual(e.get_permissions_for_user('alice'), [['alice', 'read']])
+
+    def test_has_permission_for_user(self):
+        e = get_enforcer(get_examples("basic_without_resources_model.conf"),
+                         get_examples("basic_without_resources_policy.csv"))
+        self.assertTrue(e.has_permission_for_user('alice', *['read']))
+        self.assertFalse(e.has_permission_for_user('alice', *['write']))
+        self.assertFalse(e.has_permission_for_user('bob', *['read']))
+        self.assertTrue(e.has_permission_for_user('bob', *['write']))
