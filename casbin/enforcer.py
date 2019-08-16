@@ -21,30 +21,23 @@ class Enforcer(ManagementEnforcer):
         """gets the roles that a user has."""
         return self.model.model['g']['g'].rm.get_roles(user)
 
-    def get_roles_for_user_in_domain(self, user, domain):
+    def get_roles_for_user_in_domain(self, name, domain):
         """gets the roles that a user has inside a domain."""
-        res = self.model.model['g']['g'].rm.get_roles(user, domain)
-        return [] if isinstance(res, RuntimeError) else [r.replace(domain + '::', '') for r in res]
+        return self.model.model['g']['g'].rm.get_roles(name, domain)
 
     def get_users_for_role(self, role):
         """gets the users that has a role."""
         return self.model.model['g']['g'].rm.get_users(role)
 
-    def get_users_for_role_in_domain(self, role, domain):
+    def get_users_for_role_in_domain(self, name, domain):
         """gets the users that has a role inside a domain."""
-        _role = domain + '::' + role
-        res = self.model.model['g']['g'].rm.get_users(_role, domain)
-        return [] if isinstance(res, RuntimeError) else [r.replace(domain + '::', '') for r in res]
+        return self.model.model['g']['g'].rm.get_users(name, domain)
 
     def has_role_for_user(self, user, role):
         """determines whether a user has a role."""
         roles = self.get_roles_for_user(user)
 
-        for r in roles:
-            if r == role:
-                return True
-
-        return False
+        return role in roles
 
     def add_role_for_user(self, user, role):
         """adds a role for a user."""
