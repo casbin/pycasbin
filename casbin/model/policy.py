@@ -85,7 +85,9 @@ class Policy:
         if not self.has_policy(sec, ptype, rule):
             return False
 
-        return self.model[sec][ptype].policy.remove(rule)
+        self.model[sec][ptype].policy.remove(rule)
+
+        return rule not in self.model[sec][ptype].policy
 
     def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes policy rules based on field filters from the model."""
