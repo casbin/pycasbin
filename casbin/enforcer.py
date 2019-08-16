@@ -89,14 +89,16 @@ class Enforcer(ManagementEnforcer):
     def add_permission_for_user(self, user, *permission):
         """adds a permission for a user or role."""
         """Returns false if the user or role already has the permission (aka not affected)."""
-        params = [user, *permission]
+        params = [user]
+        params.extend(permission)
 
         return self.add_policy(*params)
 
     def delete_permission_for_user(self, user, *permission):
         """adds a permission for a user or role."""
         """Returns false if the user or role already has the permission (aka not affected)."""
-        params = [user, *permission]
+        params = [user]
+        params.extend(permission)
 
         return self.remove_policy(*params)
 
@@ -115,7 +117,8 @@ class Enforcer(ManagementEnforcer):
 
     def has_permission_for_user(self, user, *permission):
         """determines whether a user has a permission."""
-        params = [user, *permission]
+        params = [user]
+        params.extend(permission)
 
         return self.has_policy(*params)
 
