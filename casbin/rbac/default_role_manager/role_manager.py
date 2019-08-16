@@ -67,6 +67,10 @@ class RoleManager(RoleManager):
         return role1.has_role(name2, self.max_hierarchy_level)
 
     def get_roles(self, name, *domain):
+        """
+        gets the roles that a subject inherits.
+        domain is a prefix to the roles.
+        """
         if len(domain) == 1:
             name = domain[0] + "::" + name
         elif len(domain) > 1:
@@ -77,19 +81,31 @@ class RoleManager(RoleManager):
 
         roles = self.create_role(name).get_roles()
         if len(domain) == 1:
-            for value in roles:
-                value = value[len(domain[0]) + 2:]
+            for key, value in enumerate(roles):
+                roles[key] = value[len(domain[0]) + 2:]
 
         return roles
 
     def get_users(self, name, *domain):
+        """
+        gets the users that inherits a subject.
+        domain is an unreferenced parameter here, may be used in other implementations.
+        """
+        if len(domain) == 1:
+            name = domain[0] + "::" + name
+        elif len(domain) > 1:
+            return RuntimeError("error: domain should be 1 parameter")
+
         if not self.has_role(name):
-            return RuntimeError("error: name does not exist")
+            return []
 
         names = []
         for role in self.all_roles.values():
             if role.has_direct_role(name):
-                names.append(role.name)
+                if len(domain) == 1:
+                    names.append(role.name[len(domain[0]) + 2:])
+                else:
+                    names.append(role.name)
 
         return names
 
