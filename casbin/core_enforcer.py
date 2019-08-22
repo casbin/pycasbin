@@ -2,7 +2,7 @@ from casbin import log
 from casbin.persist.adapters import FileAdapter
 from casbin.model import Model, FunctionMap
 from casbin.rbac import default_role_manager
-from casbin.util import generate_g_function, expression
+from casbin.util import generate_g_function, SimpleEval
 from casbin.effect import DefaultEffector, Effector
 
 
@@ -198,9 +198,7 @@ class CoreEnforcer:
         if not self.enabled:
             return False
 
-        functions = {}
-        for key, val in self.fm.get_functions().items():
-            functions[key] = val
+        functions = self.fm.get_functions()
 
         if "g" in self.model.model.keys():
             for key, ast in self.model.model["g"].items():
@@ -208,70 +206,75 @@ class CoreEnforcer:
                 functions[key] = generate_g_function(rm)
 
         if "m" not in self.model.model.keys():
-            return RuntimeError("model is undefined")
+            raise RuntimeError("model is undefined")
 
         if "m" not in self.model.model["m"].keys():
-            return RuntimeError("model is undefined")
+            raise RuntimeError("model is undefined")
+
+        r_tokens = self.model.model["r"]["r"].tokens
+        p_tokens = self.model.model["p"]["p"].tokens
+
+        if len(r_tokens) != len(rvals):
+            raise RuntimeError("invalid request size")
 
         exp_string = self.model.model["m"]["m"].value
+        expression = self._get_expression(exp_string, functions)
 
-        policy_effects = []
-        matcher_results = []
+        policy_effects = set()
+        matcher_results = set()
+
+        r_parameters = dict(zip(r_tokens, rvals))
 
         policy_len = len(self.model.model["p"]["p"].policy)
 
         if not 0 == policy_len:
             for i, pvals in enumerate(self.model.model["p"]["p"].policy):
-                parameters = dict()
-                for j, token in enumerate(self.model.model["r"]["r"].tokens):
-                    parameters[token] = rvals[j]
+                if len(p_tokens) != len(pvals):
+                    raise RuntimeError("invalid policy size")
 
-                for j, token in enumerate(self.model.model["p"]["p"].tokens):
-                    parameters[token] = pvals[j]
-
-                result = expression.evaluate(exp_string, parameters, functions)
+                parameters = dict(r_parameters, **dict(zip(p_tokens, pvals)))
+                result = expression.eval(parameters)
 
                 if isinstance(result, bool):
                     if not result:
-                        policy_effects.append(Effector.INDETERMINATE)
+                        policy_effects.add(Effector.INDETERMINATE)
                         continue
                 elif isinstance(result, float):
                     if 0 == result:
-                        policy_effects.append(Effector.INDETERMINATE)
+                        policy_effects.add(Effector.INDETERMINATE)
                         continue
                     else:
-                        matcher_results.append(result)
+                        matcher_results.add(result)
                 else:
                     raise RuntimeError("matcher result should be bool, int or float")
 
                 if "p_eft" in parameters.keys():
                     eft = parameters["p_eft"]
                     if "allow" == eft:
-                        policy_effects.append(Effector.ALLOW)
+                        policy_effects.add(Effector.ALLOW)
                     elif "deny" == eft:
-                        policy_effects.append(Effector.DENY)
+                        policy_effects.add(Effector.DENY)
                     else:
-                        policy_effects.append(Effector.INDETERMINATE)
+                        policy_effects.add(Effector.INDETERMINATE)
                 else:
-                    policy_effects.append(Effector.ALLOW)
+                    policy_effects.add(Effector.ALLOW)
 
                 if "priority(p_eft) || deny" == self.model.model["e"]["e"].value:
                     break
 
         else:
-            parameters = dict()
-            for j, token in enumerate(self.model.model["r"]["r"].tokens):
-                parameters[token] = rvals[j]
+
+            parameters = r_parameters.copy()
 
             for token in self.model.model["p"]["p"].tokens:
                 parameters[token] = ""
 
-            result = expression.evaluate(exp_string, parameters, functions)
+            result = expression.eval(parameters)
 
             if result:
-                policy_effects.append(Effector.ALLOW)
+                policy_effects.add(Effector.ALLOW)
             else:
-                policy_effects.append(Effector.INDETERMINATE)
+                policy_effects.add(Effector.INDETERMINATE)
 
         result = self.eft.merge_effects(self.model.model["e"]["e"].value, policy_effects, matcher_results)
 
@@ -284,3 +287,10 @@ class CoreEnforcer:
             log.log_print(req_str)
 
         return result
+
+    @staticmethod
+    def _get_expression(expr, functions=None):
+        expr = expr.replace("&&", "and")
+        expr = expr.replace("||", "or")
+
+        return SimpleEval(expr, functions)
