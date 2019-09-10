@@ -1,16 +1,17 @@
 language: python
 python:
-- '3.3'
-- '3.4'
-- '3.5'
-- '3.6'
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "pypy3"
 install:
-- pip install -r requirements.txt
-- pip install coveralls
+  - pip install -r requirements.txt
+  - pip install coveralls
 script:
-- coverage run -m unittest discover -s tests -t tests
+  - coverage run -m unittest discover -s tests -t tests
 after_success:
-- coveralls
+  - coveralls
 deploy:
   provider: pypi
   user: techlee
