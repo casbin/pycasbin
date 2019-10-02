@@ -31,7 +31,7 @@ class Adapter:
         """saves all policy rules to the storage."""
         pass
 
-    def save_policy(self, model):
+    def add_policy(self, sec, ptype, rule):
         """adds a policy rule to the storage."""
         pass
 
