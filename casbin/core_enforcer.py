@@ -32,7 +32,7 @@ class CoreEnforcer:
                 pass
         else:
             if isinstance(adapter, str):
-                return RuntimeError("Invalid parameters for enforcer.")
+                raise RuntimeError("Invalid parameters for enforcer.")
             else:
                 self.init_with_model_and_adapter(model, adapter)
 
@@ -157,7 +157,7 @@ class CoreEnforcer:
 
     def save_policy(self):
         if self.is_filtered():
-            return RuntimeError("cannot save a filtered policy")
+            raise RuntimeError("cannot save a filtered policy")
 
         self.adapter.save_policy(self.model)
 
