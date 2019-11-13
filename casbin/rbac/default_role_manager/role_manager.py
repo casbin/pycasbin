@@ -29,7 +29,7 @@ class RoleManager(RoleManager):
             name1 = domain[0] + "::" + name1
             name2 = domain[0] + "::" + name2
         elif len(domain) > 1:
-            return RuntimeError("error: domain should be 1 parameter")
+            raise RuntimeError("error: domain should be 1 parameter")
 
         role1 = self.create_role(name1)
         role2 = self.create_role(name2)
@@ -40,10 +40,10 @@ class RoleManager(RoleManager):
             name1 = domain[0] + "::" + name1
             name2 = domain[0] + "::" + name2
         elif len(domain) > 1:
-            return RuntimeError("error: domain should be 1 parameter")
+            raise RuntimeError("error: domain should be 1 parameter")
 
         if not self.has_role(name1) or not self.has_role(name2):
-            return RuntimeError("error: name1 or name2 does not exist")
+            raise RuntimeError("error: name1 or name2 does not exist")
 
         role1 = self.create_role(name1)
         role2 = self.create_role(name2)
@@ -54,7 +54,7 @@ class RoleManager(RoleManager):
             name1 = domain[0] + "::" + name1
             name2 = domain[0] + "::" + name2
         elif len(domain) > 1:
-            return RuntimeError("error: domain should be 1 parameter")
+            raise RuntimeError("error: domain should be 1 parameter")
 
         if name1 == name2:
             return True
