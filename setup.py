@@ -7,7 +7,7 @@ with open(desc_file, "r") as fh:
 
 setuptools.setup(
     name="casbin",
-    version="0.8.2",
+    version="0.8.3",
     author="TechLee",
     author_email="techlee@qq.com",
     description="An authorization library that supports access control models like ACL, RBAC, ABAC in Python",
@@ -15,7 +15,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/casbin/pycasbin",
     keywords=["casbin", "acl", "rbac", "abac", "auth", "authz", "authorization", "access control", "permission"],
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=("tests",)),
     install_requires=['simpleeval>=0.9.10'],
     python_requires=">=3.3",
     license="Apache 2.0",
