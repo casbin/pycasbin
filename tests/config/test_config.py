@@ -33,8 +33,8 @@ class TestConfig(TestCase):
 
         config.set("other::key1", "test key")
 
-        self.assertEqual(config.get("multi1::name"), "r.sub==p.sub&&r.obj==p.obj")
-        self.assertEqual(config.get("multi2::name"), "r.sub==p.sub&&r.obj==p.obj")
-        self.assertEqual(config.get("multi3::name"), "r.sub==p.sub&&r.obj==p.obj")
+        self.assertEqual(config.get("multi1::name"), "r.sub==p.sub && r.obj==p.obj")
+        self.assertEqual(config.get("multi2::name"), "r.sub==p.sub && r.obj==p.obj")
+        self.assertEqual(config.get("multi3::name"), "r.sub==p.sub && r.obj==p.obj")
         self.assertEqual(config.get("multi4::name"), "")
-        self.assertEqual(config.get("multi5::name"), "r.sub==p.sub&&r.obj==p.obj")
+        self.assertEqual(config.get("multi5::name"), "r.sub==p.sub && r.obj==p.obj")
