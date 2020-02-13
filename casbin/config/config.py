@@ -75,6 +75,7 @@ class Config:
                 p = ''
                 if self.DEFAULT_MULTI_LINE_SEPARATOR == line[-1]:
                     p = line[0:-1].strip()
+                    p = p + ' ' 
                 else:
                     p = line
                     can_write = True
