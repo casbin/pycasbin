@@ -35,3 +35,25 @@ def params_to_string(*s):
     """gets a printable string for variable number of parameters."""
 
     return ", ".join(s)
+
+def join_slice(a, *b):
+    ''' joins a string and a slice into a new slice.'''
+    res = []
+
+    res.append(a, *b)
+
+    return res
+
+def set_subtract(a, b):
+    ''' returns the elements in `a` that aren't in `b`. '''
+    mb = dict()
+
+    for x in b:
+        mb[x] = True
+
+    diff = list()
+    for x in a:
+        if x in mb:
+            diff.append(x)
+
+	return diff
