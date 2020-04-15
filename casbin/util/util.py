@@ -56,4 +56,4 @@ def set_subtract(a, b):
         if x in mb:
             diff.append(x)
 
-	return diff
+    return diff
