@@ -38,9 +38,9 @@ def params_to_string(*s):
 
 def join_slice(a, *b):
     ''' joins a string and a slice into a new slice.'''
-    res = []
+    res = [a]
 
-    res.append(a, *b)
+    res.extend(b)
 
     return res
 
