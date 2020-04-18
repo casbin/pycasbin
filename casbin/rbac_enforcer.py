@@ -8,12 +8,12 @@ class RBACEnforcer(ManagementEnforcer):
 
 	def get_roles_for_user(self, name):
 		''' gets the roles that a user has. '''
-		res = self.model["g"]["g"].rm.get_roles(name)
+		res = self.model.model["g"]["g"].rm.get_roles(name)
 		return res
 
 	def get_users_for_role(self, name):
 		''' gets the users that has a role. '''
-		res = self.model["g"]["g"].rm.get_roles(name)
+		res = self.model.model["g"]["g"].rm.get_users(name)
 		return res
 
 	def has_role_for_user(self, name, role):
@@ -90,7 +90,7 @@ class RBACEnforcer(ManagementEnforcer):
 		'''
 		return self.remove_policy(join_slice(user, *permission))
 
-	def delete_permission_for_user(self, user):
+	def delete_permissions_for_user(self, user):
 		'''
 		deletes permissions for a user or role.
 		Returns false if the user or role does not have any permissions (aka not affected).
@@ -103,7 +103,7 @@ class RBACEnforcer(ManagementEnforcer):
 		'''
 		return self.get_filtered_policy(0, user)
 
-	def HasPermissionForUser(self, user, *permission):
+	def has_permission_for_user(self, user, *permission):
 		'''
 		determines whether a user has a permission.
 		'''
@@ -154,7 +154,7 @@ class RBACEnforcer(ManagementEnforcer):
 		'''
 		roles = self.get_implicit_roles_for_user(user, *domain)
 
-		roles.append(user, *roles)
+		roles.insert(0, user)
 
 		withDomain = False
 		if len(domain) == 1:
@@ -162,18 +162,18 @@ class RBACEnforcer(ManagementEnforcer):
 		elif len(domain) > 1:
 			return None
 
-		res = [list()]
+		res = []
 		permissions = [list()]
 		for role in roles:
 			if withDomain:
 				permissions = self.get_permissions_for_user_in_domain(role, domain[0])
 			else:
 				permissions = self.get_permissions_for_user(role)
-			res.append(*permissions)
+			res.extend(permissions)
 
 		return res
 
-	def get_implicit_users_for_per(self, *permission):
+	def get_implicit_users_for_permission(self, *permission):
 		'''
 		gets implicit users for a permission.
 		For example:
