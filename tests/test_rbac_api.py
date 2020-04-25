@@ -205,3 +205,11 @@ class TestRbacApi(TestCase):
         self.assertEqual(e.get_roles_for_user_in_domain('bob', 'domain2'), ['admin'])
         self.assertEqual(e.get_roles_for_user_in_domain('admin', 'domain2'), [])
         self.assertEqual(e.get_roles_for_user_in_domain('non_exist', 'domain2'), [])
+
+    def test_implicit_user_api(self):
+        e = get_enforcer(get_examples("rbac_model.conf"),get_examples("rbac_with_hierarchy_policy.csv"))
+
+        self.assertEqual(["alice"], e.get_implicit_users_for_permission("data1", "read"))
+        self.assertEqual(["alice"], e.get_implicit_users_for_permission("data1", "write"))
+        self.assertEqual(["alice"], e.get_implicit_users_for_permission("data2", "read"))
+        self.assertEqual(["alice", "bob"], e.get_implicit_users_for_permission("data2", "write"))
