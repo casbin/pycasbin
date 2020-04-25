@@ -53,7 +53,7 @@ def set_subtract(a, b):
 
     diff = list()
     for x in a:
-        if x in mb:
+        if x not in mb:
             diff.append(x)
 
     return diff
