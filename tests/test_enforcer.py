@@ -29,6 +29,22 @@ class TestConfig(TestCase):
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
         self.assertFalse(e.enforce('bob', 'data1', 'write'))
 
+    def test_enforcer_basic_without_spaces(self):
+        e = get_enforcer(
+            get_examples("basic_model_without_spaces.conf"),
+            get_examples("basic_policy.csv"),
+            # True,
+        )
+
+        self.assertTrue(e.enforce("alice", "data1", "read"))
+        self.assertFalse(e.enforce("alice", "data1", "write"))
+        self.assertFalse(e.enforce("alice", "data2", "read"))
+        self.assertFalse(e.enforce("alice", "data2", "write"))
+        self.assertFalse(e.enforce("bob", "data1", "read"))
+        self.assertFalse(e.enforce("bob", "data1", "write"))
+        self.assertFalse(e.enforce("bob", "data2", "read"))
+        self.assertTrue(e.enforce("bob", "data2", "write"))
+
     def test_enforce_basic_with_root(self):
         e = get_enforcer(get_examples("basic_with_root_model.conf"), get_examples("basic_policy.csv"))
         self.assertTrue(e.enforce('root', 'any', 'any'))

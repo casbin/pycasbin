@@ -27,9 +27,9 @@ class Model(Policy):
         ast.value = value
 
         if "r" == sec or "p" == sec:
-            ast.tokens = ast.value.split(", ")
+            ast.tokens = ast.value.split(",")
             for i,token in enumerate(ast.tokens):
-                ast.tokens[i] = key + "_" + token
+                ast.tokens[i] = key + "_" + token.strip()
         else:
             ast.value = util.remove_comments(util.escape_assertion(ast.value))
 
