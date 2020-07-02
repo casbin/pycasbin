@@ -57,3 +57,16 @@ def set_subtract(a, b):
             diff.append(x)
 
     return diff
+
+def has_eval():
+    '''determine whether matcher contains function eval'''
+    pass
+
+def replace_eval():
+    '''replace function eval with the value of its parameters'''
+    pass
+
+def get_eval_value():
+    '''returns the parameters of function eval'''
+    pass
+
