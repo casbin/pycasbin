@@ -4,6 +4,7 @@ import ipaddress
 
 KEY_MATCH2_PATTERN = re.compile(r'(.*):[^\/]+(.*)')
 KEY_MATCH3_PATTERN = re.compile(r'(.*){[^\/]+}(.*)')
+PROPERTY_ACCESS_PATTERN = re.compile(r'(?P<prefix>.*)(\.(?P<content>.+?))(?P<suffix> .*)')
 
 
 def key_match(key1, key2):
@@ -131,3 +132,14 @@ def generate_g_function(rm):
             return rm.has_link(name1, name2, domain)
 
     return f
+
+def eval_func(*args):
+    expr = args[0].replace("&&", "and")
+    expr = expr.replace("||", "or")
+    old_expr = ""
+    while expr != old_expr:
+        old_expr = expr
+        expr = re.sub(PROPERTY_ACCESS_PATTERN, '\g<prefix>["\g<content>"]\g<suffix>', old_expr)
+    sub = args[1]
+
+    return eval(expr)

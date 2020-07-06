@@ -42,3 +42,9 @@ class TestBuiltinOperators(TestCase):
         self.assertTrue(util.key_match2_func("/alice/all", "/:id/all"))
         self.assertFalse(util.key_match2_func("/alice", "/:id/all"))
         self.assertFalse(util.key_match2_func("/alice/all", "/:id"))
+    
+    def test_eval(self):
+        self.assertTrue(util.eval_func("sub.Age >= 18", { 'name' : 'Alice', 'Age': 32 }))
+        self.assertFalse(util.eval_func("sub.Age >= 18", { 'name' : 'Alice', 'Age': 13 }))
+        self.assertFalse(util.eval_func("sub.Age >= 18 && sub.name == 'Alice'", { 'name' : 'Thomas', 'Age': 22 }))
+        self.assertTrue(util.eval_func("sub.Age >= 18 && sub.name == 'Alice'", { 'name' : 'Alice', 'Age': 22 }))
