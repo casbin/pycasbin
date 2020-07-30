@@ -24,3 +24,15 @@ class TestUtil(TestCase):
 
     def test_params_to_string(self):
         self.assertEqual(util.params_to_string('data', 'data1', 'data2', 'data3'), "data, data1, data2, data3")
+
+    def test_has_eval(self):
+        self.assertTrue(util.has_eval("eval() && a && b && c"))
+        self.assertFalse(util.has_eval("eval) && a && b && c"))
+        self.assertFalse(util.has_eval("eval)( && a && b && c"))
+        self.assertTrue(util.has_eval("eval(c * (a + b)) && a && b && c"))
+        self.assertFalse(util.has_eval("xeval() && a && b && c"))
+        self.assertTrue(util.has_eval("eval(a) && eval(b) && a && b && c"))
+
+    def test_replace_eval(self):
+        self.assertEqual(util.replace_eval("eval() && a && b && c", "a"), "(a) && a && b && c")
+        self.assertEqual(util.replace_eval("eval() && a && b && c", "(a)"), "((a)) && a && b && c")

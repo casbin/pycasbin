@@ -58,13 +58,22 @@ def set_subtract(a, b):
 
     return diff
 
-def has_eval():
+def has_eval(s):
     '''determine whether matcher contains function eval'''
-    pass
+    line = s.split(" && ")
+    flag = False
+    for i in line:
+        if(i[0:5] == "eval(" and ")" in i[4:]):
+            flag = True
+    return flag
 
-def replace_eval():
+
+def replace_eval(s, rule):
     '''replace function eval with the value of its parameters'''
-    pass
+    if has_eval(s):
+        return
+    else:
+        return
 
 def get_eval_value():
     '''returns the parameters of function eval'''
