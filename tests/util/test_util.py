@@ -36,3 +36,9 @@ class TestUtil(TestCase):
     def test_replace_eval(self):
         self.assertEqual(util.replace_eval("eval() && a && b && c", "a"), "(a) && a && b && c")
         self.assertEqual(util.replace_eval("eval() && a && b && c", "(a)"), "((a)) && a && b && c")
+
+    def test_get_eval_value(self):
+        self.assertEqual(util.get_eval_value("eval(a) && a && b && c"), ["a"])
+        self.assertEqual(util.get_eval_value("a && eval(a) && b && c"), ["a"])
+        self.assertEqual(util.get_eval_value("eval(a) && eval(b) && a && b && c"), ["a", "b"])
+        self.assertEqual(util.get_eval_value("a && eval(a) && eval(b) && b && c"), ["a", "b"])

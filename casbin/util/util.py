@@ -71,11 +71,16 @@ def has_eval(s):
 def replace_eval(s, rule):
     '''replace function eval with the value of its parameters'''
     if has_eval(s):
-        return
+        return s.replace("eval()", "(" + rule + ")")
     else:
-        return
+        return s
 
-def get_eval_value():
+def get_eval_value(s):
     '''returns the parameters of function eval'''
-    pass
-
+    if has_eval(s):
+        value = []
+        line = s.split(" && ")
+        for i in line:
+            if has_eval(i):
+                value.append(i[5:-1])
+    return value
