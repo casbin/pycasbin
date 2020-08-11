@@ -59,7 +59,7 @@ class CoreEnforcer:
         self._initialize()
 
         # Do not initialize the full policy when using a filtered adapter
-        if self.adapter:
+        if self.adapter and not self.is_filtered():
             self.load_policy()
 
     def _initialize(self):
@@ -147,13 +147,20 @@ class CoreEnforcer:
 
     def load_filtered_policy(self, filter):
         """reloads a filtered policy from file/database."""
+        self.model.clear_policy()
 
-        pass
+        if not hasattr(self.adapter, "is_filtered"):
+            raise ValueError("filtered policies are not supported by this adapter")
+
+        self.adapter.load_filtered_policy(self.model, filter)
+        self.model.print_policy()
+        if self.auto_build_role_links:
+            self.build_role_links()
 
     def is_filtered(self):
         """returns true if the loaded policy has been filtered."""
 
-        pass
+        return hasattr(self.adapter, "is_filtered") and self.adapter.is_filtered()
 
     def save_policy(self):
         if self.is_filtered():
