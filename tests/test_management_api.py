@@ -85,3 +85,44 @@ class TestManagementApi(TestCase):
             ['eve', 'data3', 'read'],
             ['eve', 'data3', 'write'],
         ])
+
+        rules = {
+            ["jack", "data4", "read"],
+            ["jack", "data4", "read"],
+            ["jack", "data4", "read"],
+            ["katy", "data4", "write"],
+            ["leyo", "data4", "read"],
+            ["katy", "data4", "write"],
+            ["katy", "data4", "write"],
+            ["ham", "data4", "write"],
+        }
+
+        e.add_policies(rules)
+        e.add_named_policies('p', rules)
+        self.assertEqual(e.get_policy(),[
+            ['alice', 'data1', 'read'],
+            ['bob', 'data2', 'write'],
+            ['data2_admin', 'data2', 'read'],
+            ['data2_admin', 'data2', 'write'],
+            ['eve', 'data3', 'read'],
+            ['eve', 'data3', 'write'],
+            ["jack", "data4", "read"],
+            ["jack", "data4", "read"],
+            ["jack", "data4", "read"],
+            ["katy", "data4", "write"],
+            ["leyo", "data4", "read"],
+            ["katy", "data4", "write"],
+            ["katy", "data4", "write"],
+            ["ham", "data4", "write"],
+        ])
+
+        e.remove_policies(rules)
+        e.remove_named_policies('p', rules)
+        self.assertEqual(e.get_policy(), [
+            ['alice', 'data1', 'read'],
+            ['bob', 'data2', 'write'],
+            ['data2_admin', 'data2', 'read'],
+            ['data2_admin', 'data2', 'write'],
+            ['eve', 'data3', 'read'],
+            ['eve', 'data3', 'write'],
+        ])

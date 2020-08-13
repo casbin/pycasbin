@@ -34,6 +34,21 @@ class TestPolicy(TestCase):
         m.add_policy('p', 'p', rule)
         self.assertTrue(m.has_policy('p', 'p', rule))
 
+    def test_add_policies(self):
+        m = Model()
+        m.load_model(get_examples("basic_model.conf"))
+
+        rule1 = ['alice', 'data1', 'read']
+        rule2 = ['bob', 'data2', 'write']
+        rules = [rule1, rule2]
+
+        self.assertFalse(m.has_policy('p', 'p', rule1))
+        self.assertFalse(m.has_policy('p', 'p', rule2))
+
+        m.add_policies('p', 'p', rules)
+        self.assertTrue(m.has_policy('p', 'p', rule1))
+        self.assertTrue(m.has_policy('p', 'p', rule2))
+
     def test_add_role_policy(self):
         m = Model()
         m.load_model(get_examples("rbac_model.conf"))
@@ -64,6 +79,24 @@ class TestPolicy(TestCase):
         m.remove_policy('p', 'p', rule)
         self.assertFalse(m.has_policy('p', 'p', rule))
         self.assertFalse(m.remove_policy('p', 'p', rule))
+
+    def test_remove_policies(self):
+        m = Model()
+        m.load_model(get_examples("basic_model.conf"))
+
+        rule1 = ['alice', 'data1', 'read']
+        rule2 = ['bob', 'data2', 'write']
+        rules = [rule1, rule2]
+
+        m.add_policies('p', 'p', rules)
+        self.assertTrue(m.has_policy('p', 'p', rule1))
+        self.assertTrue(m.has_policy('p', 'p', rule2))
+
+        m.remove_policies('p', 'p', rules)
+        self.assertFalse(m.has_policy('p', 'p', rule1))
+        self.assertFalse(m.has_policy('p', 'p', rule2))
+
+
 
     def test_remove_filtered_policy(self):
         m = Model()

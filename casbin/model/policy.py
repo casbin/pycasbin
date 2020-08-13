@@ -74,6 +74,17 @@ class Policy:
 
         return False
 
+    def add_policies(self, sec, ptype, rules):
+        """adds rules to the current policy."""
+
+        for rule in rules:
+            if not self.has_policy(sec, ptype, rule):
+                self.model[sec][ptype].policy.append(rule)
+            else:
+                return False
+
+        return True
+
     def remove_policy(self, sec, ptype, rule):
         """removes a policy rule from the model."""
 
@@ -88,6 +99,23 @@ class Policy:
         self.model[sec][ptype].policy.remove(rule)
 
         return rule not in self.model[sec][ptype].policy
+
+    def remove_policies(self, sec, ptype, rules):
+        '''removes policy rules from the model.'''
+
+        if sec not in self.model.keys():
+            return False
+        if ptype not in self.model[sec]:
+            return False
+
+        for rule in rules:
+            if not self.has_policy(sec, ptype, rule):
+                return False
+
+            self.model[sec][ptype].policy.remove(rule)
+
+        return rules not in self.model[sec][ptype].policy
+
 
     def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes policy rules based on field filters from the model."""
