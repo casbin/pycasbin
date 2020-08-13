@@ -2,7 +2,7 @@ from casbin import log
 from casbin.persist.adapters import FileAdapter
 from casbin.model import Model, FunctionMap
 from casbin.rbac import default_role_manager
-from casbin.util import generate_g_function, SimpleEval
+from casbin.util import generate_g_function, SimpleEval, has_eval, replace_eval, get_eval_value
 from casbin.effect import DefaultEffector, Effector
 
 
@@ -234,6 +234,11 @@ class CoreEnforcer:
 
                 parameters = dict(r_parameters, **dict(zip(p_tokens, pvals)))
                 result = expression.eval(parameters)
+
+                eval_policy = self.model.model["p"]["p"].policy
+                if has_eval(eval_policy):
+                    for eval_value in get_eval_value(eval_policy):
+                        eval_policy = replace_eval(eval_policy, self.enforce(eval_value))
 
                 if isinstance(result, bool):
                     if not result:
