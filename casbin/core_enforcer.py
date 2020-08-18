@@ -2,9 +2,8 @@ from casbin import log
 from casbin.persist.adapters import FileAdapter
 from casbin.model import Model, FunctionMap
 from casbin.rbac import default_role_manager
-from casbin.util import generate_g_function, SimpleEval
+from casbin.util import generate_g_function, SimpleEval, has_eval, replace_eval, get_eval_value, escape_assertion, remove_comments
 from casbin.effect import DefaultEffector, Effector
-
 
 class CoreEnforcer:
     """CoreEnforcer defines the core functionality of an enforcer."""
@@ -234,6 +233,13 @@ class CoreEnforcer:
 
                 parameters = dict(r_parameters, **dict(zip(p_tokens, pvals)))
                 result = expression.eval(parameters)
+
+                if has_eval(exp_string):
+                    rule_names = get_eval_value(exp_string)
+                    for rule_name in rule_names:
+                        j = p_tokens[rule_name]
+                        rule = escape_assertion(pvals[j])
+                        exp_string = replace_eval(exp_string, self.enforce(rule))
 
                 if isinstance(result, bool):
                     if not result:
