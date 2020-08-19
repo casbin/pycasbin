@@ -1,5 +1,7 @@
 from collections import OrderedDict
+import re
 
+eval_reg = re.compile(r'\beval\((?P<rule>[^)]*)\)')
 
 def escape_assertion(s):
     """escapes the dots in the assertion, because the expression evaluation doesn't support such variable names."""
@@ -57,3 +59,22 @@ def set_subtract(a, b):
             diff.append(x)
 
     return diff
+
+
+def has_eval(s):
+    '''determine whether matcher contains function eval'''
+    return eval_reg.match(s)
+
+
+def replace_eval(s, rule):
+    '''replace function eval with the value of its parameters'''
+    if has_eval(s):
+        return eval_reg.sub("(" + rule + ")", s)
+    else:
+        return s
+
+
+def get_eval_value(s):
+    '''returns the parameters of function eval'''
+    sub_match = eval_reg.findall(s)
+    return sub_match.copy()
