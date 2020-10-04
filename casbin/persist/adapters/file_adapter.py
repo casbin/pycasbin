@@ -38,12 +38,12 @@ class FileAdapter(persist.Adapter):
             if "p" in model.model.keys():
                 for key, ast in model.model["p"].items():
                     for pvals in ast.policy:
-                        lines.append(key + ', ' + ', '.join(pvals))
+                        lines.append(key + ", " + ", ".join(pvals))
 
             if "g" in model.model.keys():
                 for key, ast in model.model["g"].items():
                     for pvals in ast.policy:
-                        lines.append(key + ', ' + ', '.join(pvals))
+                        lines.append(key + ", " + ", ".join(pvals))
 
             for i, line in enumerate(lines):
                 if i != len(lines) - 1:
@@ -58,4 +58,10 @@ class FileAdapter(persist.Adapter):
         pass
 
     def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
+        pass
+
+    def is_filtered(self):
+        return False
+
+    def load_filtered_policy(self, model, filter):
         pass
