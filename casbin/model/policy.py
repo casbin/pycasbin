@@ -25,7 +25,7 @@ class Policy:
                 continue
 
             for key, ast in self.model[sec].items():
-                self.logger.info(f"{key} : {ast.value} :  {ast.policy}")
+                self.logger.info("{} : {} : {}".format(key, ast.value, ast.policy))
 
     def clear_policy(self):
         """clears all current policy."""
