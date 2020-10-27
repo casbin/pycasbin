@@ -33,6 +33,23 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
         self.assertFalse(e.enforce('bob', 'data1', 'write'))
 
+    def test_model_operations(self):
+        e = get_enforcer(
+            get_examples("basic_model.conf"),
+            get_examples("basic_policy.csv"),
+            # True,
+        )
+        self.assertTrue(e.enforce('alice', 'data1', 'read'))
+        self.assertFalse(e.enforce('alice', 'data2', 'read'))
+        self.assertTrue(e.enforce('bob', 'data2', 'write'))
+        self.assertFalse(e.enforce('bob', 'data1', 'write'))
+        e.set_model(None)
+        self.assertTrue(e.model is None)
+        # creating new model
+        e.load_model()
+        self.assertTrue(e.model)
+
+
     def test_enforcer_basic_without_spaces(self):
         e = self.get_enforcer(
             get_examples("basic_model_without_spaces.conf"),
