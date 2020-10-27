@@ -24,8 +24,8 @@ class SyncedEnforcer():
     """SyncedEnforcer wraps Enforcer and provides synchronized access. 
     It's also a drop-in replacement for Enforcer"""
 
-    def __init__(self, model=None, adapter=None, enable_log=False):
-        self._e = Enforcer(model, adapter, enable_log)
+    def __init__(self, model=None, adapter=None):
+        self._e = Enforcer(model, adapter)
         self._rwlock = RWLockWrite()
         self._rl = self._rwlock.gen_rlock()
         self._wl = self._rwlock.gen_wlock()
@@ -98,11 +98,6 @@ class SyncedEnforcer():
         """sets the current effector."""
         with self._wl:
             self._e.set_effector(eft)
-
-    def enable_log(self, enable):
-        """changes whether Casbin will log messages to the Logger."""
-        with self._wl:
-            return self._e.enable_log(enable)
 
     def clear_policy(self):
         """ clears all policy."""

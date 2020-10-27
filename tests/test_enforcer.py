@@ -14,11 +14,10 @@ class TestSub():
         self.age = age
 
 class TestCaseBase(TestCase):
-    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+    def get_enforcer(self, model=None, adapter=None):
         return casbin.Enforcer(
             model,
             adapter,
-            enable_log,
         )
 
 class TestConfig(TestCaseBase):
@@ -27,7 +26,6 @@ class TestConfig(TestCaseBase):
         e = self.get_enforcer(
             get_examples("basic_model.conf"),
             get_examples("basic_policy.csv"),
-            # True,
         )
 
         self.assertTrue(e.enforce('alice', 'data1', 'read'))
@@ -39,7 +37,6 @@ class TestConfig(TestCaseBase):
         e = self.get_enforcer(
             get_examples("basic_model_without_spaces.conf"),
             get_examples("basic_policy.csv"),
-            # True,
         )
 
         self.assertTrue(e.enforce("alice", "data1", "read"))
@@ -189,9 +186,7 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("bob", "/pen2/2", "GET"))
 
     def test_enforce_abac_log_enabled(self):
-        e = self.get_enforcer(get_examples("abac_model.conf"), enable_log=True)
-        e.enable_log(True)
-
+        e = self.get_enforcer(get_examples("abac_model.conf"))
         sub = 'alice'
         obj = {'Owner': 'alice', 'id': 'data1'}
         self.assertTrue(e.enforce(sub, obj, 'write'))
@@ -250,18 +245,16 @@ class TestConfig(TestCaseBase):
 
 class TestConfigSynced(TestConfig):
 
-    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+    def get_enforcer(self, model=None, adapter=None):
         return casbin.SyncedEnforcer(
             model,
             adapter,
-            enable_log,
         )
 
     def test_auto_loading_policy(self):
         e = self.get_enforcer(
             get_examples("basic_model.conf"),
             get_examples("basic_policy.csv"),
-            # True,
         )
 
         e.start_auto_load_policy(5/1000)

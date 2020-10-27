@@ -3,11 +3,10 @@ from tests.test_enforcer import get_examples, TestCaseBase
 
 class TestManagementApi(TestCaseBase):
 
-    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+    def get_enforcer(self, model=None, adapter=None):
         return casbin.Enforcer(
             model,
             adapter,
-            enable_log,
         )
 
     def test_get_list(self):
@@ -140,9 +139,8 @@ class TestManagementApi(TestCaseBase):
 
 class TestManagementApiSynced(TestManagementApi):
 
-    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+    def get_enforcer(self, model=None, adapter=None):
         return casbin.SyncedEnforcer(
             model,
             adapter,
-            enable_log,
         )

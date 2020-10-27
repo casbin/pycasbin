@@ -216,9 +216,8 @@ class TestRbacApi(TestCaseBase):
 
 class TestRbacApiSynced(TestRbacApi):
 
-    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+    def get_enforcer(self, model=None, adapter=None):
         return casbin.SyncedEnforcer(
             model,
             adapter,
-            enable_log,
         )

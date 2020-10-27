@@ -1,5 +1,5 @@
 from . import Assertion
-from casbin import util, config, log
+from casbin import util, config
 from .policy import Policy
 
 
@@ -75,7 +75,7 @@ class Model(Policy):
         self._load_section(cfg, "g")
 
     def print_model(self):
-        log.log_print("Model:")
+        self.logger.info("Model:")
         for k, v in self.model.items():
             for i, j in v.items():
-                log.log_printf("%s.%s: %s", k, i, j.value)
+                self.logger.info("%s.%s: %s", k, i, j.value)

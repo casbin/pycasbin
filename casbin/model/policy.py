@@ -1,8 +1,10 @@
-from casbin import util, log
+from casbin import util
+import logging
 
 
 class Policy:
     def __init__(self):
+        self.logger = logging.getLogger()
         self.model = {}
 
     def build_role_links(self, rm):
@@ -15,15 +17,15 @@ class Policy:
             ast.build_role_links(rm)
 
     def print_policy(self):
-        """prints the policy to log."""
+        """Log using info"""
 
-        log.log_print("Policy:")
+        self.logger.info("Policy:")
         for sec in ["p", "g"]:
             if sec not in self.model.keys():
                 continue
 
             for key, ast in self.model[sec].items():
-                log.log_print(key, ": ", ast.value, ": ", ast.policy)
+                self.logger.info(f"{key} : {ast.value} :  {ast.policy}")
 
     def clear_policy(self):
         """clears all current policy."""
