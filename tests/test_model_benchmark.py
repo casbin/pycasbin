@@ -6,7 +6,7 @@ from tests.test_enforcer import get_examples, TestCaseBase
 from unittest import TestCase
 
 log = logging.getLogger(__name__)
-loglevel = logging.DEBUG
+loglevel = logging.WARNING
 logging.basicConfig(level=loglevel)
 
 
@@ -16,7 +16,7 @@ def get_function_name():
 
 def print_time_diff(start, end, time):
     ms = (end - start).total_seconds() * 1000 / time
-    log.debug("%s %f ms" % (get_function_name(), ms))
+    log.warning("%s %f ms" % (get_function_name(), ms))
 
 
 class TestModelBenchmark(TestCaseBase):
@@ -42,9 +42,8 @@ class TestModelBenchmark(TestCaseBase):
 
 class TestModelBenchmarkSynced(TestModelBenchmark):
 
-    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+    def get_enforcer(self, model=None, adapter=None):
         return casbin.SyncedEnforcer(
             model,
             adapter,
-            enable_log,
         )
