@@ -177,7 +177,7 @@ else:
 3. Besides the static policy file, Casbin also provides API for permission management at run-time. For example, You can get all the roles assigned to a user as below:
 
 ```python
-roles = e.get_roles("alice")
+roles = e.get_roles_for_user("alice")
 ```
 
 See [Policy management APIs](#policy-management) for more usage.
