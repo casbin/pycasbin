@@ -1,9 +1,8 @@
 import re
 import ipaddress
 
-
-KEY_MATCH2_PATTERN = re.compile(r'(.*):[^\/]+(.*)')
-KEY_MATCH3_PATTERN = re.compile(r'(.*){[^\/]+}(.*)')
+KEY_MATCH2_PATTERN = re.compile(r'(.*?):[^\/]+(.*?)')
+KEY_MATCH3_PATTERN = re.compile(r'(.*?){[^\/]+}(.*?)')
 
 
 def key_match(key1, key2):
@@ -35,14 +34,9 @@ def key_match2(key1, key2):
     """
 
     key2 = key2.replace("/*", "/.*")
+    key2 = KEY_MATCH2_PATTERN.sub(r'\g<1>[^\/]+\g<2>', key2, 0)
 
-    while True:
-        if "/:" not in key2:
-            break
-
-        key2 = "^" + KEY_MATCH2_PATTERN.sub(r'\g<1>[^\/]+\g<2>', key2, 0) + "$"
-
-    return regex_match(key1, key2)
+    return regex_match(key1, "^" + key2 + "$")
 
 
 def key_match2_func(*args):
@@ -58,14 +52,9 @@ def key_match3(key1, key2):
     """
 
     key2 = key2.replace("/*", "/.*")
+    key2 = KEY_MATCH3_PATTERN.sub(r'\g<1>[^\/]+\g<2>', key2, 0)
 
-    while True:
-        if "{" not in key2:
-            break
-
-        key2 = KEY_MATCH3_PATTERN.sub(r'\g<1>[^\/]+\g<2>', key2, 0)
-
-    return regex_match(key1, key2)
+    return regex_match(key1, "^" + key2 + "$")
 
 
 def key_match3_func(*args):
@@ -100,7 +89,7 @@ def ip_match(ip1, ip2):
     """
     ip1 = ipaddress.ip_address(ip1)
     try:
-        network = ipaddress.ip_network(ip2, strict=True)
+        network = ipaddress.ip_network(ip2, strict=False)
         return ip1 in network
     except ValueError:
         return ip1 == ip2
