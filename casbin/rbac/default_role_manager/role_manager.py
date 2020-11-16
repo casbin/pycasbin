@@ -11,13 +11,28 @@ class RoleManager(RoleManager):
     def __init__(self, max_hierarchy_level):
         self.all_roles = dict()
         self.max_hierarchy_level = max_hierarchy_level
+        self.matching_func = None
+
+    def add_matching_func(self, fn):
+        self.matching_func = fn
 
     def has_role(self, name):
-        return name in self.all_roles.keys()
+        if self.matching_func is None:
+            return name in self.all_roles.keys()
+        else:
+            for key in self.all_roles.keys():
+                if self.matching_func(name, key):
+                    return True
+        return False
 
     def create_role(self, name):
         if name not in self.all_roles.keys():
             self.all_roles[name] = Role(name)
+
+        if self.matching_func is not None:
+            for key, role in self.all_roles.items():
+                if self.matching_func(name, key) and name != key:
+                    self.all_roles[name].add_role(role)
 
         return self.all_roles[name]
 

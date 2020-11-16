@@ -155,6 +155,33 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('bob', 'data2', 'read'))
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
 
+    def test_enforce_rbac_with_pattern(self):
+        e = get_enforcer(get_examples("rbac_with_pattern_model.conf"),
+                         get_examples("rbac_with_pattern_policy.csv"))
+
+        #set matching function to key_match2
+        e.rm.add_matching_func(casbin.util.key_match2)
+
+        self.assertTrue(e.enforce("alice", "/book/1", "GET"))
+        self.assertTrue(e.enforce("alice", "/book/2", "GET"))
+        self.assertTrue(e.enforce("alice", "/pen/1", "GET"))
+        self.assertFalse(e.enforce("alice", "/pen/2", "GET"))
+        self.assertFalse(e.enforce("bob", "/book/1", "GET"))
+        self.assertFalse(e.enforce("bob", "/book/2", "GET"))
+        self.assertTrue(e.enforce("bob", "/pen/1", "GET"))
+        self.assertTrue(e.enforce("bob", "/pen/2", "GET"))
+
+        #replace key_match2 with key_match3
+        e.rm.add_matching_func(casbin.util.key_match3)
+        self.assertTrue(e.enforce("alice", "/book2/1", "GET"))
+        self.assertTrue(e.enforce("alice", "/book2/2", "GET"))
+        self.assertTrue(e.enforce("alice", "/pen2/1", "GET"))
+        self.assertFalse(e.enforce("alice", "/pen2/2", "GET"))
+        self.assertFalse(e.enforce("bob", "/book2/1", "GET"))
+        self.assertFalse(e.enforce("bob", "/book2/2", "GET"))
+        self.assertTrue(e.enforce("bob", "/pen2/1", "GET"))
+        self.assertTrue(e.enforce("bob", "/pen2/2", "GET"))
+
     def test_enforce_abac_log_enabled(self):
         e = get_enforcer(get_examples("abac_model.conf"), enable_log=True)
         e.enable_log(True)
