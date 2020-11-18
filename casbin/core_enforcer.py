@@ -231,15 +231,16 @@ class CoreEnforcer:
                 if len(p_tokens) != len(pvals):
                     raise RuntimeError("invalid policy size")
 
-                parameters = dict(r_parameters, **dict(zip(p_tokens, pvals)))
-                result = expression.eval(parameters)
+                p_parameters = dict(zip(p_tokens, pvals))
+                parameters = dict(r_parameters, **p_parameters)
 
                 if has_eval(exp_string):
                     rule_names = get_eval_value(exp_string)
-                    for rule_name in rule_names:
-                        j = p_tokens[rule_name]
-                        rule = escape_assertion(pvals[j])
-                        exp_string = replace_eval(exp_string, self.enforce(rule))
+                    rules = [escape_assertion(p_parameters[rule_name]) for rule_name in rule_names]
+                    exp_with_rule = replace_eval(exp_string, rules)
+                    expression = self._get_expression(exp_with_rule, functions)
+
+                result = expression.eval(parameters)
 
                 if isinstance(result, bool):
                     if not result:

@@ -27,6 +27,7 @@ class TestUtil(TestCase):
 
     def test_has_eval(self):
         self.assertTrue(util.has_eval("eval() && a && b && c"))
+        self.assertTrue(util.has_eval("a && b && eval(c)"))
         self.assertFalse(util.has_eval("eval) && a && b && c"))
         self.assertFalse(util.has_eval("eval)( && a && b && c"))
         self.assertTrue(util.has_eval("eval(c * (a + b)) && a && b && c"))
@@ -34,8 +35,8 @@ class TestUtil(TestCase):
         self.assertTrue(util.has_eval("eval(a) && eval(b) && a && b && c"))
 
     def test_replace_eval(self):
-        self.assertEqual(util.replace_eval("eval() && a && b && c", "a"), "(a) && a && b && c")
-        self.assertEqual(util.replace_eval("eval() && a && b && c", "(a)"), "((a)) && a && b && c")
+        self.assertEqual(util.replace_eval("eval(a) && eval(b) && c", ["a", "b"]), "(a) && (b) && c")
+        self.assertEqual(util.replace_eval("a && eval(b) && eval(c)", ["b", "c"]), "a && (b) && (c)")
 
     def test_get_eval_value(self):
         self.assertEqual(util.get_eval_value("eval(a) && a && b && c"), ["a"])

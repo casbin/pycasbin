@@ -63,16 +63,20 @@ def set_subtract(a, b):
 
 def has_eval(s):
     '''determine whether matcher contains function eval'''
-    return eval_reg.match(s)
+    return eval_reg.search(s)
 
 
-def replace_eval(s, rule):
-    '''replace function eval with the value of its parameters'''
-    if has_eval(s):
-        return eval_reg.sub("(" + rule + ")", s)
-    else:
-        return s
+def replace_eval(expr, rules):
+    ''' replace all occurences of function eval with rules '''
+    pos = 0
+    match = eval_reg.search(expr, pos)
+    while match:
+        rule = "({rule})".format(rule=rules.pop(0))
+        expr = expr[:match.start()] + rule + expr[match.end():]
+        pos = match.start() + len(rule)
+        match = eval_reg.search(expr, pos)
 
+    return expr
 
 def get_eval_value(s):
     '''returns the parameters of function eval'''
