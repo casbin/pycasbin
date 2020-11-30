@@ -1,0 +1,2 @@
+p, r.sub.age > 18, r.sub.name == "alice", /data1, read
+p, r.sub.age < 60, r.sub.name == "bob", /data2, write

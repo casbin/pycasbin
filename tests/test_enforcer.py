@@ -15,6 +15,11 @@ def get_examples(path):
     examples_path = os.path.split(os.path.realpath(__file__))[0] + "/../examples/"
     return os.path.abspath(examples_path + path)
 
+class TestSub():
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
 class TestConfig(TestCase):
     def test_enforcer_basic(self):
@@ -189,3 +194,55 @@ class TestConfig(TestCase):
         sub = 'alice'
         obj = {'Owner': 'alice', 'id': 'data1'}
         self.assertTrue(e.enforce(sub, obj, 'write'))
+
+    def test_abac_with_sub_rule(self):
+        e = get_enforcer(get_examples("abac_rule_model.conf"),
+                         get_examples("abac_rule_policy.csv"))
+
+        sub1 = TestSub("alice", 16)
+        sub2 = TestSub("bob", 20)
+        sub3 = TestSub("alice", 65)
+        
+        self.assertFalse(e.enforce(sub1, "/data1", "read"))
+        self.assertFalse(e.enforce(sub1, "/data2", "read"))
+        self.assertFalse(e.enforce(sub1, "/data1", "write"))
+        self.assertTrue(e.enforce(sub1, "/data2", "write"))
+
+        self.assertTrue(e.enforce(sub2, "/data1", "read"))
+        self.assertFalse(e.enforce(sub2, "/data2", "read"))
+        self.assertFalse(e.enforce(sub2, "/data1", "write"))
+        self.assertTrue(e.enforce(sub2, "/data2", "write"))
+
+        self.assertTrue(e.enforce(sub3, "/data1", "read"))
+        self.assertFalse(e.enforce(sub3, "/data2", "read"))
+        self.assertFalse(e.enforce(sub3, "/data1", "write"))
+        self.assertFalse(e.enforce(sub3, "/data2", "write"))
+
+    def test_abac_with_multiple_sub_rules(self):
+        e = get_enforcer(get_examples("abac_multiple_rules_model.conf"),
+                         get_examples("abac_multiple_rules_policy.csv"))
+
+        sub1 = TestSub("alice", 16)
+        sub2 = TestSub("alice", 20)
+        sub3 = TestSub("bob", 65)
+        sub4 = TestSub("bob", 35)
+        
+        self.assertFalse(e.enforce(sub1, "/data1", "read"))
+        self.assertFalse(e.enforce(sub1, "/data2", "read"))
+        self.assertFalse(e.enforce(sub1, "/data1", "write"))
+        self.assertFalse(e.enforce(sub1, "/data2", "write"))
+
+        self.assertTrue(e.enforce(sub2, "/data1", "read"))
+        self.assertFalse(e.enforce(sub2, "/data2", "read"))
+        self.assertFalse(e.enforce(sub2, "/data1", "write"))
+        self.assertFalse(e.enforce(sub2, "/data2", "write"))
+
+        self.assertFalse(e.enforce(sub3, "/data1", "read"))
+        self.assertFalse(e.enforce(sub3, "/data2", "read"))
+        self.assertFalse(e.enforce(sub3, "/data1", "write"))
+        self.assertFalse(e.enforce(sub3, "/data2", "write"))
+
+        self.assertFalse(e.enforce(sub4, "/data1", "read"))
+        self.assertFalse(e.enforce(sub4, "/data2", "read"))
+        self.assertFalse(e.enforce(sub4, "/data1", "write"))
+        self.assertTrue(e.enforce(sub4, "/data2", "write"))

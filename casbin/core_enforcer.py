@@ -2,7 +2,7 @@ from casbin import log
 from casbin.persist.adapters import FileAdapter
 from casbin.model import Model, FunctionMap
 from casbin.rbac import default_role_manager
-from casbin.util import generate_g_function, SimpleEval
+from casbin.util import generate_g_function, SimpleEval, util
 from casbin.effect import DefaultEffector, Effector
 
 
@@ -225,7 +225,9 @@ class CoreEnforcer:
             raise RuntimeError("invalid request size")
 
         exp_string = self.model.model["m"]["m"].value
-        expression = self._get_expression(exp_string, functions)
+        has_eval = util.has_eval(exp_string)
+        if not has_eval:        
+            expression = self._get_expression(exp_string, functions)
 
         policy_effects = set()
         matcher_results = set()
@@ -239,7 +241,15 @@ class CoreEnforcer:
                 if len(p_tokens) != len(pvals):
                     raise RuntimeError("invalid policy size")
 
-                parameters = dict(r_parameters, **dict(zip(p_tokens, pvals)))
+                p_parameters = dict(zip(p_tokens, pvals))
+                parameters = dict(r_parameters, **p_parameters)
+
+                if util.has_eval(exp_string):
+                    rule_names = util.get_eval_value(exp_string)
+                    rules = [util.escape_assertion(p_parameters[rule_name]) for rule_name in rule_names]
+                    exp_with_rule = util.replace_eval(exp_string, rules)
+                    expression = self._get_expression(exp_with_rule, functions)
+
                 result = expression.eval(parameters)
 
                 if isinstance(result, bool):
@@ -270,6 +280,8 @@ class CoreEnforcer:
                     break
 
         else:
+            if has_eval:
+                raise RuntimeError("please make sure rule exists in policy when using eval() in matcher")
 
             parameters = r_parameters.copy()
 
