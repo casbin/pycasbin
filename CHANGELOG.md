@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/casbin/pycasbin/compare/v0.10.0...v0.11.0) (2020-12-01)
+
+
+### Features
+
+* add eval function ([9604fbf](https://github.com/casbin/pycasbin/commit/9604fbf91a22149dab531183576c8a4e7078a4d0))
+
 # [0.10.0](https://github.com/casbin/pycasbin/compare/v0.9.0...v0.10.0) (2020-11-10)
 
 
