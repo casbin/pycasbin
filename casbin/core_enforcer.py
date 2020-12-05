@@ -24,6 +24,7 @@ class CoreEnforcer:
 
     def __init__(self, model=None, adapter=None, enable_log=False):
         self.enable_log(enable_log)
+
         if isinstance(model, str):
             if isinstance(adapter, str):
                 self.init_with_file(model, adapter)

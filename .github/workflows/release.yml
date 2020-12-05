@@ -18,9 +18,18 @@ jobs:
         uses: actions/setup-node@v1
 
       - name: Setup
-        run: npm install -g semantic-release @semantic-release/github @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/npm @semantic-release/git @semantic-release/release-notes-generator
-  
+        run: npm install -g semantic-release @semantic-release/github @semantic-release/changelog @semantic-release/commit-analyzer @semantic-release/git @semantic-release/release-notes-generator semantic-release-pypi
+      
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      
+      - name: Install setuptools
+        run: python -m pip install --upgrade setuptools wheel twine
+      
       - name: Rlease
-        run: npx semantic-release  
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: npx semantic-release  
