@@ -1,3 +1,12 @@
+# Semantic Versioning Changelog
+
+# [0.12.0](https://github.com/casbin/pycasbin/compare/v0.11.0...v0.12.0) (2020-12-07)
+
+
+### Features
+
+* add semantic-release-pypi plugin ([e53d842](https://github.com/casbin/pycasbin/commit/e53d84283952b3b66720e6d50ae91030880fe839))
+
 # [0.11.0](https://github.com/casbin/pycasbin/compare/v0.10.0...v0.11.0) (2020-12-01)
 
 
