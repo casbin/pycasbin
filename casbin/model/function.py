@@ -14,6 +14,7 @@ class FunctionMap:
         fm.add_function("keyMatch2", util.key_match2_func)
         fm.add_function("regexMatch", util.regex_match_func)
         fm.add_function("ipMatch", util.ip_match_func)
+        fm.add_function("globMatch", util.glob_match_func)
 
         return fm
 
