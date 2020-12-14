@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [0.13.0](https://github.com/casbin/pycasbin/compare/v0.12.0...v0.13.0) (2020-12-14)
+
+
+### Features
+
+* add glob pattern matching using fnmatch module ([41ba828](https://github.com/casbin/pycasbin/commit/41ba828b2cecd21df79a5ec905d9d4de9506b918))
+
 # [0.12.0](https://github.com/casbin/pycasbin/compare/v0.11.0...v0.12.0) (2020-12-07)
 
 
