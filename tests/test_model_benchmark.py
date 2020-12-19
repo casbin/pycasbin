@@ -1,7 +1,8 @@
+import casbin
 import datetime
 import logging
 import sys
-from tests.test_enforcer import get_examples, get_enforcer
+from tests.test_enforcer import get_examples, TestCaseBase
 from unittest import TestCase
 
 log = logging.getLogger(__name__)
@@ -18,9 +19,9 @@ def print_time_diff(start, end, time):
     log.debug("%s %f ms" % (get_function_name(), ms))
 
 
-class TestModelBenchmark(TestCase):
+class TestModelBenchmark(TestCaseBase):
     def test_benchmark_basic_model(self):
-        e = get_enforcer(get_examples("basic_model.conf"), get_examples("basic_policy.csv"))
+        e = self.get_enforcer(get_examples("basic_model.conf"), get_examples("basic_policy.csv"))
 
         time = 10000
         start = datetime.datetime.now()
@@ -30,7 +31,7 @@ class TestModelBenchmark(TestCase):
         print_time_diff(start, end, time)
 
     def test_benchmark_rbac_model(self):
-        e = get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
 
         time = 10000
         start = datetime.datetime.now()
@@ -38,3 +39,12 @@ class TestModelBenchmark(TestCase):
             e.enforce("alice", "data2", "read")
         end = datetime.datetime.now()
         print_time_diff(start, end, time)
+
+class TestModelBenchmarkSynced(TestModelBenchmark):
+
+    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+        return casbin.SyncedEnforcer(
+            model,
+            adapter,
+            enable_log,
+        )
