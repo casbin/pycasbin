@@ -165,7 +165,7 @@ class TestConfig(TestCase):
                          get_examples("rbac_with_pattern_policy.csv"))
 
         #set matching function to key_match2
-        e.rm.add_matching_func(casbin.util.key_match2)
+        e.get_role_manager().add_matching_func(casbin.util.key_match2)
 
         self.assertTrue(e.enforce("alice", "/book/1", "GET"))
         self.assertTrue(e.enforce("alice", "/book/2", "GET"))
@@ -177,7 +177,7 @@ class TestConfig(TestCase):
         self.assertTrue(e.enforce("bob", "/pen/2", "GET"))
 
         #replace key_match2 with key_match3
-        e.rm.add_matching_func(casbin.util.key_match3)
+        e.get_role_manager().add_matching_func(casbin.util.key_match3)
         self.assertTrue(e.enforce("alice", "/book2/1", "GET"))
         self.assertTrue(e.enforce("alice", "/book2/2", "GET"))
         self.assertTrue(e.enforce("alice", "/pen2/1", "GET"))
