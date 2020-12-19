@@ -121,6 +121,10 @@ class CoreEnforcer:
         self.watcher = watcher
         pass
 
+    def get_role_manager(self):
+        """gets the current role manager."""
+        return self.rm
+
     def set_role_manager(self, rm):
         """sets the current role manager."""
 
