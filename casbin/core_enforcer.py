@@ -157,6 +157,16 @@ class CoreEnforcer:
         self.model.print_policy()
         if self.auto_build_role_links:
             self.build_role_links()
+    
+    def load_increment_filtered_policy(self,filter):
+        """LoadIncrementalFilteredPolicy append a filtered policy from file/database."""
+        if not hasattr(self.adapter, "is_filtered"):
+            raise ValueError("filtered policies are not supported by this adapter")
+
+        self.adapter.load_filtered_policy(self.model, filter)
+        self.model.print_policy()
+        if self.auto_build_role_links:
+            self.build_role_links()
 
     def is_filtered(self):
         """returns true if the loaded policy has been filtered."""

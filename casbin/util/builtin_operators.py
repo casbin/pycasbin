@@ -1,3 +1,4 @@
+import fnmatch
 import re
 import ipaddress
 
@@ -81,6 +82,20 @@ def regex_match_func(*args):
     name2 = args[1]
 
     return regex_match(name1, name2)
+
+
+def glob_match(string, pattern):
+    """determines whether string matches the pattern in glob expression."""
+    return fnmatch.fnmatch(string, pattern)
+
+
+def glob_match_func(*args):
+    """the wrapper for globMatch."""
+
+    string = args[0]
+    pattern = args[1]
+
+    return glob_match(string, pattern)
 
 
 def ip_match(ip1, ip2):
