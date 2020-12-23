@@ -1,10 +1,17 @@
-from tests.test_enforcer import get_examples, get_enforcer
-from unittest import TestCase
+import casbin
+from tests.test_enforcer import get_examples, TestCaseBase
 
+class TestManagementApi(TestCaseBase):
 
-class TestManagementApi(TestCase):
+    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+        return casbin.Enforcer(
+            model,
+            adapter,
+            enable_log,
+        )
+
     def test_get_list(self):
-        e = get_enforcer(
+        e = self.get_enforcer(
             get_examples("rbac_model.conf"),
             get_examples("rbac_policy.csv"),
             # True,
@@ -16,7 +23,7 @@ class TestManagementApi(TestCase):
         self.assertEqual(e.get_all_roles(), ['data2_admin'])
 
     def test_get_policy_api(self):
-        e = get_enforcer(
+        e = self.get_enforcer(
             get_examples("rbac_model.conf"),
             get_examples("rbac_policy.csv"),
         )
@@ -62,7 +69,7 @@ class TestManagementApi(TestCase):
         self.assertFalse(e.has_grouping_policy(['bob', 'data2_admin']))
 
     def test_modify_policy_api(self):
-        e = get_enforcer(
+        e = self.get_enforcer(
             get_examples("rbac_model.conf"),
             get_examples("rbac_policy.csv"),
             # True,
@@ -85,3 +92,12 @@ class TestManagementApi(TestCase):
             ['eve', 'data3', 'read'],
             ['eve', 'data3', 'write'],
         ])
+
+class TestManagementApiSynced(TestManagementApi):
+
+    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+        return casbin.SyncedEnforcer(
+            model,
+            adapter,
+            enable_log,
+        )

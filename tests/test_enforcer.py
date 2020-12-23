@@ -1,15 +1,7 @@
 import casbin
 import os
 from unittest import TestCase
-
-
-def get_enforcer(model=None, adapter=None, enable_log=False):
-    return casbin.Enforcer(
-        model,
-        adapter,
-        enable_log,
-    )
-
+import time
 
 def get_examples(path):
     examples_path = os.path.split(os.path.realpath(__file__))[0] + "/../examples/"
@@ -21,9 +13,18 @@ class TestSub():
         self.name = name
         self.age = age
 
-class TestConfig(TestCase):
+class TestCaseBase(TestCase):
+    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+        return casbin.Enforcer(
+            model,
+            adapter,
+            enable_log,
+        )
+
+class TestConfig(TestCaseBase):
+
     def test_enforcer_basic(self):
-        e = get_enforcer(
+        e = self.get_enforcer(
             get_examples("basic_model.conf"),
             get_examples("basic_policy.csv"),
             # True,
@@ -35,7 +36,7 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('bob', 'data1', 'write'))
 
     def test_enforcer_basic_without_spaces(self):
-        e = get_enforcer(
+        e = self.get_enforcer(
             get_examples("basic_model_without_spaces.conf"),
             get_examples("basic_policy.csv"),
             # True,
@@ -51,11 +52,11 @@ class TestConfig(TestCase):
         self.assertTrue(e.enforce("bob", "data2", "write"))
 
     def test_enforce_basic_with_root(self):
-        e = get_enforcer(get_examples("basic_with_root_model.conf"), get_examples("basic_policy.csv"))
+        e = self.get_enforcer(get_examples("basic_with_root_model.conf"), get_examples("basic_policy.csv"))
         self.assertTrue(e.enforce('root', 'any', 'any'))
 
     def test_enforce_basic_without_resources(self):
-        e = get_enforcer(get_examples("basic_without_resources_model.conf"),
+        e = self.get_enforcer(get_examples("basic_without_resources_model.conf"),
                          get_examples("basic_without_resources_policy.csv"))
         self.assertTrue(e.enforce('alice', 'read'))
         self.assertFalse(e.enforce('alice', 'write'))
@@ -63,7 +64,7 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('bob', 'read'))
 
     def test_enforce_basic_without_users(self):
-        e = get_enforcer(get_examples("basic_without_users_model.conf"),
+        e = self.get_enforcer(get_examples("basic_without_users_model.conf"),
                          get_examples("basic_without_users_policy.csv"))
         self.assertTrue(e.enforce('data1', 'read'))
         self.assertFalse(e.enforce('data1', 'write'))
@@ -71,13 +72,13 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('data2', 'read'))
 
     def test_enforce_ip_match(self):
-        e = get_enforcer(get_examples("ipmatch_model.conf"),
+        e = self.get_enforcer(get_examples("ipmatch_model.conf"),
                          get_examples("ipmatch_policy.csv"))
         self.assertTrue(e.enforce('192.168.2.1', 'data1', 'read'))
         self.assertFalse(e.enforce('192.168.3.1', 'data1', 'read'))
 
     def test_enforce_key_match(self):
-        e = get_enforcer(get_examples("keymatch_model.conf"),
+        e = self.get_enforcer(get_examples("keymatch_model.conf"),
                          get_examples("keymatch_policy.csv"))
         self.assertTrue(e.enforce('alice', '/alice_data/test', 'GET'))
         self.assertFalse(e.enforce('alice', '/bob_data/test', 'GET'))
@@ -86,13 +87,13 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('cathy', '/cathy_data/12', 'POST'))
 
     def test_enforce_key_match2(self):
-        e = get_enforcer(get_examples("keymatch2_model.conf"),
+        e = self.get_enforcer(get_examples("keymatch2_model.conf"),
                          get_examples("keymatch2_policy.csv"))
         self.assertTrue(e.enforce('alice', '/alice_data/resource', 'GET'))
         self.assertTrue(e.enforce('alice', '/alice_data2/123/using/456', 'GET'))
 
     def test_enforce_priority(self):
-        e = get_enforcer(get_examples("priority_model.conf"), get_examples("priority_policy.csv"))
+        e = self.get_enforcer(get_examples("priority_model.conf"), get_examples("priority_policy.csv"))
         self.assertTrue(e.enforce('alice', 'data1', 'read'))
         self.assertFalse(e.enforce('alice', 'data1', 'write'))
         self.assertFalse(e.enforce('alice', 'data2', 'read'))
@@ -104,11 +105,11 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('bob', 'data2', 'write'))
 
     def test_enforce_priority_indeterminate(self):
-        e = get_enforcer(get_examples("priority_model.conf"), get_examples("priority_indeterminate_policy.csv"))
+        e = self.get_enforcer(get_examples("priority_model.conf"), get_examples("priority_indeterminate_policy.csv"))
         self.assertFalse(e.enforce('alice', 'data1', 'read'))
 
     def test_enforce_rbac(self):
-        e = get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
         self.assertTrue(e.enforce('alice', 'data1', 'read'))
         self.assertFalse(e.enforce('bob', 'data1', 'read'))
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
@@ -117,7 +118,7 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('bogus', 'data2', 'write'))  # test non-existant subject
 
     def test_enforce_rbac__empty_policy(self):
-        e = get_enforcer(get_examples("rbac_model.conf"), get_examples("empty_policy.csv"))
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("empty_policy.csv"))
         self.assertFalse(e.enforce('alice', 'data1', 'read'))
         self.assertFalse(e.enforce('bob', 'data1', 'read'))
         self.assertFalse(e.enforce('bob', 'data2', 'write'))
@@ -125,14 +126,14 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce('alice', 'data2', 'write'))
 
     def test_enforce_rbac_with_deny(self):
-        e = get_enforcer(get_examples("rbac_with_deny_model.conf"), get_examples("rbac_with_deny_policy.csv"))
+        e = self.get_enforcer(get_examples("rbac_with_deny_model.conf"), get_examples("rbac_with_deny_policy.csv"))
         self.assertTrue(e.enforce('alice', 'data1', 'read'))
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
         self.assertTrue(e.enforce('alice', 'data2', 'read'))
         self.assertFalse(e.enforce('alice', 'data2', 'write'))
 
     def test_enforce_rbac_with_domains(self):
-        e = get_enforcer(get_examples("rbac_with_domains_model.conf"), get_examples("rbac_with_domains_policy.csv"))
+        e = self.get_enforcer(get_examples("rbac_with_domains_model.conf"), get_examples("rbac_with_domains_policy.csv"))
         self.assertTrue(e.enforce('alice', 'domain1', 'data1', 'read'))
         self.assertTrue(e.enforce('alice', 'domain1', 'data1', 'write'))
         self.assertFalse(e.enforce('alice', 'domain1', 'data2', 'read'))
@@ -144,11 +145,11 @@ class TestConfig(TestCase):
         self.assertTrue(e.enforce('bob', 'domain2', 'data2', 'write'))
 
     def test_enforce_rbac_with_not_deny(self):
-        e = get_enforcer(get_examples("rbac_with_not_deny_model.conf"), get_examples("rbac_with_deny_policy.csv"))
+        e = self.get_enforcer(get_examples("rbac_with_not_deny_model.conf"), get_examples("rbac_with_deny_policy.csv"))
         self.assertFalse(e.enforce('alice', 'data2', 'write'))
 
     def test_enforce_rbac_with_resource_roles(self):
-        e = get_enforcer(get_examples("rbac_with_resource_roles_model.conf"),
+        e = self.get_enforcer(get_examples("rbac_with_resource_roles_model.conf"),
                          get_examples("rbac_with_resource_roles_policy.csv"))
         self.assertTrue(e.enforce('alice', 'data1', 'read'))
         self.assertTrue(e.enforce('alice', 'data1', 'write'))
@@ -161,11 +162,11 @@ class TestConfig(TestCase):
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
 
     def test_enforce_rbac_with_pattern(self):
-        e = get_enforcer(get_examples("rbac_with_pattern_model.conf"),
+        e = self.get_enforcer(get_examples("rbac_with_pattern_model.conf"),
                          get_examples("rbac_with_pattern_policy.csv"))
 
         #set matching function to key_match2
-        e.rm.add_matching_func(casbin.util.key_match2)
+        e.get_role_manager().add_matching_func(casbin.util.key_match2)
 
         self.assertTrue(e.enforce("alice", "/book/1", "GET"))
         self.assertTrue(e.enforce("alice", "/book/2", "GET"))
@@ -177,7 +178,7 @@ class TestConfig(TestCase):
         self.assertTrue(e.enforce("bob", "/pen/2", "GET"))
 
         #replace key_match2 with key_match3
-        e.rm.add_matching_func(casbin.util.key_match3)
+        e.get_role_manager().add_matching_func(casbin.util.key_match3)
         self.assertTrue(e.enforce("alice", "/book2/1", "GET"))
         self.assertTrue(e.enforce("alice", "/book2/2", "GET"))
         self.assertTrue(e.enforce("alice", "/pen2/1", "GET"))
@@ -188,7 +189,7 @@ class TestConfig(TestCase):
         self.assertTrue(e.enforce("bob", "/pen2/2", "GET"))
 
     def test_enforce_abac_log_enabled(self):
-        e = get_enforcer(get_examples("abac_model.conf"), enable_log=True)
+        e = self.get_enforcer(get_examples("abac_model.conf"), enable_log=True)
         e.enable_log(True)
 
         sub = 'alice'
@@ -196,7 +197,7 @@ class TestConfig(TestCase):
         self.assertTrue(e.enforce(sub, obj, 'write'))
 
     def test_abac_with_sub_rule(self):
-        e = get_enforcer(get_examples("abac_rule_model.conf"),
+        e = self.get_enforcer(get_examples("abac_rule_model.conf"),
                          get_examples("abac_rule_policy.csv"))
 
         sub1 = TestSub("alice", 16)
@@ -219,7 +220,7 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce(sub3, "/data2", "write"))
 
     def test_abac_with_multiple_sub_rules(self):
-        e = get_enforcer(get_examples("abac_multiple_rules_model.conf"),
+        e = self.get_enforcer(get_examples("abac_multiple_rules_model.conf"),
                          get_examples("abac_multiple_rules_policy.csv"))
 
         sub1 = TestSub("alice", 16)
@@ -246,3 +247,27 @@ class TestConfig(TestCase):
         self.assertFalse(e.enforce(sub4, "/data2", "read"))
         self.assertFalse(e.enforce(sub4, "/data1", "write"))
         self.assertTrue(e.enforce(sub4, "/data2", "write"))
+
+class TestConfigSynced(TestConfig):
+
+    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+        return casbin.SyncedEnforcer(
+            model,
+            adapter,
+            enable_log,
+        )
+
+    def test_auto_loading_policy(self):
+        e = self.get_enforcer(
+            get_examples("basic_model.conf"),
+            get_examples("basic_policy.csv"),
+            # True,
+        )
+
+        e.start_auto_load_policy(5/1000)
+        self.assertTrue(e.is_auto_loading_running())
+        e.stop_auto_load_policy()
+        #thread needs a moment to exit
+        time.sleep(10/1000)
+        self.assertFalse(e.is_auto_loading_running())
+        
