@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+# [0.14.0](https://github.com/casbin/pycasbin/compare/v0.13.0...v0.14.0) (2020-12-23)
+
+
+### Features
+
+* add function get_role_manager ([7fb1879](https://github.com/casbin/pycasbin/commit/7fb1879e3bbdc77ea5e01ac46f96d81f917cb6fe))
+* add SyncedEnforcer ([9439272](https://github.com/casbin/pycasbin/commit/94392722a1fd4680a7f4072ae20b176e8225be15))
+
 # [0.13.0](https://github.com/casbin/pycasbin/compare/v0.12.0...v0.13.0) (2020-12-14)
 
 
