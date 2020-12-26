@@ -1,12 +1,10 @@
 from casbin import persist
 import os
 
-
 class FileAdapter(persist.Adapter):
     """the file adapter for Casbin.
     It can load policy from file or save policy to file.
     """
-
     _file_path = ""
 
     def __init__(self, file_path):
@@ -55,13 +53,4 @@ class FileAdapter(persist.Adapter):
         pass
 
     def remove_policy(self, sec, ptype, rule):
-        pass
-
-    def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
-        pass
-
-    def is_filtered(self):
-        return False
-
-    def load_filtered_policy(self, model, filter):
         pass
