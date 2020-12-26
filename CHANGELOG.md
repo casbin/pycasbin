@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [0.15.0](https://github.com/casbin/pycasbin/compare/v0.14.0...v0.15.0) (2020-12-26)
+
+
+### Features
+
+* add filtered_adapter ([ee817b5](https://github.com/casbin/pycasbin/commit/ee817b521b94aaf90533906efd158c761b25f9f4))
+
 # [0.14.0](https://github.com/casbin/pycasbin/compare/v0.13.0...v0.14.0) (2020-12-23)
 
 
