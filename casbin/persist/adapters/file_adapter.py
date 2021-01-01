@@ -51,6 +51,12 @@ class FileAdapter(persist.Adapter):
 
     def add_policy(self, sec, ptype, rule):
         pass
+    
+    def add_policies(self,sec,ptype,rules):
+        pass
 
     def remove_policy(self, sec, ptype, rule):
+        pass
+
+    def remove_policies(self,sec,ptype,rules):
         pass
