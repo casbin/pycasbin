@@ -1,6 +1,4 @@
-
 from casbin.core_enforcer import CoreEnforcer
-
 
 class InternalEnforcer(CoreEnforcer):
     """
@@ -21,7 +19,22 @@ class InternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rule_added
+    
+    def _add_policies(self,sec,ptype,rules):
+        """adds rules to the current policy."""
+        rules_added = self.model.add_policies(sec, ptype, rules)
+        if not rules_added:
+            return rules_added
 
+        if self.adapter and self.auto_save:
+            if self.adapter.add_policies(sec, ptype, rules) is False:
+                return False
+
+            if self.watcher:
+                self.watcher.update()
+
+        return rules_added
+    
     def _remove_policy(self, sec, ptype, rule):
         """removes a rule from the current policy."""
         rule_removed = self.model.remove_policy(sec, ptype, rule)
@@ -36,6 +49,21 @@ class InternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rule_removed
+
+    def _remove_policies(self, sec, ptype, rules):
+        """RemovePolicies removes policy rules from the model."""
+        rules_removed = self.model.remove_policies(sec, ptype, rules)
+        if not rules_removed:
+            return rules_removed
+
+        if self.adapter and self.auto_save:
+            if self.adapter.remove_policies(sec, ptype, rules) is False:
+                return False
+
+            if self.watcher:
+                self.watcher.update()
+
+        return rules_removed
 
     def _remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes rules based on field filters from the current policy."""
