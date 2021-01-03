@@ -137,7 +137,7 @@ class TestManagementApi(TestCaseBase):
             ['eve', 'data3', 'read'],
             ['eve', 'data3', 'write'],
         ])
-"""
+
 class TestManagementApiSynced(TestManagementApi):
 
     def get_enforcer(self, model=None, adapter=None, enable_log=False):
@@ -146,4 +146,3 @@ class TestManagementApiSynced(TestManagementApi):
             adapter,
             enable_log,
         )
-"""

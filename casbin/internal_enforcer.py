@@ -27,6 +27,9 @@ class InternalEnforcer(CoreEnforcer):
             return rules_added
 
         if self.adapter and self.auto_save:
+            if hasattr(self.adapter,'add_policies') is False:
+                return False
+                
             if self.adapter.add_policies(sec, ptype, rules) is False:
                 return False
 
@@ -57,6 +60,9 @@ class InternalEnforcer(CoreEnforcer):
             return rules_removed
 
         if self.adapter and self.auto_save:
+            if hasattr(self.adapter,'remove_policies') is False:
+                return False
+
             if self.adapter.remove_policies(sec, ptype, rules) is False:
                 return False
 
