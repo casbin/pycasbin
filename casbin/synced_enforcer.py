@@ -19,7 +19,7 @@ class AtomicBool():
         with self._lock:
             self._value = value
 
-class SyncedEnforcer(Enforcer):
+class SyncedEnforcer():
 
     """SyncedEnforcer wraps Enforcer and provides synchronized access. 
     It's also a drop-in replacement for Enforcer"""
@@ -506,3 +506,57 @@ class SyncedEnforcer(Enforcer):
         """returns true if the loaded policy has been filtered."""
         with self._rl:
             self._e.is_filtered()
+
+    def add_policies(self,rules):
+        """adds authorization rules to the current policy.
+        
+        If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
+        Otherwise the function returns true for the corresponding rule by adding the new rule.
+        """
+        with self._wl:
+            return self._e.add_policies(rules)
+
+    def add_named_policies(self,ptype,rules):
+        """adds authorization rules to the current named policy.
+        
+        If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
+        Otherwise the function returns true for the corresponding by adding the new rule."""
+        with self._wl:
+            return self._e.add_named_policies(ptype,rules)
+
+    def remove_policies(self,rules):
+        """removes authorization rules from the current policy."""
+        with self._wl:
+            return self._e.remove_policies(rules)
+
+    def remove_named_policies(self,ptype,rules):
+        """removes authorization rules from the current named policy."""
+        with self._wl:
+            return self._e.remove_named_policies(ptype,rules)
+
+    def add_grouping_policies(self,rules):
+        """adds role inheritance rulea to the current policy.
+        
+        If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
+        Otherwise the function returns true for the corresponding policy rule by adding the new rule.
+        """
+        with self._wl:
+            return self._e.add_grouping_policies(rules)
+
+    def add_named_grouping_policies(self,ptype,rules):
+        """"adds named role inheritance rules to the current policy.
+        
+        If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
+        Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
+        with self._wl:
+            return self._e.add_named_grouping_policies(ptype,rules)
+
+    def remove_grouping_policies(self,rules):
+        """removes role inheritance rulea from the current policy."""
+        with self._wl:
+            return self._e.addremove_grouping_policies_policies(rules)
+
+    def remove_named_grouping_policies(self,ptype,rules):
+        """ removes role inheritance rules from the current named policy."""
+        with self._wl:
+            return self._e.remove_named_grouping_policies(ptype,rules)

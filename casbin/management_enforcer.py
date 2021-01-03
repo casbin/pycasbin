@@ -1,6 +1,5 @@
 from casbin.internal_enforcer import InternalEnforcer
 
-
 class ManagementEnforcer(InternalEnforcer):
     """
         ManagementEnforcer = InternalEnforcer + Management API.
