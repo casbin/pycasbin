@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+# [0.16.0](https://github.com/casbin/pycasbin/compare/v0.15.0...v0.16.0) (2021-01-09)
+
+
+### Features
+
+* add batch api to SyncedEnforcer ([9191ccd](https://github.com/casbin/pycasbin/commit/9191ccd72cbeed6e36303d4cbf0407b626718421))
+* add batch_adapter ([9470c3e](https://github.com/casbin/pycasbin/commit/9470c3ebf678ac4c64bffea623fb9a974f4f2e95))
+
 # [0.15.0](https://github.com/casbin/pycasbin/compare/v0.14.0...v0.15.0) (2020-12-26)
 
 
