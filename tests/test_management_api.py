@@ -74,7 +74,6 @@ class TestManagementApi(TestCaseBase):
             get_examples("rbac_policy.csv"),
             # True,
         )
-
         self.assertEqual(e.get_policy(), [
             ['alice', 'data1', 'read'],
             ['bob', 'data2', 'write'],
@@ -84,6 +83,52 @@ class TestManagementApi(TestCaseBase):
 
         e.add_policy('eve', 'data3', 'read')
         e.add_named_policy('p', ['eve', 'data3', 'write'])
+        self.assertEqual(e.get_policy(), [
+            ['alice', 'data1', 'read'],
+            ['bob', 'data2', 'write'],
+            ['data2_admin', 'data2', 'read'],
+            ['data2_admin', 'data2', 'write'],
+            ['eve', 'data3', 'read'],
+            ['eve', 'data3', 'write'],
+        ])
+        
+        rules = [
+        ['jack', 'data4', 'read'],
+        ['katy', 'data4', 'write'],
+        ['leyo', 'data4', 'read'],
+        ['ham', 'data4', 'write']
+        ]
+
+        named_policies = [
+        ['jack', 'data4', 'write'],
+        ['katy', 'data4', 'read'],
+        ['leyo', 'data4', 'write'],
+        ['ham', 'data4', 'read']
+        ]
+        e.add_policies(rules)
+        e.add_named_policies('p',named_policies)
+        
+        self.assertEqual(e.get_policy(), [
+            ['alice', 'data1', 'read'],
+            ['bob', 'data2', 'write'],
+            ['data2_admin', 'data2', 'read'],
+            ['data2_admin', 'data2', 'write'],
+            ['eve', 'data3', 'read'],
+            ['eve', 'data3', 'write'],
+            ["jack", "data4", "read"],
+            ["katy", "data4", "write"],
+            ["leyo", "data4", "read"],
+            ["ham", "data4", "write"],
+            ['jack', 'data4', 'write'],
+            ['katy', 'data4', 'read'],
+            ['leyo', 'data4', 'write'],
+            ['ham', 'data4', 'read']
+            ]
+        )
+
+        e.remove_policies(rules)
+        e.remove_named_policies('p',named_policies)
+
         self.assertEqual(e.get_policy(), [
             ['alice', 'data1', 'read'],
             ['bob', 'data2', 'write'],

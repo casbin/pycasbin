@@ -1,6 +1,5 @@
 from casbin.internal_enforcer import InternalEnforcer
 
-
 class ManagementEnforcer(InternalEnforcer):
     """
         ManagementEnforcer = InternalEnforcer + Management API.
@@ -94,6 +93,14 @@ class ManagementEnforcer(InternalEnforcer):
         Otherwise the function returns true by adding the new rule.
         """
         return self.add_named_policy('p', *params)
+    
+    def add_policies(self,rules):
+        """adds authorization rules to the current policy.
+        
+        If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
+        Otherwise the function returns true for the corresponding rule by adding the new rule.
+        """
+        return self.add_named_policies('p',rules)
 
     def add_named_policy(self, ptype, *params):
         """adds an authorization rule to the current named policy.
@@ -115,9 +122,20 @@ class ManagementEnforcer(InternalEnforcer):
 
         return rule_added
 
+    def add_named_policies(self,ptype,rules):
+        """adds authorization rules to the current named policy.
+        
+        If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
+        Otherwise the function returns true for the corresponding by adding the new rule."""
+        return self._add_policies('p',ptype,rules)
+
     def remove_policy(self, *params):
         """removes an authorization rule from the current policy."""
         return self.remove_named_policy('p', *params)
+
+    def remove_policies(self,rules):
+        """removes authorization rules from the current policy."""
+        return self.remove_named_policies('p',rules)
 
     def remove_filtered_policy(self, field_index, *field_values):
         """removes an authorization rule from the current policy, field filters can be specified."""
@@ -139,6 +157,10 @@ class ManagementEnforcer(InternalEnforcer):
 
         return rule_removed
 
+    def remove_named_policies(self,ptype,rules):
+        """removes authorization rules from the current named policy."""
+        return self._remove_policies('p',ptype,rules)
+
     def remove_filtered_named_policy(self, ptype, field_index, *field_values):
         """removes an authorization rule from the current named policy, field filters can be specified."""
         return self._remove_filtered_policy('p', ptype, field_index, *field_values)
@@ -146,7 +168,7 @@ class ManagementEnforcer(InternalEnforcer):
     def has_grouping_policy(self, *params):
         """determines whether a role inheritance rule exists."""
 
-        return self.has_named_grouping_policy("g", *params)
+        return self.has_named_grouping_policy('g', *params)
 
     def has_named_grouping_policy(self, ptype, *params):
         """determines whether a named role inheritance rule exists."""
@@ -170,6 +192,14 @@ class ManagementEnforcer(InternalEnforcer):
         """
         return self.add_named_grouping_policy('g', *params)
 
+    def add_grouping_policies(self,rules):
+        """adds role inheritance rulea to the current policy.
+        
+        If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
+        Otherwise the function returns true for the corresponding policy rule by adding the new rule.
+        """
+        return self.add_named_grouping_policies('g',rules)
+
     def add_named_grouping_policy(self, ptype, *params):
         """adds a named role inheritance rule to the current policy.
 
@@ -192,9 +222,24 @@ class ManagementEnforcer(InternalEnforcer):
             self.build_role_links()
         return rule_added
 
+    def add_named_grouping_policies(self,ptype,rules):
+        """"adds named role inheritance rules to the current policy.
+        
+        If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
+        Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
+        rules_added = self._add_policies('g',ptype,rules)
+        if self.auto_build_role_links:
+            self.build_role_links()
+        
+        return rules_added
+
     def remove_grouping_policy(self, *params):
         """removes a role inheritance rule from the current policy."""
         return self.remove_named_grouping_policy('g', *params)
+
+    def remove_grouping_policies(self,rules):
+        """removes role inheritance rulea from the current policy."""
+        return self.remove_named_grouping_policies('g',rules)
 
     def remove_filtered_grouping_policy(self, field_index, *field_values):
         """removes a role inheritance rule from the current policy, field filters can be specified."""
@@ -217,6 +262,15 @@ class ManagementEnforcer(InternalEnforcer):
         if self.auto_build_role_links:
             self.build_role_links()
         return rule_removed
+    
+    def remove_named_grouping_policies(self,ptype,rules):
+        """ removes role inheritance rules from the current named policy."""
+        rules_removed = self._remove_policies('g',ptype,rules)
+
+        if self.auto_build_role_links:
+            self.build_role_links()
+        
+        return rules_removed
 
     def remove_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
         """removes a role inheritance rule from the current named policy, field filters can be specified."""
