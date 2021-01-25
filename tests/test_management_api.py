@@ -3,11 +3,10 @@ from tests.test_enforcer import get_examples, TestCaseBase
 
 class TestManagementApi(TestCaseBase):
 
-    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+    def get_enforcer(self, model=None, adapter=None):
         return casbin.Enforcer(
             model,
             adapter,
-            enable_log,
         )
 
     def test_get_list(self):
@@ -129,6 +128,7 @@ class TestManagementApi(TestCaseBase):
         e.remove_policies(rules)
         e.remove_named_policies('p',named_policies)
 
+        e.add_named_policy('p', 'testing')
         self.assertEqual(e.get_policy(), [
             ['alice', 'data1', 'read'],
             ['bob', 'data2', 'write'],
@@ -136,13 +136,13 @@ class TestManagementApi(TestCaseBase):
             ['data2_admin', 'data2', 'write'],
             ['eve', 'data3', 'read'],
             ['eve', 'data3', 'write'],
+            ['testing']
         ])
 
 class TestManagementApiSynced(TestManagementApi):
 
-    def get_enforcer(self, model=None, adapter=None, enable_log=False):
+    def get_enforcer(self, model=None, adapter=None):
         return casbin.SyncedEnforcer(
             model,
             adapter,
-            enable_log,
         )

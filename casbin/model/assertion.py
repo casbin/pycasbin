@@ -1,8 +1,9 @@
-from casbin import log
+import logging
 
 
 class Assertion:
     def __init__(self):
+        self.logger = logging.getLogger()
         self.key = ""
         self.value = ""
         self.tokens = []
@@ -22,5 +23,5 @@ class Assertion:
 
             self.rm.add_link(*rule[:count])
 
-        log.log_print("Role links for: " + self.key)
+        self.logger.info("Role links for: {}".format(self.key))
         self.rm.print_roles()
