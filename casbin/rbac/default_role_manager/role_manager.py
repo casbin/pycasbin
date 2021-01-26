@@ -30,11 +30,6 @@ class RoleManager(RoleManager):
         if name not in self.all_roles.keys():
             self.all_roles[name] = Role(name)
 
-        if self.matching_func is not None:
-            for key, role in self.all_roles.items():
-                if self.matching_func(name, key) and name != key:
-                    self.all_roles[name].add_role(role)
-
         return self.all_roles[name]
 
     def clear(self):
@@ -50,6 +45,17 @@ class RoleManager(RoleManager):
         role1 = self.create_role(name1)
         role2 = self.create_role(name2)
         role1.add_role(role2)
+
+        if self.matching_func is not None:
+            for key, role in self.all_roles.items():
+                if self.matching_func(key, name1) and name1 != key:
+                    self.all_roles[key].add_role(role1)
+                if self.matching_func(key, name2) and name2 != key:
+                    self.all_roles[name2].add_role(role)
+                if self.matching_func(name1, key) and name1 != key:
+                    self.all_roles[key].add_role(role1)
+                if self.matching_func(name2, key) and name2 != key:
+                    self.all_roles[name2].add_role(role)
 
     def delete_link(self, name1, name2, *domain):
         if len(domain) == 1:
@@ -78,9 +84,14 @@ class RoleManager(RoleManager):
         if not self.has_role(name1) or not self.has_role(name2):
             return False
 
-        role1 = self.create_role(name1)
-
-        return role1.has_role(name2, self.max_hierarchy_level)
+        if self.matching_func is None:
+            role1 = self.create_role(name1)
+            return role1.has_role(name2, self.max_hierarchy_level)
+        else:
+            for key, role in self.all_roles.items():
+                if self.matching_func(name1, key) and role.has_role(name2, self.max_hierarchy_level, self.matching_func):
+                    return True
+            return False        
 
     def get_roles(self, name, *domain):
         """
@@ -158,23 +169,27 @@ class Role:
                 self.roles.remove(rr)
                 return
 
-    def has_role(self, name, hierarchy_level):
-        if name == self.name:
+    def has_role(self, name, hierarchy_level, matching_func=None):
+        if self.has_direct_role(name, matching_func):
             return True
         if hierarchy_level <= 0:
             return False
 
         for role in self.roles:
-            if role.has_role(name, hierarchy_level - 1):
+            if role.has_role(name, hierarchy_level - 1, matching_func):
                 return True
 
         return False
 
-    def has_direct_role(self, name):
-        for role in self.roles:
-            if role.name == name:
-                return True
-
+    def has_direct_role(self, name, matching_func=None):
+        if matching_func is None:
+            for role in self.roles:
+                if role.name == name:
+                    return True
+        else:
+            for role in self.roles:
+                if matching_func(name, role.name):
+                    return True
         return False
 
     def to_string(self):
