@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [0.16.1](https://github.com/casbin/pycasbin/compare/v0.16.0...v0.16.1) (2021-01-29)
+
+
+### Bug Fixes
+
+* role manager with matching_func ([8079cda](https://github.com/casbin/pycasbin/commit/8079cda8a28409e9502508fe2bdf9b0bddac3f98))
+
 # [0.16.0](https://github.com/casbin/pycasbin/compare/v0.15.0...v0.16.0) (2021-01-09)
 
 
