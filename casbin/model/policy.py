@@ -4,7 +4,7 @@ import logging
 
 class Policy:
     def __init__(self):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger("casbin.policy")
         self.model = {}
 
     def build_role_links(self, rm):

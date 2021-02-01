@@ -3,7 +3,7 @@ import logging
 
 class Assertion:
     def __init__(self):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger("casbin.assertion")
         self.key = ""
         self.value = ""
         self.tokens = []

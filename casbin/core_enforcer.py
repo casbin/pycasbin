@@ -23,7 +23,7 @@ class CoreEnforcer:
     auto_build_role_links = False
 
     def __init__(self, model=None, adapter=None):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger("casbin.enforcer")
         if isinstance(model, str):
             if isinstance(adapter, str):
                 self.init_with_file(model, adapter)
