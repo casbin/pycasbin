@@ -1,5 +1,6 @@
-from casbin import util
 import logging
+
+from casbin import util
 
 
 class Policy:
@@ -87,6 +88,14 @@ class Policy:
             self.model[sec][ptype].policy.append(rule)
         
         return True
+
+    def update_policy(self, sec, ptype, oldRule, newRule):
+        """update a policy rule from the model."""
+
+        if not self.has_policy(sec, ptype, oldRule):
+            return False
+
+        return self.remove_policy(sec, ptype, oldRule) and self.add_policy(sec, ptype, newRule)
 
     def remove_policy(self, sec, ptype, rule):
         """removes a policy rule from the model."""

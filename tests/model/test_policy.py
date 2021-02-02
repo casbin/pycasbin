@@ -1,4 +1,5 @@
 from unittest import TestCase
+
 from casbin.model import Model
 from tests.test_enforcer import get_examples
 
@@ -52,6 +53,20 @@ class TestPolicy(TestCase):
 
         self.assertTrue(m.get_policy('p', 'p') == [p_rule1, p_rule2])
         self.assertTrue(m.get_policy('g', 'g') == [g_rule])
+
+    def test_update_policy(self):
+        m = Model()
+        m.load_model(get_examples("basic_model.conf"))
+
+        oldRule = ['admin', 'domain1', 'data1', 'read']
+        newRule = ['admin', 'domain1', 'data2', 'read']
+
+        m.add_policy('p', 'p', oldRule)
+        self.assertTrue(m.has_policy('p', 'p', oldRule))
+
+        m.update_policy('p', 'p', oldRule, newRule)
+        self.assertFalse(m.has_policy('p', 'p', oldRule))
+        self.assertTrue(m.has_policy('p', 'p', newRule))
 
     def test_remove_policy(self):
         m = Model()
