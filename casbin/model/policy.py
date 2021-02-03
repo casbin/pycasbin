@@ -91,11 +91,6 @@ class Policy:
     def remove_policy(self, sec, ptype, rule):
         """removes a policy rule from the model."""
 
-        if sec not in self.model.keys():
-            return False
-        if ptype not in self.model[sec]:
-            return False
-
         if not self.has_policy(sec, ptype, rule):
             return False
 
@@ -105,11 +100,6 @@ class Policy:
 
     def remove_policies(self, sec, ptype, rules):
         """RemovePolicies removes policy rules from the model."""
-
-        if sec not in self.model.keys():
-            return False
-        if ptype not in self.model[sec]:
-            return False
 
         for rule in rules:
             if not self.has_policy(sec,ptype,rule):
