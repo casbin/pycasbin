@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [0.16.2](https://github.com/casbin/pycasbin/compare/v0.16.1...v0.16.2) (2021-02-03)
+
+
+### Performance Improvements
+
+* remove duplicated check ([#117](https://github.com/casbin/pycasbin/issues/117)) ([6aebadf](https://github.com/casbin/pycasbin/commit/6aebadf0a344e453ca2a1e9c0ae3b0d2f1c3d2c7))
+
 ## [0.16.1](https://github.com/casbin/pycasbin/compare/v0.16.0...v0.16.1) (2021-01-29)
 
 
