@@ -37,6 +37,40 @@ class InternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rules_added
+
+    def _update_policy(self, sec, ptype, old_rule, new_rule):
+        """updates a rule from the current policy."""
+        rule_updated = self.model.update_policy(sec, ptype, old_rule, new_rule)
+
+        if not rule_updated:
+            return rule_updated
+
+        if self.adapter and self.auto_save:
+
+            if self.adapter.update_policy(sec, ptype, old_rule, new_rule) is False:
+                return False
+
+            if self.watcher:
+                self.watcher.update()
+
+        return rule_updated
+
+    def _update_policies(self, sec, ptype, old_rules, new_rules):
+        """updates rules from the current policy."""
+        rules_updated = self.model.update_policies(sec, ptype, old_rules, new_rules)
+
+        if not rules_updated:
+            return rules_updated
+
+        if self.adapter and self.auto_save:
+
+            if self.adapter.update_policies(sec, ptype, old_rules, new_rules) is False:
+                return False
+
+            if self.watcher:
+                self.watcher.update()
+
+        return rules_updated
     
     def _remove_policy(self, sec, ptype, rule):
         """removes a rule from the current policy."""

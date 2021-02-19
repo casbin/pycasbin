@@ -129,6 +129,22 @@ class ManagementEnforcer(InternalEnforcer):
         Otherwise the function returns true for the corresponding by adding the new rule."""
         return self._add_policies('p',ptype,rules)
 
+    def update_policy(self, old_rule, new_rule):
+        """updates an authorization rule from the current policy."""
+        return self.update_named_policy('p', old_rule, new_rule)
+
+    def update_policies(self, old_rules, new_rules):
+        """updates authorization rules from the current policy."""
+        return self.update_named_policies('p', old_rules, new_rules)
+
+    def update_named_policy(self, ptype, old_rule, new_rule):
+        """updates an authorization rule from the current named policy."""
+        return self._update_policy('p', ptype, old_rule, new_rule)
+
+    def update_named_policies(self, ptype, old_rules, new_rules):
+        """updates authorization rules from the current named policy."""
+        return self._update_policies('p', ptype, old_rules, new_rules)
+
     def remove_policy(self, *params):
         """removes an authorization rule from the current policy."""
         return self.remove_named_policy('p', *params)
