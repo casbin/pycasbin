@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [0.17.0](https://github.com/casbin/pycasbin/compare/v0.16.2...v0.17.0) (2021-02-19)
+
+
+### Features
+
+* add update_policy() ([7f7d26f](https://github.com/casbin/pycasbin/commit/7f7d26fe3f6cddcf54a2e42cef83565eb21e202c))
+
 ## [0.16.2](https://github.com/casbin/pycasbin/compare/v0.16.1...v0.16.2) (2021-02-03)
 
 
