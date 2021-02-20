@@ -221,8 +221,7 @@ class CoreEnforcer:
         try:
             self.rm[ptype].add_matching_func(fn)
             return True
-        except Exception as e:
-            print(e)
+        except:
             return False
 
     def add_named_domain_matching_func(self, ptype, fn):
