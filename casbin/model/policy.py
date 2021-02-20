@@ -14,8 +14,9 @@ class Policy:
         if "g" not in self.model.keys():
             return
 
-        for ast in self.model["g"].values():
-            ast.build_role_links(rm)
+        for ptype,ast in self.model["g"].items():
+            onerm = rm[ptype]
+            ast.build_role_links(onerm)
 
     def print_policy(self):
         """Log using info"""

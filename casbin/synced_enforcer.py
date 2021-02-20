@@ -1,7 +1,9 @@
-from casbin.enforcer import Enforcer
-from casbin.util.rwlock import RWLockWrite
 import threading
 import time
+
+from casbin.enforcer import Enforcer
+from casbin.util.rwlock import RWLockWrite
+
 
 class AtomicBool():
 
@@ -496,6 +498,16 @@ class SyncedEnforcer():
         """
         with self._wl:
             return self._e.enable_enforce(enabled)
+
+    def add_named_matching_func(self, ptype, fn):
+        """add_named_matching_func add MatchingFunc by ptype RoleManager"""
+        with self._wl:
+            self._e.add_named_matching_func(ptype, fn)
+
+    def add_named_domain_matching_func(self, ptype, fn):
+        """add_named_domain_matching_func add MatchingFunc by ptype to RoleManager"""
+        with self._wl:
+            self._e.add_named_domain_matching_func(ptype, fn)
 
     def is_filtered(self):
         """returns true if the loaded policy has been filtered."""
