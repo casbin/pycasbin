@@ -138,8 +138,8 @@ class Enforcer(ManagementEnforcer):
             name = q[0]
             q = q[1:]
 
-            for onerm in self.rm.values():
-                roles = onerm.get_roles(name, *domain)
+            for rm in self.rmMap.values():
+                roles = rm.get_roles(name, *domain)
                 for r in roles:
                     if r not in roleSet:
                         res.append(r)
