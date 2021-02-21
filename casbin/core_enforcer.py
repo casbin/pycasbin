@@ -212,8 +212,8 @@ class CoreEnforcer:
     def build_role_links(self):
         """manually rebuild the role inheritance relations."""
 
-        for onerm in self.rmMap.values():
-            onerm.clear()
+        for rm in self.rmMap.values():
+            rm.clear()
             self.model.build_role_links(self.rmMap)
 
     def add_named_matching_func(self, ptype, fn):

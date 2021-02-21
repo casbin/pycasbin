@@ -8,15 +8,15 @@ class Policy:
         self.logger = logging.getLogger()
         self.model = {}
 
-    def build_role_links(self, rm):
+    def build_role_links(self, rmMap):
         """initializes the roles in RBAC."""
 
         if "g" not in self.model.keys():
             return
 
-        for ptype,ast in self.model["g"].items():
-            onerm = rm[ptype]
-            ast.build_role_links(onerm)
+        for ptype, ast in self.model["g"].items():
+            rm = rmMap[ptype]
+            ast.build_role_links(rm)
 
     def print_policy(self):
         """Log using info"""
