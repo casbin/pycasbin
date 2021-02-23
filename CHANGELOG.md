@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [0.18.0](https://github.com/casbin/pycasbin/compare/v0.17.0...v0.18.0) (2021-02-23)
+
+
+### Features
+
+* add AddNamedDomainMatchingFunc and AddNamedMatchingFunc to enforcer ([#122](https://github.com/casbin/pycasbin/issues/122)) ([e01f393](https://github.com/casbin/pycasbin/commit/e01f393c8c41a954b201ecf9de2ad2350f87b651))
+
 # [0.17.0](https://github.com/casbin/pycasbin/compare/v0.16.2...v0.17.0) (2021-02-19)
 
 
