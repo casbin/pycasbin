@@ -1,5 +1,6 @@
-from casbin.rbac import RoleManager
 import logging
+
+from casbin.rbac import RoleManager
 
 
 class RoleManager(RoleManager):
@@ -8,14 +9,23 @@ class RoleManager(RoleManager):
     all_roles = dict()
     max_hierarchy_level = 0
 
+
     def __init__(self, max_hierarchy_level):
         self.logger = logging.getLogger()
         self.all_roles = dict()
         self.max_hierarchy_level = max_hierarchy_level
         self.matching_func = None
+        self.domain_matching_func = None
+        self.has_pattern = None
+        self.has_domain_pattern = None
 
-    def add_matching_func(self, fn):
+    def add_matching_func(self, fn=None):
+        self.has_pattern = True
         self.matching_func = fn
+
+    def add_domain_matching_func(self, fn=None):
+        self.has_domain_pattern = True
+        self.domain_matching_func = fn
 
     def has_role(self, name):
         if self.matching_func is None:

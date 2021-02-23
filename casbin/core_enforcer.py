@@ -1,9 +1,10 @@
-from casbin.persist.adapters import FileAdapter
+import logging
+
+from casbin.effect import DefaultEffector, Effector
 from casbin.model import Model, FunctionMap
+from casbin.persist.adapters import FileAdapter
 from casbin.rbac import default_role_manager
 from casbin.util import generate_g_function, SimpleEval, util
-from casbin.effect import DefaultEffector, Effector
-import logging
 
 
 class CoreEnforcer:
@@ -16,7 +17,7 @@ class CoreEnforcer:
 
     adapter = None
     watcher = None
-    rm = None
+    rm_map = None
 
     enabled = False
     auto_save = False
@@ -63,13 +64,15 @@ class CoreEnforcer:
             self.load_policy()
 
     def _initialize(self):
-        self.rm = default_role_manager.RoleManager(10)
+        self.rm_map = dict()
         self.eft = DefaultEffector()
         self.watcher = None
 
         self.enabled = True
         self.auto_save = True
         self.auto_build_role_links = True
+
+        self.init_rm_map()
 
     @staticmethod
     def new_model(path="", text=""):
@@ -122,12 +125,11 @@ class CoreEnforcer:
 
     def get_role_manager(self):
         """gets the current role manager."""
-        return self.rm
+        return self.rm_map['g']
 
     def set_role_manager(self, rm):
         """sets the current role manager."""
-
-        self.rm = rm
+        self.rm_map['g'] = rm
 
     def set_effector(self, eft):
         """sets the current effector."""
@@ -139,12 +141,18 @@ class CoreEnforcer:
 
         self.model.clear_policy()
 
+    def init_rm_map(self):
+        if 'g' in self.model.model.keys():
+            for ptype in self.model.model['g']:
+                self.rm_map[ptype] = default_role_manager.RoleManager(10)
+
     def load_policy(self):
         """reloads the policy from file/database."""
 
         self.model.clear_policy()
         self.adapter.load_policy(self.model)
 
+        self.init_rm_map()
         self.model.print_policy()
         if self.auto_build_role_links:
             self.build_role_links()
@@ -157,6 +165,7 @@ class CoreEnforcer:
             raise ValueError("filtered policies are not supported by this adapter")
 
         self.adapter.load_filtered_policy(self.model, filter)
+        self.init_rm_map()
         self.model.print_policy()
         if self.auto_build_role_links:
             self.build_role_links()
@@ -203,8 +212,25 @@ class CoreEnforcer:
     def build_role_links(self):
         """manually rebuild the role inheritance relations."""
 
-        self.rm.clear()
-        self.model.build_role_links(self.rm)
+        for rm in self.rm_map.values():
+            rm.clear()
+            self.model.build_role_links(self.rm_map)
+
+    def add_named_matching_func(self, ptype, fn):
+        """add_named_matching_func add MatchingFunc by ptype RoleManager"""
+        try:
+            self.rm_map[ptype].add_matching_func(fn)
+            return True
+        except:
+            return False
+
+    def add_named_domain_matching_func(self, ptype, fn):
+        """add_named_domain_matching_func add MatchingFunc by ptype to RoleManager"""
+        try:
+            self.rm_map[ptype].add_domain_matching_func(fn)
+            return True
+        except:
+            return False
 
     def enforce(self, *rvals):
         """decides whether a "subject" can access a "object" with the operation "action",
@@ -319,6 +345,8 @@ class CoreEnforcer:
             self.logger.error(req_str)
 
         return result
+
+
 
     @staticmethod
     def _get_expression(expr, functions=None):

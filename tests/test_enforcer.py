@@ -1,7 +1,9 @@
-import casbin
 import os
-from unittest import TestCase
 import time
+from unittest import TestCase
+
+import casbin
+
 
 def get_examples(path):
     examples_path = os.path.split(os.path.realpath(__file__))[0] + "/../examples/"
@@ -176,7 +178,7 @@ class TestConfig(TestCaseBase):
                          get_examples("rbac_with_pattern_policy.csv"))
 
         #set matching function to key_match2
-        e.get_role_manager().add_matching_func(casbin.util.key_match2)
+        e.add_named_matching_func('g2', casbin.util.key_match2)
 
         self.assertTrue(e.enforce("alice", "/book/1", "GET"))
         self.assertTrue(e.enforce("alice", "/book/2", "GET"))
@@ -188,7 +190,7 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("bob", "/pen/2", "GET"))
 
         #replace key_match2 with key_match3
-        e.get_role_manager().add_matching_func(casbin.util.key_match3)
+        e.add_named_matching_func('g2', casbin.util.key_match3)
         self.assertTrue(e.enforce("alice", "/book2/1", "GET"))
         self.assertTrue(e.enforce("alice", "/book2/2", "GET"))
         self.assertTrue(e.enforce("alice", "/pen2/1", "GET"))
