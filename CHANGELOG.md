@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [0.18.1](https://github.com/casbin/pycasbin/compare/v0.18.0...v0.18.1) (2021-02-25)
+
+
+### Performance Improvements
+
+* reposition build_role_links() ([396ef7a](https://github.com/casbin/pycasbin/commit/396ef7ae5a650a102751dd602aed4ddd2775efba))
+
 # [0.18.0](https://github.com/casbin/pycasbin/compare/v0.17.0...v0.18.0) (2021-02-23)
 
 
