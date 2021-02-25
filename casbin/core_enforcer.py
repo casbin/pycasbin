@@ -169,8 +169,8 @@ class CoreEnforcer:
         self.model.print_policy()
         if self.auto_build_role_links:
             self.build_role_links()
-    
-    def load_increment_filtered_policy(self,filter):
+
+    def load_increment_filtered_policy(self, filter):
         """LoadIncrementalFilteredPolicy append a filtered policy from file/database."""
         if not hasattr(self.adapter, "is_filtered"):
             raise ValueError("filtered policies are not supported by this adapter")
@@ -214,7 +214,8 @@ class CoreEnforcer:
 
         for rm in self.rm_map.values():
             rm.clear()
-            self.model.build_role_links(self.rm_map)
+
+        self.model.build_role_links(self.rm_map)
 
     def add_named_matching_func(self, ptype, fn):
         """add_named_matching_func add MatchingFunc by ptype RoleManager"""
@@ -261,7 +262,7 @@ class CoreEnforcer:
 
         exp_string = self.model.model["m"]["m"].value
         has_eval = util.has_eval(exp_string)
-        if not has_eval:        
+        if not has_eval:
             expression = self._get_expression(exp_string, functions)
 
         policy_effects = set()
@@ -346,12 +347,10 @@ class CoreEnforcer:
 
         return result
 
-
-
     @staticmethod
     def _get_expression(expr, functions=None):
         expr = expr.replace("&&", "and")
         expr = expr.replace("||", "or")
-        expr = expr.replace("!","not")
+        expr = expr.replace("!", "not")
 
         return SimpleEval(expr, functions)
