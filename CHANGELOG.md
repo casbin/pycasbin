@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [0.18.2](https://github.com/casbin/pycasbin/compare/v0.18.1...v0.18.2) (2021-03-02)
+
+
+### Bug Fixes
+
+* typo ([32a572f](https://github.com/casbin/pycasbin/commit/32a572fcc4b114d93ffd59508a85e90297fd9744))
+
 ## [0.18.1](https://github.com/casbin/pycasbin/compare/v0.18.0...v0.18.1) (2021-02-25)
 
 
