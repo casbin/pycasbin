@@ -28,7 +28,7 @@ jobs:
       - name: Install setuptools
         run: python -m pip install --upgrade setuptools wheel twine
       
-      - name: Rlease
+      - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
