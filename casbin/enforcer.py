@@ -26,14 +26,7 @@ class Enforcer(ManagementEnforcer):
     def has_role_for_user(self, name, role):
         """ determines whether a user has a role. """
         roles = self.get_roles_for_user(name)
-
-        hasRole = False
-        for r in roles:
-            if r == role:
-                hasRole = True
-                break
-
-        return hasRole
+        return any(r == role for r in roles)
 
     def add_role_for_user(self, user, role):
         """
@@ -116,7 +109,7 @@ class Enforcer(ManagementEnforcer):
         """
         return self.has_policy(join_slice(user, *permission))
 
-    def get_implicit_roles_for_user(self, name, *domain):
+    def get_implicit_roles_for_user(self, name, domain=None):
         """
         gets implicit roles that a user has.
         Compared to get_roles_for_user(), this function retrieves indirect roles besides direct roles.
@@ -127,28 +120,22 @@ class Enforcer(ManagementEnforcer):
         get_roles_for_user("alice") can only get: ["role:admin"].
         But get_implicit_roles_for_user("alice") will get: ["role:admin", "role:user"].
         """
-        res = list()
-        roleSet = dict()
-        roleSet[name] = True
+        res = []
+        queue = [name]
 
-        q = list()
-        q.append(name)
-
-        while len(q) > 0:
-            name = q[0]
-            q = q[1:]
+        while queue:
+            name = queue.pop(0)
 
             for rm in self.rm_map.values():
-                roles = rm.get_roles(name, *domain)
+                roles = rm.get_roles(name, domain)
                 for r in roles:
-                    if r not in roleSet:
+                    if r not in res:
                         res.append(r)
-                        q.append(r)
-                        roleSet[r] = True
+                        queue.append(r)
 
         return res
 
-    def get_implicit_permissions_for_user(self, user, *domain):
+    def get_implicit_permissions_for_user(self, user, domain=None):
         """
         gets implicit permissions for a user or role.
         Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.
@@ -160,23 +147,17 @@ class Enforcer(ManagementEnforcer):
         get_permissions_for_user("alice") can only get: [["alice", "data2", "read"]].
         But get_implicit_permissions_for_user("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
         """
-        roles = self.get_implicit_roles_for_user(user, *domain)
+        roles = self.get_implicit_roles_for_user(user, domain)
 
         roles.insert(0, user)
 
-        withDomain = False
-        if len(domain) == 1:
-            withDomain = True
-        elif len(domain) > 1:
-            return None
-
         res = []
-        permissions = [list()]
         for role in roles:
-            if withDomain:
-                permissions = self.get_permissions_for_user_in_domain(role, domain[0])
+            if domain:
+                permissions = self.get_permissions_for_user_in_domain(role, domain)
             else:
                 permissions = self.get_permissions_for_user(role)
+
             res.extend(permissions)
 
         return res

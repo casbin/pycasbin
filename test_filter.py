@@ -34,7 +34,7 @@ class TestFilteredAdapter(TestCase):
 
         self.assertTrue(e.has_policy(['admin', 'domain1', 'data1','read']))
         self.assertFalse(e.has_policy(['admin', 'domain2', 'data2','read']))
-        
+
         with self.assertRaises(RuntimeError):
             e.save_policy()
 
@@ -121,5 +121,5 @@ class TestFilteredAdapter(TestCase):
         adapter = casbin.persist.adapters.FilteredAdapter("examples/does_not_exist_policy.csv")
         e = casbin.Enforcer("examples/rbac_with_domains_model.conf", adapter)
 
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(RuntimeError):
             e.load_filtered_policy(None)

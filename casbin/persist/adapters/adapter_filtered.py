@@ -16,7 +16,7 @@ class FilteredAdapter (FileAdapter,persist.FilteredAdapter):
     def __init__(self,file_path):
         self.filtered = True
         self._file_path = file_path
-    
+
     def load_policy(self,model):
         if not os.path.isfile(self._file_path):
             raise RuntimeError("invalid file path, file path cannot be empty")
@@ -27,7 +27,7 @@ class FilteredAdapter (FileAdapter,persist.FilteredAdapter):
     def load_filtered_policy(self,model,filter):
         if filter == None:
             return self.load_policy(model)
-        
+
         if not os.path.isfile(self._file_path):
             raise RuntimeError("invalid file path, file path cannot be empty")
 
@@ -50,7 +50,7 @@ class FilteredAdapter (FileAdapter,persist.FilteredAdapter):
                     break
                 if filter_line(line,filter):
                     continue
-        
+
                 hanlder(line,model)
 
     #is_filtered returns true if the loaded policy has been filtered.
@@ -65,7 +65,7 @@ class FilteredAdapter (FileAdapter,persist.FilteredAdapter):
 def filter_line(line,filter):
     if filter == None:
         return False
-    
+
     p = line.split(',')
     if len(p) == 0:
         return True
@@ -86,4 +86,4 @@ def filter_words(line,filter):
             skip_line = True
             break
 
-    return skip_line 
+    return skip_line

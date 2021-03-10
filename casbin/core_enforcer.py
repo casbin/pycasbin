@@ -79,7 +79,7 @@ class CoreEnforcer:
         """creates a model."""
 
         m = Model()
-        if len(path) > 0:
+        if path:
             m.load_model(path)
         else:
             m.load_model_from_text(text)

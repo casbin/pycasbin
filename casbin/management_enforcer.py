@@ -79,12 +79,7 @@ class ManagementEnforcer(InternalEnforcer):
             str_slice = params[0]
             return self.model.has_policy('p', ptype, str_slice)
 
-        policy = []
-
-        for param in params:
-            policy.append(param)
-
-        return self.model.has_policy('p', ptype, policy)
+        return self.model.has_policy('p', ptype, list(params))
 
     def add_policy(self, *params):
         """adds an authorization rule to the current policy.
@@ -113,12 +108,7 @@ class ManagementEnforcer(InternalEnforcer):
             str_slice = params[0]
             rule_added = self._add_policy('p', ptype, str_slice)
         else:
-            policy = []
-
-            for param in params:
-                policy.append(param)
-
-            rule_added = self._add_policy('p', ptype, policy)
+            rule_added = self._add_policy('p', ptype, list(params))
 
         return rule_added
 
@@ -164,12 +154,7 @@ class ManagementEnforcer(InternalEnforcer):
             str_slice = params[0]
             rule_removed = self._remove_policy('p', ptype, str_slice)
         else:
-            policy = []
-
-            for param in params:
-                policy.append(param)
-
-            rule_removed = self._remove_policy('p', ptype, policy)
+            rule_removed = self._remove_policy('p', ptype, list(params))
 
         return rule_removed
 
@@ -193,12 +178,7 @@ class ManagementEnforcer(InternalEnforcer):
             str_slice = params[0]
             return self.model.has_policy('g', ptype, str_slice)
 
-        policy = []
-
-        for param in params:
-            policy.append(param)
-
-        return self.model.has_policy('g', ptype, policy)
+        return self.model.has_policy('g', ptype, list(params))
 
     def add_grouping_policy(self, *params):
         """adds a role inheritance rule to the current policy.
@@ -227,12 +207,7 @@ class ManagementEnforcer(InternalEnforcer):
             str_slice = params[0]
             rule_added = self._add_policy('g', ptype, str_slice)
         else:
-            policy = []
-
-            for param in params:
-                policy.append(param)
-
-            rule_added = self._add_policy('g', ptype, policy)
+            rule_added = self._add_policy('g', ptype, list(params))
 
         if self.auto_build_role_links:
             self.build_role_links()
@@ -268,12 +243,7 @@ class ManagementEnforcer(InternalEnforcer):
             str_slice = params[0]
             rule_removed = self._remove_policy('g', ptype, str_slice)
         else:
-            policy = []
-
-            for param in params:
-                policy.append(param)
-
-            rule_removed = self._remove_policy('g', ptype, policy)
+            rule_removed = self._remove_policy('g', ptype, list(params))
 
         if self.auto_build_role_links:
             self.build_role_links()

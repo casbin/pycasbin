@@ -103,23 +103,21 @@ class RoleManager(RoleManager):
                     return True
             return False        
 
-    def get_roles(self, name, *domain):
+    def get_roles(self, name, domain=None):
         """
         gets the roles that a subject inherits.
         domain is a prefix to the roles.
         """
-        if len(domain) == 1:
-            name = domain[0] + "::" + name
-        elif len(domain) > 1:
-            return RuntimeError("error: domain should be 1 parameter")
+        if domain:
+            name = domain + "::" + name
 
         if not self.has_role(name):
             return []
 
         roles = self.create_role(name).get_roles()
-        if len(domain) == 1:
+        if domain:
             for key, value in enumerate(roles):
-                roles[key] = value[len(domain[0]) + 2:]
+                roles[key] = value[len(domain) + 2:]
 
         return roles
 
