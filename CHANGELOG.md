@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [0.18.3](https://github.com/casbin/pycasbin/compare/v0.18.2...v0.18.3) (2021-03-12)
+
+
+### Performance Improvements
+
+* refacto & improve performance ([ff7f288](https://github.com/casbin/pycasbin/commit/ff7f288f487f5eab6b29898eb81f68257e6eb508))
+
 ## [0.18.2](https://github.com/casbin/pycasbin/compare/v0.18.1...v0.18.2) (2021-03-02)
 
 
