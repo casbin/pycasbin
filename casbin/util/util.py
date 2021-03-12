@@ -48,17 +48,7 @@ def join_slice(a, *b):
 
 def set_subtract(a, b):
     ''' returns the elements in `a` that aren't in `b`. '''
-    mb = dict()
-
-    for x in b:
-        mb[x] = True
-
-    diff = list()
-    for x in a:
-        if x not in mb:
-            diff.append(x)
-
-    return diff
+    return [i for i in a if i not in b]
 
 def has_eval(s):
     '''determine whether matcher contains function eval'''
