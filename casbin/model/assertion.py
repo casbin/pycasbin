@@ -13,11 +13,10 @@ class Assertion:
     def build_role_links(self, rm):
         self.rm = rm
         count = self.value.count("_")
+        if count < 2:
+            raise RuntimeError('the number of "_" in role definition should be at least 2')
 
         for rule in self.policy:
-            if count < 2:
-                raise RuntimeError('the number of "_" in role definition should be at least 2')
-
             if len(rule) < count:
                 raise RuntimeError("grouping policy elements do not meet role definition")
 
