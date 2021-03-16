@@ -98,6 +98,29 @@ class Config:
 
         del b[:]
 
+    def get_bool(self, key):
+        """lookups up the value using the provided key and converts the value to a bool."""
+        return self.get(key).capitalize() == "True"
+
+    def get_int(self, key):
+        """lookups up the value using the provided key and converts the value to a int"""
+        return int(self.get(key))
+
+    def get_float(self, key):
+        """lookups up the value using the provided key and converts the value to a float"""
+        return float(self.get(key))
+
+    def get_string(self, key):
+        """lookups up the value using the provided key and converts the value to a string"""
+        return self.get(key)
+
+    def get_strings(self, key):
+        """lookups up the value using the provided key and converts the value to an array of string"""
+        value = self.get(key)
+        if value == "":
+            return None
+        return value.split(",")
+
     def set(self, key, value):
         if len(key) == 0:
             raise RuntimeError("key is empty")
