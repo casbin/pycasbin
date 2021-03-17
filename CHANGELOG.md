@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [0.18.4](https://github.com/casbin/pycasbin/compare/v0.18.3...v0.18.4) (2021-03-17)
+
+
+### Performance Improvements
+
+* Added code to convert config value to different types ([c87fdfa](https://github.com/casbin/pycasbin/commit/c87fdfa37f68e9c32e198e044862a9a2f1cb36b7))
+
 ## [0.18.3](https://github.com/casbin/pycasbin/compare/v0.18.2...v0.18.3) (2021-03-12)
 
 
