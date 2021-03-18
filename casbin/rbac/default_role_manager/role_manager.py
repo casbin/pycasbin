@@ -47,8 +47,9 @@ class RoleManager(RoleManager):
 
     def add_link(self, name1, name2, *domain):
         if len(domain) == 1:
-            name1 = domain[0] + "::" + name1
-            name2 = domain[0] + "::" + name2
+            if len(domain[0]) > 1:
+                name1 = domain[0] + "::" + name1
+                name2 = domain[0] + "::" + name2
         elif len(domain) > 1:
             raise RuntimeError("error: domain should be 1 parameter")
 
@@ -69,8 +70,9 @@ class RoleManager(RoleManager):
 
     def delete_link(self, name1, name2, *domain):
         if len(domain) == 1:
-            name1 = domain[0] + "::" + name1
-            name2 = domain[0] + "::" + name2
+            if len(domain[0]) > 1:
+                name1 = domain[0] + "::" + name1
+                name2 = domain[0] + "::" + name2
         elif len(domain) > 1:
             raise RuntimeError("error: domain should be 1 parameter")
 

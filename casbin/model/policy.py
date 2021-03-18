@@ -15,6 +15,10 @@ class Policy:
             rm = rm_map[ptype]
             ast.build_role_links(rm)
 
+    def build_incremental_role_links(self, rm, op, sec, ptype, rules):
+        if sec == "g":
+            self.model.get(sec).get(ptype).build_incremental_role_links(rm, op, rules)
+
     def print_policy(self):
         """Log using info"""
 
@@ -115,6 +119,34 @@ class Policy:
                 return False
 
         return True
+
+    def remove_filtered_policy_returns_effects(self, sec, ptype, field_index, field_values):
+        """
+        remove_filtered_policy_returns_effects removes policy rules based on field filters from the model.
+        """
+        tmp = []
+        effects = []
+        first_index = -1
+        for rule in self.model[sec][ptype].policy:
+            matched = True
+            for i in range(len(field_values)):
+                field_value = field_values[i]
+                if(field_value != "" and rule[field_index + i] != field_value):
+                    matched = False
+                    break
+
+            if matched:
+                if first_index == -1:
+                    first_index = self.model[sec][ptype].policy.index(rule)
+                effects.append(rule)
+            else:
+                tmp.append(rule)
+
+        if first_index != -1:
+            self.model[sec][ptype].policy = tmp
+
+        return effects
+
 
     def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes policy rules based on field filters from the model."""

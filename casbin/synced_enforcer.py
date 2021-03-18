@@ -21,7 +21,7 @@ class AtomicBool():
         with self._lock:
             self._value = value
 
-class SyncedEnforcer():
+class SyncedEnforcer(Enforcer):
 
     """SyncedEnforcer wraps Enforcer and provides synchronized access. 
     It's also a drop-in replacement for Enforcer"""

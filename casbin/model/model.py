@@ -2,7 +2,6 @@ from . import Assertion
 from casbin import util, config
 from .policy import Policy
 
-
 class Model(Policy):
 
     section_name_map = {
