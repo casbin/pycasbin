@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [0.19.1](https://github.com/casbin/pycasbin/compare/v0.19.0...v0.19.1) (2021-03-18)
+
+
+### Bug Fixes
+
+* relocate unittest and fix file path ([5ed07b2](https://github.com/casbin/pycasbin/commit/5ed07b2f2aef9137a35048d3921d9986bae3254c))
+
 # [0.19.0](https://github.com/casbin/pycasbin/compare/v0.18.4...v0.19.0) (2021-03-18)
 
 
