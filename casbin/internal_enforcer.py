@@ -1,4 +1,5 @@
 from casbin.core_enforcer import CoreEnforcer
+from casbin.model.policy_op import PolicyOp
 
 class InternalEnforcer(CoreEnforcer):
     """
@@ -37,6 +38,9 @@ class InternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rules_added
+
+    def build_incremental_role_links(self, op, ptype, rules):
+        self.get_model().build_incremental_role_links(self.get_role_manager(), op, "g", ptype, rules)
 
     def _update_policy(self, sec, ptype, old_rule, new_rule):
         """updates a rule from the current policy."""
