@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [0.19.0](https://github.com/casbin/pycasbin/compare/v0.18.4...v0.19.0) (2021-03-18)
+
+
+### Features
+
+* Added dispatcher class ([5c4a992](https://github.com/casbin/pycasbin/commit/5c4a992971a492874cfd32dc4eb94a3d61dbfcd7))
+
 ## [0.18.4](https://github.com/casbin/pycasbin/compare/v0.18.3...v0.18.4) (2021-03-17)
 
 
