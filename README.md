@@ -1,7 +1,7 @@
 PyCasbin
 ====
 
-[![Build Status](https://www.travis-ci.com/casbin/pycasbin.svg?branch=master)](https://www.travis-ci.com/casbin/pycasbin)
+[![GitHub Action](https://github.com/casbin/pycasbin/workflows/build/badge.svg?branch=master)](https://github.com/casbin/pycasbin/actions)
 [![Coverage Status](https://coveralls.io/repos/github/casbin/pycasbin/badge.svg)](https://coveralls.io/github/casbin/pycasbin)
 [![Version](https://img.shields.io/pypi/v/casbin.svg)](https://pypi.org/project/casbin/)
 [![PyPI - Wheel](https://img.shields.io/pypi/wheel/casbin.svg)](https://pypi.org/project/casbin/)
