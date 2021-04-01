@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [0.19.2](https://github.com/casbin/pycasbin/compare/v0.19.1...v0.19.2) (2021-04-01)
+
+
+### Bug Fixes
+
+* Added checks in init_with_model_and_adapter in CoreEnforcer ([1c55727](https://github.com/casbin/pycasbin/commit/1c55727661616edc62865f4ffd15e3f262ddf1d5))
+
 ## [0.19.1](https://github.com/casbin/pycasbin/compare/v0.19.0...v0.19.1) (2021-03-18)
 
 
