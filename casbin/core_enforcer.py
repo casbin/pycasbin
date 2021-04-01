@@ -2,6 +2,7 @@ import logging
 
 from casbin.effect import DefaultEffector, Effector
 from casbin.model import Model, FunctionMap
+from casbin.persist import Adapter
 from casbin.persist.adapters import FileAdapter
 from casbin.rbac import default_role_manager
 from casbin.util import generate_g_function, SimpleEval, util
@@ -51,6 +52,10 @@ class CoreEnforcer:
 
     def init_with_model_and_adapter(self, m, adapter=None):
         """initializes an enforcer with a model and a database adapter."""
+
+        if not isinstance(m, Model) or adapter is not None and not isinstance(adapter, Adapter):
+            raise RuntimeError("Invalid parameters for enforcer.")
+
         self.adapter = adapter
 
         self.model = m
