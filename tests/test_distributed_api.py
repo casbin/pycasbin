@@ -80,12 +80,3 @@ class TestDistributedApi(TestCaseBase):
         self.assertFalse(e.enforce("bob", "data2", "write"))
         self.assertFalse(e.enforce("data2_admin", "data2", "read"))
         self.assertFalse(e.enforce("data2_admin", "data2", "write"))
-
-
-class TestDistributedApiSynced(TestDistributedApi):
-
-    def get_enforcer(self, model=None, adapter=None):
-        return casbin.DistributedEnforcer(
-            model,
-            adapter,
-        )
