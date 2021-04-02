@@ -18,9 +18,10 @@ class DistributedEnforcer(SyncedEnforcer):
         AddPolicySelf provides a method for dispatcher to add authorization rules to the current policy.
         The function returns the rules affected and error.
         """
+        
         no_exists_policy = []
         for rule in rules:
-            if self.get_model().has_policy(sec, ptype, rule):
+            if not self.get_model().has_policy(sec, ptype, rule):
                 no_exists_policy.append(rule)
 
         if should_persist:
@@ -39,7 +40,7 @@ class DistributedEnforcer(SyncedEnforcer):
                 self.logger.log("An exception occurred: " + e)
                 return no_exists_policy
 
-        return rules
+        return no_exists_policy
 
     def remove_policy_self(self, should_persist, sec, ptype, rules):
         """
@@ -53,16 +54,16 @@ class DistributedEnforcer(SyncedEnforcer):
             except Exception as e:
                 self.logger.log("An exception occurred: " + e)
 
-        self.get_model().remove_policies(sec, ptype, rules)
+        effected = self.get_model().remove_policies_with_effected(sec, ptype, rules)
 
         if sec == "g":
             try:
                 self.build_incremental_role_links(PolicyOp.Policy_remove, ptype, rules)
             except Exception as e:
                 self.logger.log("An exception occurred: " + e)
-                return rules
+                return effected
 
-        return rules
+        return effected
 
     def remove_filtered_policy_self(self, should_persist, sec, ptype, field_index, *field_values):
         """
@@ -116,17 +117,14 @@ class DistributedEnforcer(SyncedEnforcer):
         if not rule_updated:
             return False
 
-        rules = []
         if sec == "g":
             try:
-                rules.append(old_rule)
-                self.build_incremental_role_links(PolicyOp.Policy_remove, ptype, rules)
+                self.build_incremental_role_links(PolicyOp.Policy_remove, ptype, [old_rule])
             except Exception as e:
                 return False
 
             try:
-                rules.append(new_rule)
-                self.build_incremental_role_links(PolicyOp.Policy_add, ptype, rules)
+                self.build_incremental_role_links(PolicyOp.Policy_add, ptype, [new_rule])
             except Exception as e:
                 return False
 

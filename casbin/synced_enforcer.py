@@ -21,7 +21,7 @@ class AtomicBool():
         with self._lock:
             self._value = value
 
-class SyncedEnforcer(Enforcer):
+class SyncedEnforcer():
 
     """SyncedEnforcer wraps Enforcer and provides synchronized access. 
     It's also a drop-in replacement for Enforcer"""
@@ -567,3 +567,6 @@ class SyncedEnforcer(Enforcer):
         """ removes role inheritance rules from the current named policy."""
         with self._wl:
             return self._e.remove_named_grouping_policies(ptype,rules)
+
+    def build_incremental_role_links(self, op, ptype, rules):
+        self.get_model().build_incremental_role_links(self.get_role_manager(), op, "g", ptype, rules)
