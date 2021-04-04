@@ -352,6 +352,126 @@ class CoreEnforcer:
 
         return result
 
+    def enforceEx(self, *rvals):
+        """decides whether a "subject" can access a "object" with the operation "action",
+        input parameters are usually: (sub, obj, act).
+        return judge result with reason
+        """
+        explain_index = -1
+
+        if not self.enabled:
+            return False
+
+        functions = self.fm.get_functions()
+
+        if "g" in self.model.model.keys():
+            for key, ast in self.model.model["g"].items():
+                rm = ast.rm
+                functions[key] = generate_g_function(rm)
+
+        if "m" not in self.model.model.keys():
+            raise RuntimeError("model is undefined")
+
+        if "m" not in self.model.model["m"].keys():
+            raise RuntimeError("model is undefined")
+
+        r_tokens = self.model.model["r"]["r"].tokens
+        p_tokens = self.model.model["p"]["p"].tokens
+
+        if len(r_tokens) != len(rvals):
+            raise RuntimeError("invalid request size")
+
+        exp_string = self.model.model["m"]["m"].value
+        has_eval = util.has_eval(exp_string)
+        if not has_eval:
+            expression = self._get_expression(exp_string, functions)
+
+        policy_effects = list()
+        matcher_results = list()
+
+        r_parameters = dict(zip(r_tokens, rvals))
+
+        policy_len = len(self.model.model["p"]["p"].policy)
+
+        if not 0 == policy_len:
+            for i, pvals in enumerate(self.model.model["p"]["p"].policy):
+                if len(p_tokens) != len(pvals):
+                    raise RuntimeError("invalid policy size")
+
+                p_parameters = dict(zip(p_tokens, pvals))
+                parameters = dict(r_parameters, **p_parameters)
+
+                if util.has_eval(exp_string):
+                    rule_names = util.get_eval_value(exp_string)
+                    rules = [util.escape_assertion(p_parameters[rule_name]) for rule_name in rule_names]
+                    exp_with_rule = util.replace_eval(exp_string, rules)
+                    expression = self._get_expression(exp_with_rule, functions)
+
+                result = expression.eval(parameters)
+
+                if isinstance(result, bool):
+                    if not result:
+                        policy_effects.append(Effector.INDETERMINATE)
+                        continue
+                elif isinstance(result, float):
+                    if 0 == result:
+                        policy_effects.append(Effector.INDETERMINATE)
+                        continue
+                    else:
+                        matcher_results.append(result)
+                else:
+                    raise RuntimeError("matcher result should be bool, int or float")
+
+                if "p_eft" in parameters.keys():
+                    eft = parameters["p_eft"]
+                    if "allow" == eft:
+                        policy_effects.append(Effector.ALLOW)
+                    elif "deny" == eft:
+                        policy_effects.append(Effector.DENY)
+                    else:
+                        policy_effects.append(Effector.INDETERMINATE)
+                else:
+                    policy_effects.append(Effector.ALLOW)
+
+                if "priority(p_eft) || deny" == self.model.model["e"]["e"].value:
+                    break
+
+        else:
+            if has_eval:
+                raise RuntimeError("please make sure rule exists in policy when using eval() in matcher")
+
+            parameters = r_parameters.copy()
+
+            for token in self.model.model["p"]["p"].tokens:
+                parameters[token] = ""
+
+            result = expression.eval(parameters)
+
+            if result:
+                policy_effects.append(Effector.ALLOW)
+            else:
+                policy_effects.append(Effector.INDETERMINATE)
+
+        result, explain_index = self.eft.merge_effects(self.model.model["e"]["e"].value, policy_effects, matcher_results)
+
+        # Log request.
+
+        req_str = "Request: "
+        req_str = req_str + ", ".join([str(v) for v in rvals])
+
+        req_str = req_str + " ---> %s" % result
+        if result:
+            self.logger.info(req_str)
+        else:
+            # leaving this in error for now, if it's very noise this can be changed to info or debug
+            self.logger.error(req_str)
+
+        explain_rule = []
+        if explain_index != -1:
+            explain_rule = self.model.model["p"]["p"].policy[explain_index]
+
+        return result, explain_rule
+
     @staticmethod
     def _get_expression(expr, functions=None):
         expr = expr.replace("&&", "and")
