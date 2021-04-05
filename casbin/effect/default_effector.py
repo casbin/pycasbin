@@ -33,11 +33,11 @@ class DefaultEffector(Effector):
         elif expr == "some(where (p_eft == allow)) && !some(where (p_eft == deny))":
             if self.DENY in effects:
                 if explain:
-                    explain_index = effects.index(self.ALLOW)
+                    explain_index = effects.index(self.DENY)
                 result = False
             elif self.ALLOW in effects:
                 if explain:
-                    explain_index = effects.index(self.DENY)
+                    explain_index = effects.index(self.ALLOW)
                 result = True
 
         elif expr == "priority(p_eft) || deny":
