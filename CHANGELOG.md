@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [0.20.0](https://github.com/casbin/pycasbin/compare/v0.19.2...v0.20.0) (2021-04-06)
+
+
+### Features
+
+* added distributed enforcer file along with respective unit tests ([f167ebf](https://github.com/casbin/pycasbin/commit/f167ebf40f5d170745a3f48692d2185e205f3449))
+
 ## [0.19.2](https://github.com/casbin/pycasbin/compare/v0.19.1...v0.19.2) (2021-04-01)
 
 
