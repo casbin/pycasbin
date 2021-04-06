@@ -1,6 +1,6 @@
 import logging
 
-from casbin.effect import DefaultEffector, Effector
+from casbin.effect import Effector, get_effector, effect_to_bool
 from casbin.model import Model, FunctionMap
 from casbin.persist import Adapter
 from casbin.persist.adapters import FileAdapter
@@ -70,7 +70,7 @@ class CoreEnforcer:
 
     def _initialize(self):
         self.rm_map = dict()
-        self.eft = DefaultEffector()
+        self.eft = get_effector(self.model.model["e"]["e"].value)
         self.watcher = None
 
         self.enabled = True
@@ -242,6 +242,15 @@ class CoreEnforcer:
         """decides whether a "subject" can access a "object" with the operation "action",
         input parameters are usually: (sub, obj, act).
         """
+        result, _ = self.enforceEx(*rvals)
+        return result
+
+    def enforceEx(self, *rvals):
+        """decides whether a "subject" can access a "object" with the operation "action",
+        input parameters are usually: (sub, obj, act).
+        return judge result with reason
+        """
+        explain_index = -1
 
         if not self.enabled:
             return False
@@ -271,12 +280,12 @@ class CoreEnforcer:
             expression = self._get_expression(exp_string, functions)
 
         policy_effects = set()
-        matcher_results = set()
 
         r_parameters = dict(zip(r_tokens, rvals))
 
         policy_len = len(self.model.model["p"]["p"].policy)
 
+        explain_index = -1
         if not 0 == policy_len:
             for i, pvals in enumerate(self.model.model["p"]["p"].policy):
                 if len(p_tokens) != len(pvals):
@@ -301,8 +310,6 @@ class CoreEnforcer:
                     if 0 == result:
                         policy_effects.add(Effector.INDETERMINATE)
                         continue
-                    else:
-                        matcher_results.add(result)
                 else:
                     raise RuntimeError("matcher result should be bool, int or float")
 
@@ -317,7 +324,8 @@ class CoreEnforcer:
                 else:
                     policy_effects.add(Effector.ALLOW)
 
-                if "priority(p_eft) || deny" == self.model.model["e"]["e"].value:
+                if self.eft.intermediate_effect(policy_effects) != Effector.INDETERMINATE:
+                    explain_index = i
                     break
 
         else:
@@ -336,7 +344,8 @@ class CoreEnforcer:
             else:
                 policy_effects.add(Effector.INDETERMINATE)
 
-        result = self.eft.merge_effects(self.model.model["e"]["e"].value, policy_effects, matcher_results)
+        final_effect = self.eft.final_effect(policy_effects)
+        result = effect_to_bool(final_effect)
 
         # Log request.
 
@@ -350,7 +359,11 @@ class CoreEnforcer:
             # leaving this in error for now, if it's very noise this can be changed to info or debug
             self.logger.error(req_str)
 
-        return result
+        explain_rule = []
+        if explain_index != -1 and explain_index < policy_len:
+            explain_rule = self.model.model["p"]["p"].policy[explain_index]
+
+        return result, explain_rule
 
     @staticmethod
     def _get_expression(expr, functions=None):

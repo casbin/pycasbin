@@ -9,11 +9,13 @@ def get_examples(path):
     examples_path = os.path.split(os.path.realpath(__file__))[0] + "/../examples/"
     return os.path.abspath(examples_path + path)
 
+
 class TestSub():
 
     def __init__(self, name, age):
         self.name = name
         self.age = age
+
 
 class TestCaseBase(TestCase):
     def get_enforcer(self, model=None, adapter=None):
@@ -21,6 +23,7 @@ class TestCaseBase(TestCase):
             model,
             adapter,
         )
+
 
 class TestConfig(TestCaseBase):
 
@@ -35,6 +38,16 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
         self.assertFalse(e.enforce('bob', 'data1', 'write'))
 
+    def test_enforceEx_basic(self):
+        e = self.get_enforcer(
+            get_examples("basic_model.conf"),
+            get_examples("basic_policy.csv"),
+        )
+        self.assertTupleEqual(e.enforceEx('alice', 'data1', 'read'), (True, ['alice', 'data1', 'read']))
+        self.assertTupleEqual(e.enforceEx('alice', 'data2', 'read'), (False, []))
+        self.assertTupleEqual(e.enforceEx('bob', 'data2', 'write'), (True, ['bob', 'data2', 'write']))
+        self.assertTupleEqual(e.enforceEx('bob', 'data1', 'write'), (False, []))
+
     def test_model_set_load(self):
         e = self.get_enforcer(
             get_examples("basic_model.conf"),
@@ -46,7 +59,6 @@ class TestConfig(TestCaseBase):
             # creating new model
             e.load_model()
             self.assertTrue(e.model)
-
 
     def test_enforcer_basic_without_spaces(self):
         e = self.get_enforcer(
@@ -69,7 +81,7 @@ class TestConfig(TestCaseBase):
 
     def test_enforce_basic_without_resources(self):
         e = self.get_enforcer(get_examples("basic_without_resources_model.conf"),
-                         get_examples("basic_without_resources_policy.csv"))
+                              get_examples("basic_without_resources_policy.csv"))
         self.assertTrue(e.enforce('alice', 'read'))
         self.assertFalse(e.enforce('alice', 'write'))
         self.assertTrue(e.enforce('bob', 'write'))
@@ -77,7 +89,7 @@ class TestConfig(TestCaseBase):
 
     def test_enforce_basic_without_users(self):
         e = self.get_enforcer(get_examples("basic_without_users_model.conf"),
-                         get_examples("basic_without_users_policy.csv"))
+                              get_examples("basic_without_users_policy.csv"))
         self.assertTrue(e.enforce('data1', 'read'))
         self.assertFalse(e.enforce('data1', 'write'))
         self.assertTrue(e.enforce('data2', 'write'))
@@ -85,13 +97,13 @@ class TestConfig(TestCaseBase):
 
     def test_enforce_ip_match(self):
         e = self.get_enforcer(get_examples("ipmatch_model.conf"),
-                         get_examples("ipmatch_policy.csv"))
+                              get_examples("ipmatch_policy.csv"))
         self.assertTrue(e.enforce('192.168.2.1', 'data1', 'read'))
         self.assertFalse(e.enforce('192.168.3.1', 'data1', 'read'))
 
     def test_enforce_key_match(self):
         e = self.get_enforcer(get_examples("keymatch_model.conf"),
-                         get_examples("keymatch_policy.csv"))
+                              get_examples("keymatch_policy.csv"))
         self.assertTrue(e.enforce('alice', '/alice_data/test', 'GET'))
         self.assertFalse(e.enforce('alice', '/bob_data/test', 'GET'))
         self.assertTrue(e.enforce('cathy', '/cathy_data', 'GET'))
@@ -100,7 +112,7 @@ class TestConfig(TestCaseBase):
 
     def test_enforce_key_match2(self):
         e = self.get_enforcer(get_examples("keymatch2_model.conf"),
-                         get_examples("keymatch2_policy.csv"))
+                              get_examples("keymatch2_policy.csv"))
         self.assertTrue(e.enforce('alice', '/alice_data/resource', 'GET'))
         self.assertTrue(e.enforce('alice', '/alice_data2/123/using/456', 'GET'))
 
@@ -145,7 +157,8 @@ class TestConfig(TestCaseBase):
         self.assertFalse(e.enforce('alice', 'data2', 'write'))
 
     def test_enforce_rbac_with_domains(self):
-        e = self.get_enforcer(get_examples("rbac_with_domains_model.conf"), get_examples("rbac_with_domains_policy.csv"))
+        e = self.get_enforcer(get_examples("rbac_with_domains_model.conf"),
+                              get_examples("rbac_with_domains_policy.csv"))
         self.assertTrue(e.enforce('alice', 'domain1', 'data1', 'read'))
         self.assertTrue(e.enforce('alice', 'domain1', 'data1', 'write'))
         self.assertFalse(e.enforce('alice', 'domain1', 'data2', 'read'))
@@ -162,7 +175,7 @@ class TestConfig(TestCaseBase):
 
     def test_enforce_rbac_with_resource_roles(self):
         e = self.get_enforcer(get_examples("rbac_with_resource_roles_model.conf"),
-                         get_examples("rbac_with_resource_roles_policy.csv"))
+                              get_examples("rbac_with_resource_roles_policy.csv"))
         self.assertTrue(e.enforce('alice', 'data1', 'read'))
         self.assertTrue(e.enforce('alice', 'data1', 'write'))
         self.assertFalse(e.enforce('alice', 'data2', 'read'))
@@ -175,9 +188,9 @@ class TestConfig(TestCaseBase):
 
     def test_enforce_rbac_with_pattern(self):
         e = self.get_enforcer(get_examples("rbac_with_pattern_model.conf"),
-                         get_examples("rbac_with_pattern_policy.csv"))
+                              get_examples("rbac_with_pattern_policy.csv"))
 
-        #set matching function to key_match2
+        # set matching function to key_match2
         e.add_named_matching_func('g2', casbin.util.key_match2)
 
         self.assertTrue(e.enforce("alice", "/book/1", "GET"))
@@ -189,7 +202,7 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("bob", "/pen/1", "GET"))
         self.assertTrue(e.enforce("bob", "/pen/2", "GET"))
 
-        #replace key_match2 with key_match3
+        # replace key_match2 with key_match3
         e.add_named_matching_func('g2', casbin.util.key_match3)
         self.assertTrue(e.enforce("alice", "/book2/1", "GET"))
         self.assertTrue(e.enforce("alice", "/book2/2", "GET"))
@@ -208,12 +221,12 @@ class TestConfig(TestCaseBase):
 
     def test_abac_with_sub_rule(self):
         e = self.get_enforcer(get_examples("abac_rule_model.conf"),
-                         get_examples("abac_rule_policy.csv"))
+                              get_examples("abac_rule_policy.csv"))
 
         sub1 = TestSub("alice", 16)
         sub2 = TestSub("bob", 20)
         sub3 = TestSub("alice", 65)
-        
+
         self.assertFalse(e.enforce(sub1, "/data1", "read"))
         self.assertFalse(e.enforce(sub1, "/data2", "read"))
         self.assertFalse(e.enforce(sub1, "/data1", "write"))
@@ -231,13 +244,13 @@ class TestConfig(TestCaseBase):
 
     def test_abac_with_multiple_sub_rules(self):
         e = self.get_enforcer(get_examples("abac_multiple_rules_model.conf"),
-                         get_examples("abac_multiple_rules_policy.csv"))
+                              get_examples("abac_multiple_rules_policy.csv"))
 
         sub1 = TestSub("alice", 16)
         sub2 = TestSub("alice", 20)
         sub3 = TestSub("bob", 65)
         sub4 = TestSub("bob", 35)
-        
+
         self.assertFalse(e.enforce(sub1, "/data1", "read"))
         self.assertFalse(e.enforce(sub1, "/data2", "read"))
         self.assertFalse(e.enforce(sub1, "/data1", "write"))
@@ -258,6 +271,7 @@ class TestConfig(TestCaseBase):
         self.assertFalse(e.enforce(sub4, "/data1", "write"))
         self.assertTrue(e.enforce(sub4, "/data2", "write"))
 
+
 class TestConfigSynced(TestConfig):
 
     def get_enforcer(self, model=None, adapter=None):
@@ -272,10 +286,9 @@ class TestConfigSynced(TestConfig):
             get_examples("basic_policy.csv"),
         )
 
-        e.start_auto_load_policy(5/1000)
+        e.start_auto_load_policy(5 / 1000)
         self.assertTrue(e.is_auto_loading_running())
         e.stop_auto_load_policy()
-        #thread needs a moment to exit
-        time.sleep(10/1000)
+        # thread needs a moment to exit
+        time.sleep(10 / 1000)
         self.assertFalse(e.is_auto_loading_running())
-
