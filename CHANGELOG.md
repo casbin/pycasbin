@@ -1,5 +1,21 @@
 # Semantic Versioning Changelog
 
+# [1.0.0](https://github.com/casbin/pycasbin/compare/v0.20.0...v1.0.0) (2021-04-06)
+
+
+### Features
+
+* add EnforceEx ([#134](https://github.com/casbin/pycasbin/issues/134)) ([c577e1d](https://github.com/casbin/pycasbin/commit/c577e1da65e3ddf4cf360d851f9f9a5ef6c94650))
+
+
+### BREAKING CHANGES
+
+* Custom effectors will need a rewrite
+
+Signed-off-by: Andreas Bichinger <andreas.bichinger@gmail.com>
+
+Co-authored-by: Andreas Bichinger <andreas.bichinger@gmail.com>
+
 # [0.20.0](https://github.com/casbin/pycasbin/compare/v0.19.2...v0.20.0) (2021-04-06)
 
 
