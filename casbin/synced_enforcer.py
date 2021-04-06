@@ -567,3 +567,6 @@ class SyncedEnforcer():
         """ removes role inheritance rules from the current named policy."""
         with self._wl:
             return self._e.remove_named_grouping_policies(ptype,rules)
+
+    def build_incremental_role_links(self, op, ptype, rules):
+        self.get_model().build_incremental_role_links(self.get_role_manager(), op, "g", ptype, rules)
