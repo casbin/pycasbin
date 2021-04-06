@@ -7,6 +7,13 @@ class Effector:
 
     DENY = 2
 
-    def merge_effects(self, expr, effects, results):
-        """merges all matching results collected by the enforcer into a single decision."""
+    def intermediate_effect(self, effects):
+        """ returns a intermediate effect based on the matched effects of the enforcer """
         pass
+
+    def final_effect(self, effects):
+        """ returns the final effect based on the matched effects of the enforcer """
+        pass
+        
+
+
