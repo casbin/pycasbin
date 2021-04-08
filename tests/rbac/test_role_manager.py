@@ -113,6 +113,12 @@ class TestDefaultRoleManager(TestCase):
         self.assertTrue(rm.has_link("u4", "admin", "domain1"))
         self.assertTrue(rm.has_link("u4", "admin", "domain2"))
 
+    # In 0.20.0 and 1.0.0, when length of the domain name is 1, role manager won't work as expected.
+    def test_domain_role_edge_condition(self):
+        rm = get_role_manager()
+        rm.add_link("u1", "g1", "d")
+        self.assertTrue(rm.has_link("u1", "g1", "d"))
+
     def test_clear(self):
         rm = get_role_manager()
         rm.add_link("u1", "g1")
