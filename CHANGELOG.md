@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.1](https://github.com/casbin/pycasbin/compare/v1.0.0...v1.0.1) (2021-04-09)
+
+
+### Bug Fixes
+
+* wrong domain length judge and bug in build_incremental_role_links() ([#139](https://github.com/casbin/pycasbin/issues/139)) ([51b8833](https://github.com/casbin/pycasbin/commit/51b883301e0f2c104ef31658e2074ac6ca586451))
+
 # [1.0.0](https://github.com/casbin/pycasbin/compare/v0.20.0...v1.0.0) (2021-04-06)
 
 
