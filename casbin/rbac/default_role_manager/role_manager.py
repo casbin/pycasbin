@@ -9,7 +9,6 @@ class RoleManager(RoleManager):
     all_roles = dict()
     max_hierarchy_level = 0
 
-
     def __init__(self, max_hierarchy_level):
         self.logger = logging.getLogger()
         self.all_roles = dict()
@@ -47,9 +46,8 @@ class RoleManager(RoleManager):
 
     def add_link(self, name1, name2, *domain):
         if len(domain) == 1:
-            if len(domain[0]) > 1:
-                name1 = domain[0] + "::" + name1
-                name2 = domain[0] + "::" + name2
+            name1 = domain[0] + "::" + name1
+            name2 = domain[0] + "::" + name2
         elif len(domain) > 1:
             raise RuntimeError("error: domain should be 1 parameter")
 
@@ -70,9 +68,8 @@ class RoleManager(RoleManager):
 
     def delete_link(self, name1, name2, *domain):
         if len(domain) == 1:
-            if len(domain[0]) > 1:
-                name1 = domain[0] + "::" + name1
-                name2 = domain[0] + "::" + name2
+            name1 = domain[0] + "::" + name1
+            name2 = domain[0] + "::" + name2
         elif len(domain) > 1:
             raise RuntimeError("error: domain should be 1 parameter")
 
@@ -101,9 +98,10 @@ class RoleManager(RoleManager):
             return role1.has_role(name2, self.max_hierarchy_level)
         else:
             for key, role in self.all_roles.items():
-                if self.matching_func(name1, key) and role.has_role(name2, self.max_hierarchy_level, self.matching_func):
+                if self.matching_func(name1, key) and role.has_role(name2, self.max_hierarchy_level,
+                                                                    self.matching_func):
                     return True
-            return False        
+            return False
 
     def get_roles(self, name, domain=None):
         """
