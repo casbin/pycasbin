@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.2](https://github.com/casbin/pycasbin/compare/v1.0.1...v1.0.2) (2021-04-12)
+
+
+### Bug Fixes
+
+* rename enforceEx() to enforce_ex() ([#143](https://github.com/casbin/pycasbin/issues/143)) ([e52351a](https://github.com/casbin/pycasbin/commit/e52351a41c91d2546dddbc4f448c59ff70e9de1a))
+
 ## [1.0.1](https://github.com/casbin/pycasbin/compare/v1.0.0...v1.0.1) (2021-04-09)
 
 
