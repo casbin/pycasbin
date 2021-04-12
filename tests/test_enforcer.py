@@ -38,15 +38,15 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce('bob', 'data2', 'write'))
         self.assertFalse(e.enforce('bob', 'data1', 'write'))
 
-    def test_enforce_ex_basic(self):
+    def test_enforceEx_basic(self):
         e = self.get_enforcer(
             get_examples("basic_model.conf"),
             get_examples("basic_policy.csv"),
         )
-        self.assertTupleEqual(e.enforce_ex('alice', 'data1', 'read'), (True, ['alice', 'data1', 'read']))
-        self.assertTupleEqual(e.enforce_ex('alice', 'data2', 'read'), (False, []))
-        self.assertTupleEqual(e.enforce_ex('bob', 'data2', 'write'), (True, ['bob', 'data2', 'write']))
-        self.assertTupleEqual(e.enforce_ex('bob', 'data1', 'write'), (False, []))
+        self.assertTupleEqual(e.enforceEx('alice', 'data1', 'read'), (True, ['alice', 'data1', 'read']))
+        self.assertTupleEqual(e.enforceEx('alice', 'data2', 'read'), (False, []))
+        self.assertTupleEqual(e.enforceEx('bob', 'data2', 'write'), (True, ['bob', 'data2', 'write']))
+        self.assertTupleEqual(e.enforceEx('bob', 'data1', 'write'), (False, []))
 
     def test_model_set_load(self):
         e = self.get_enforcer(

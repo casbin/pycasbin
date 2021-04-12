@@ -132,13 +132,13 @@ class SyncedEnforcer():
         with self._rl:
             return self._e.enforce(*rvals)
 
-    def enforce_ex(self, *rvals):
+    def enforceEx(self, *rvals):
         """decides whether a "subject" can access a "object" with the operation "action",
         input parameters are usually: (sub, obj, act).
         return judge result with reason
         """
         with self._rl:
-            return self._e.enforce_ex(*rvals)
+            return self._e.enforceEx(*rvals)
 
     def get_all_subjects(self):
         """gets the list of subjects that show up in the current policy."""
