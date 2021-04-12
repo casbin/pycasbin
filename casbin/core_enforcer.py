@@ -242,10 +242,10 @@ class CoreEnforcer:
         """decides whether a "subject" can access a "object" with the operation "action",
         input parameters are usually: (sub, obj, act).
         """
-        result, _ = self.enforceEx(*rvals)
+        result, _ = self.enforce_ex(*rvals)
         return result
 
-    def enforceEx(self, *rvals):
+    def enforce_ex(self, *rvals):
         """decides whether a "subject" can access a "object" with the operation "action",
         input parameters are usually: (sub, obj, act).
         return judge result with reason
