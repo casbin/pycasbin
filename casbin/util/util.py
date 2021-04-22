@@ -6,8 +6,8 @@ eval_reg = re.compile(r'\beval\((?P<rule>[^)]*)\)')
 def escape_assertion(s):
     """escapes the dots in the assertion, because the expression evaluation doesn't support such variable names."""
 
-    s = s.replace("r.", "r_")
-    s = s.replace("p.", "p_")
+    s = re.sub(r'\br\.', 'r_', s)
+    s = re.sub(r'\bp\.', 'p_', s)
 
     return s
 
