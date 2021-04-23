@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.3](https://github.com/casbin/pycasbin/compare/v1.0.2...v1.0.3) (2021-04-23)
+
+
+### Bug Fixes
+
+* r.user.name -> r_user_name instead of r_user.name in ABAC model ([192529e](https://github.com/casbin/pycasbin/commit/192529e11a8ddc848f3f2ee22c448c8afaf41f1b))
+
 ## [1.0.2](https://github.com/casbin/pycasbin/compare/v1.0.1...v1.0.2) (2021-04-12)
 
 
