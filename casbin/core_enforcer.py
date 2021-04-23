@@ -250,7 +250,6 @@ class CoreEnforcer:
         input parameters are usually: (sub, obj, act).
         return judge result with reason
         """
-        explain_index = -1
 
         if not self.enabled:
             return False
