@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.4](https://github.com/casbin/pycasbin/compare/v1.0.3...v1.0.4) (2021-04-24)
+
+
+### Performance Improvements
+
+* remove unused variable ([e642898](https://github.com/casbin/pycasbin/commit/e642898c5a0b9a8ccefb2104321985b82f420aa4))
+
 ## [1.0.3](https://github.com/casbin/pycasbin/compare/v1.0.2...v1.0.3) (2021-04-23)
 
 
