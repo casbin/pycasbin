@@ -1,6 +1,7 @@
-import fnmatch
-import re
 import ipaddress
+import re
+
+from wcmatch import pathlib
 
 KEY_MATCH2_PATTERN = re.compile(r'(.*?):[^\/]+(.*?)')
 KEY_MATCH3_PATTERN = re.compile(r'(.*?){[^\/]+}(.*?)')
@@ -86,7 +87,7 @@ def regex_match_func(*args):
 
 def glob_match(string, pattern):
     """determines whether string matches the pattern in glob expression."""
-    return fnmatch.fnmatch(string, pattern)
+    return pathlib.Path(string).globmatch(pattern)
 
 
 def glob_match_func(*args):

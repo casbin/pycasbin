@@ -90,30 +90,30 @@ class TestBuiltinOperators(TestCase):
         self.assertTrue(util.glob_match_func("/foo", "/foo*"))
         self.assertFalse(util.glob_match_func("/foo", "/foo/*"))
         self.assertFalse(util.glob_match_func("/foo/bar", "/foo"))
-        self.assertTrue(util.glob_match_func("/foo/bar", "/foo*"))  # differ from Casbin Go
+        self.assertFalse(util.glob_match_func("/foo/bar", "/foo*"))
         self.assertTrue(util.glob_match_func("/foo/bar", "/foo/*"))
         self.assertFalse(util.glob_match_func("/foobar", "/foo"))
         self.assertTrue(util.glob_match_func("/foobar", "/foo*"))
         self.assertFalse(util.glob_match_func("/foobar", "/foo/*"))
 
-        self.assertTrue(util.glob_match_func("/prefix/foo", "*/foo")) # differ from Casbin Go
-        self.assertTrue(util.glob_match_func("/prefix/foo", "*/foo*")) # differ from Casbin Go
+        self.assertFalse(util.glob_match_func("/prefix/foo", "*/foo"))
+        self.assertFalse(util.glob_match_func("/prefix/foo", "*/foo*"))
         self.assertFalse(util.glob_match_func("/prefix/foo", "*/foo/*"))
         self.assertFalse(util.glob_match_func("/prefix/foo/bar", "*/foo"))
-        self.assertTrue(util.glob_match_func("/prefix/foo/bar", "*/foo*")) # differ from Casbin Go
-        self.assertTrue(util.glob_match_func("/prefix/foo/bar", "*/foo/*")) # differ from Casbin Go
+        self.assertFalse(util.glob_match_func("/prefix/foo/bar", "*/foo*"))
+        self.assertFalse(util.glob_match_func("/prefix/foo/bar", "*/foo/*"))
         self.assertFalse(util.glob_match_func("/prefix/foobar", "*/foo"))
-        self.assertTrue(util.glob_match_func("/prefix/foobar", "*/foo*")) # differ from Casbin Go
+        self.assertFalse(util.glob_match_func("/prefix/foobar", "*/foo*"))
         self.assertFalse(util.glob_match_func("/prefix/foobar", "*/foo/*"))
 
-        self.assertTrue(util.glob_match_func("/prefix/subprefix/foo", "*/foo")) # differ from Casbin Go
-        self.assertTrue(util.glob_match_func("/prefix/subprefix/foo", "*/foo*")) # differ from Casbin Go
+        self.assertFalse(util.glob_match_func("/prefix/subprefix/foo", "*/foo"))
+        self.assertFalse(util.glob_match_func("/prefix/subprefix/foo", "*/foo*"))
         self.assertFalse(util.glob_match_func("/prefix/subprefix/foo", "*/foo/*"))
         self.assertFalse(util.glob_match_func("/prefix/subprefix/foo/bar", "*/foo"))
-        self.assertTrue(util.glob_match_func("/prefix/subprefix/foo/bar", "*/foo*")) # differ from Casbin Go
-        self.assertTrue(util.glob_match_func("/prefix/subprefix/foo/bar", "*/foo/*")) # differ from Casbin Go
+        self.assertFalse(util.glob_match_func("/prefix/subprefix/foo/bar", "*/foo*"))
+        self.assertFalse(util.glob_match_func("/prefix/subprefix/foo/bar", "*/foo/*"))
         self.assertFalse(util.glob_match_func("/prefix/subprefix/foobar", "*/foo"))
-        self.assertTrue(util.glob_match_func("/prefix/subprefix/foobar", "*/foo*")) # differ from Casbin Go
+        self.assertFalse(util.glob_match_func("/prefix/subprefix/foobar", "*/foo*"))
         self.assertFalse(util.glob_match_func("/prefix/subprefix/foobar", "*/foo/*"))
 
     def test_ip_match(self):
