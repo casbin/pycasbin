@@ -1,1 +1,2 @@
 simpleeval>=0.9.10
+wcmatch >= 8.1.2
