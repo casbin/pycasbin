@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.5](https://github.com/casbin/pycasbin/compare/v1.0.4...v1.0.5) (2021-05-12)
+
+
+### Bug Fixes
+
+* replace fnmatch with wcmatch for glob match, keep same behavior with Go Casbin ([#149](https://github.com/casbin/pycasbin/issues/149)) ([906f40c](https://github.com/casbin/pycasbin/commit/906f40c6c6b0d9e31104ca3ea92e4a8498c30619))
+
 ## [1.0.4](https://github.com/casbin/pycasbin/compare/v1.0.3...v1.0.4) (2021-04-24)
 
 
