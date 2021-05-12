@@ -1,9 +1,18 @@
 import setuptools
+from os import path
 
 desc_file = "README.md"
 
+here = path.abspath(path.dirname(__file__))
+
 with open(desc_file, "r") as fh:
     long_description = fh.read()
+
+# get the dependencies and installs
+with open(path.join(here, "requirements.txt"), encoding="utf-8") as f:
+    all_reqs = f.read().split("\n")
+
+install_requires = [x.strip() for x in all_reqs if "git+" not in x]
 
 setuptools.setup(
     name="casbin",
@@ -15,7 +24,7 @@ setuptools.setup(
     url="https://github.com/casbin/pycasbin",
     keywords=["casbin", "acl", "rbac", "abac", "auth", "authz", "authorization", "access control", "permission"],
     packages=setuptools.find_packages(exclude=("tests",)),
-    install_requires=['simpleeval>=0.9.10'],
+    install_requires=install_requires,
     python_requires=">=3.3",
     license="Apache 2.0",
     classifiers=[
