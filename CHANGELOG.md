@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.6](https://github.com/casbin/pycasbin/compare/v1.0.5...v1.0.6) (2021-05-13)
+
+
+### Bug Fixes
+
+* optimized install_requires parsing process ([34d3a4f](https://github.com/casbin/pycasbin/commit/34d3a4f5cfb120e0b074c557e831c74fb0e3101f))
+
 ## [1.0.5](https://github.com/casbin/pycasbin/compare/v1.0.4...v1.0.5) (2021-05-12)
 
 
