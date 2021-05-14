@@ -10,7 +10,7 @@ class DistributedEnforcer(SyncedEnforcer):
     """DistributedEnforcer wraps SyncedEnforcer for dispatcher."""
 
     def __init__(self, model=None, adapter=None):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(__name__)
         SyncedEnforcer.__init__(self, model, adapter)
 
     def add_policy_self(self, should_persist, sec, ptype, rules):

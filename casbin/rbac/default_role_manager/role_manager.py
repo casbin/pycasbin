@@ -10,7 +10,7 @@ class RoleManager(RoleManager):
     max_hierarchy_level = 0
 
     def __init__(self, max_hierarchy_level):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(__name__)
         self.all_roles = dict()
         self.max_hierarchy_level = max_hierarchy_level
         self.matching_func = None
