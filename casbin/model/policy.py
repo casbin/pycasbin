@@ -2,7 +2,7 @@ import logging
 
 class Policy:
     def __init__(self):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(__name__)
         self.model = {}
 
     def build_role_links(self, rm_map):
