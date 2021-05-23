@@ -59,7 +59,7 @@ class CoreEnforcer:
         self.adapter = adapter
 
         self.model = m
-        m.logger = self.logger        
+        m.logger = self.logger
         self.model.print_model()
         self.fm = FunctionMap.load_function_map()
 
@@ -253,7 +253,7 @@ class CoreEnforcer:
         """
 
         if not self.enabled:
-            return False
+            return [False, []]
 
         functions = self.fm.get_functions()
 
