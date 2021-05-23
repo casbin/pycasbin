@@ -1,5 +1,17 @@
 # Semantic Versioning Changelog
 
+# [1.1.0](https://github.com/casbin/pycasbin/compare/v1.0.6...v1.1.0) (2021-05-23)
+
+
+### Bug Fixes
+
+* enforce_ex now works fine when it was disabled ([15f58c9](https://github.com/casbin/pycasbin/commit/15f58c9af82b10e1a6dd4ce584ea39f1235031b9))
+
+
+### Features
+
+* Use named loggers ([#153](https://github.com/casbin/pycasbin/issues/153)) ([40e7f00](https://github.com/casbin/pycasbin/commit/40e7f001c77034854e0916dba13bc87f30c2ce7d))
+
 ## [1.0.6](https://github.com/casbin/pycasbin/compare/v1.0.5...v1.0.6) (2021-05-13)
 
 
