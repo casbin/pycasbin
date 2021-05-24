@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.1.1](https://github.com/casbin/pycasbin/compare/v1.1.0...v1.1.1) (2021-05-24)
+
+
+### Bug Fixes
+
+* function 'keyMatch3' not defined ([e97bb6a](https://github.com/casbin/pycasbin/commit/e97bb6aadc58faca33d6c606d9bae31adfbd2259))
+
 # [1.1.0](https://github.com/casbin/pycasbin/compare/v1.0.6...v1.1.0) (2021-05-23)
 
 
