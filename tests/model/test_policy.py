@@ -68,6 +68,19 @@ class TestPolicy(TestCase):
         self.assertFalse(m.has_policy('p', 'p', old_rule))
         self.assertTrue(m.has_policy('p', 'p', new_rule))
 
+        m = Model()
+        m.load_model(get_examples("priority_model_explicit.conf"))
+
+        old_rule = ['1', 'admin', 'data1', 'read', 'allow']
+        new_rule = ['1', 'admin', 'data2', 'read', 'allow']
+
+        m.add_policy('p', 'p', old_rule)
+        self.assertTrue(m.has_policy('p', 'p', old_rule))
+
+        m.update_policy('p', 'p', old_rule, new_rule)
+        self.assertFalse(m.has_policy('p', 'p', old_rule))
+        self.assertTrue(m.has_policy('p', 'p', new_rule))
+
     def test_update_policies(self):
         m = Model()
         m.load_model(get_examples("basic_model.conf"))
@@ -78,6 +91,28 @@ class TestPolicy(TestCase):
         new_rules = [['admin', 'domain1', 'data4', 'read'],
                      ['admin', 'domain1', 'data5', 'read'],
                      ['admin', 'domain1', 'data6', 'read']]
+
+        m.add_policies('p', 'p', old_rules)
+
+        for old_rule in old_rules:
+            self.assertTrue(m.has_policy('p', 'p', old_rule))
+
+        m.update_policies('p', 'p', old_rules, new_rules)
+
+        for old_rule in old_rules:
+            self.assertFalse(m.has_policy('p', 'p', old_rule))
+        for new_rule in new_rules:
+            self.assertTrue(m.has_policy('p', 'p', new_rule))
+
+        m = Model()
+        m.load_model(get_examples("priority_model_explicit.conf"))
+
+        old_rules = [['1', 'admin', 'data1', 'read', 'allow'],
+                     ['1', 'admin', 'data2', 'read', 'allow'],
+                     ['1', 'admin', 'data3', 'read', 'allow']]
+        new_rules = [['1', 'admin', 'data4', 'read', 'allow'],
+                     ['1', 'admin', 'data5', 'read', 'allow'],
+                     ['1', 'admin', 'data6', 'read', 'allow']]
 
         m.add_policies('p', 'p', old_rules)
 
