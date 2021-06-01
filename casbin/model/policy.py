@@ -90,14 +90,33 @@ class Policy:
 
         return self.remove_policy(sec, ptype, old_rule) and self.add_policy(sec, ptype, new_rule)
 
-    def update_policies(self, sec, ptype, old_rules, new_rules):
-        """update policy rules from the model."""
+    def update_policy(self, sec, ptype, old_rule, new_rule):
+        """update a policy rule from the model."""
 
-        for rule in old_rules:
-            if not self.has_policy(sec, ptype, rule):
-                return False
+        if sec not in self.model.keys():
+            return False
+        if ptype not in self.model[sec]:
+            return False
 
-        return self.remove_policies(sec, ptype, old_rules) and self.add_policies(sec, ptype, new_rules)
+        ast = self.model[sec][ptype]
+
+        # find rule index, if fail return false
+        try:
+            rule_index = ast.policy.index(old_rule)
+        except:
+            return False
+        # find rule priority index, if fail, add directly.
+        try:
+            priority_index = ast.tokens.index(old_rule)
+        except ValueError:
+            ast.policy[rule_index] = new_rule
+        else:
+            if old_rule[priority_index] == new_rule[priority_index]:
+                ast.policy[rule_index] = new_rule
+            else:
+                raise Exception("New rule should have the same priority with old rule.")
+
+        return True
 
     def remove_policy(self, sec, ptype, rule):
         """removes a policy rule from the model."""
