@@ -85,19 +85,60 @@ class Policy:
     def update_policy(self, sec, ptype, old_rule, new_rule):
         """update a policy rule from the model."""
 
-        if not self.has_policy(sec, ptype, old_rule):
+        if sec not in self.model.keys():
+            return False
+        if ptype not in self.model[sec]:
             return False
 
-        return self.remove_policy(sec, ptype, old_rule) and self.add_policy(sec, ptype, new_rule)
+        ast = self.model[sec][ptype]
+
+        if old_rule in ast.policy:
+            rule_index = ast.policy.index(old_rule)
+        else:
+            return False
+
+        if "p_priority" in ast.tokens:
+            priority_index = ast.tokens.index("p_priority")
+            if old_rule[priority_index] == new_rule[priority_index]:
+                ast.policy[rule_index] = new_rule
+            else:
+                raise Exception("New rule should have the same priority with old rule.")
+        else:
+            ast.policy[rule_index] = new_rule
+
+        return True
 
     def update_policies(self, sec, ptype, old_rules, new_rules):
         """update policy rules from the model."""
 
-        for rule in old_rules:
-            if not self.has_policy(sec, ptype, rule):
+        if sec not in self.model.keys():
+            return False
+        if ptype not in self.model[sec]:
+            return False
+        if len(old_rules) != len(new_rules):
+            return False
+
+        ast = self.model[sec][ptype]
+        old_rules_index = []
+
+        for old_rule in old_rules:
+            if old_rule in ast.policy:
+                old_rules_index.append(ast.policy.index(old_rule))
+            else:
                 return False
 
-        return self.remove_policies(sec, ptype, old_rules) and self.add_policies(sec, ptype, new_rules)
+        if "p_priority" in ast.tokens:
+            priority_index = ast.tokens.index("p_priority")
+            for idx, old_rule, new_rule in zip(old_rules_index, old_rules, new_rules):
+                if old_rule[priority_index] == new_rule[priority_index]:
+                    ast.policy[idx] = new_rule
+                else:
+                    raise Exception("New rule should have the same priority with old rule.")
+        else:
+            for idx, old_rule, new_rule in zip(old_rules_index ,old_rules, new_rules):
+                ast.policy[idx] = new_rule
+
+        return True
 
     def remove_policy(self, sec, ptype, rule):
         """removes a policy rule from the model."""
