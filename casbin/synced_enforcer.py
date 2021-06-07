@@ -49,6 +49,7 @@ class SyncedEnforcer():
             return
         self._auto_loading.value = True
         self._auto_loading_thread = threading.Thread(target=self._auto_load_policy, args=[interval], daemon=True)
+        self._auto_loading_thread.start()
         
     def stop_auto_load_policy(self):
         """stops the thread started by start_auto_load_policy"""
