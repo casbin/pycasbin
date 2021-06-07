@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.1.2](https://github.com/casbin/pycasbin/compare/v1.1.1...v1.1.2) (2021-06-07)
+
+
+### Bug Fixes
+
+* start auto loading policy for SyncedEnforcer ([4724f7a](https://github.com/casbin/pycasbin/commit/4724f7a2c137ba5357634aee1eebc1b1c28959f9))
+
 ## [1.1.1](https://github.com/casbin/pycasbin/compare/v1.1.0...v1.1.1) (2021-05-24)
 
 
