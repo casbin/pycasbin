@@ -25,7 +25,9 @@ class FileAdapter(persist.Adapter):
     def _load_policy_file(self, model):
         with open(self._file_path, "rb") as file:
             line = file.readline()
+
             while line:
+
                 persist.load_policy_line(line.decode().strip(), model)
                 line = file.readline()
 
@@ -40,6 +42,7 @@ class FileAdapter(persist.Adapter):
 
             if "g" in model.model.keys():
                 for key, ast in model.model["g"].items():
+
                     for pvals in ast.policy:
                         lines.append(key + ", " + ", ".join(pvals))
 

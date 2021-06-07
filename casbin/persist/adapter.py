@@ -1,3 +1,4 @@
+domain_all=set()
 def load_policy_line(line, model):
     """loads a text line as a policy rule to model."""
 
@@ -11,6 +12,7 @@ def load_policy_line(line, model):
     key = tokens[0]
     sec = key[0]
 
+
     if sec not in model.model.keys():
         return
 
@@ -18,6 +20,19 @@ def load_policy_line(line, model):
         return
 
     model.model[sec][key].policy.append(tokens[1:])
+
+
+    if sec=='p':
+        domain_all.add(tokens[2])
+
+    if sec=='g' and tokens[3]=='*':
+        for domain in domain_all:
+            tem_line=tokens[:]
+            tem_line[3]=domain
+            tem_line=", ".join(tem_line)
+
+            load_policy_line(tem_line,model)
+
 
 
 class Adapter:
