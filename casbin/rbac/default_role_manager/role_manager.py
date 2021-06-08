@@ -94,27 +94,6 @@ class RoleManager(RoleManager):
                         and duplicate_judge():
                     self.all_roles[role2.get_key()].add_role(role)
 
-                # def match_check(a, b):
-                #     if self.matching_func(a.name, b.name) and duplicate_judge():
-                #         self.all_roles[b.get_key()].add_role(a)
-                #
-                # match_check(role, role1)
-                # match_check(role, role2)
-                # match_check(role1, role)
-                # match_check(role2, role)
-
-                # if self.matching_func(role.name, role1.name) and duplicate_judge():
-                #     self.all_roles[role1.get_key()].add_role(role1)
-                #
-                # if self.matching_func(role.name, role2.name) and duplicate_judge():
-                #     self.all_roles[role2.get_key()].add_role(role)
-                #
-                # if self.matching_func(role1.name, role.name) and duplicate_judge():
-                #     self.all_roles[role.get_key()].add_role(role1)
-                #
-                # if self.matching_func(role2.name, role.name) and duplicate_judge():
-                #     self.all_roles[role.get_key()].add_role(role2)
-
     def delete_link(self, name1, name2, *domain):
         role1, role2 = two_role_domain_wrapper(self, name1, name2, domain)
 
