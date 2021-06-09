@@ -86,11 +86,13 @@ class RoleManager(RoleManager):
                 def duplicate_judge():
                     return role1.name != role.name and role2.name != role.name
 
-                if self.matching_func(role.name, role1.name) or self.matching_func(role1.name, role.name) \
+                if match_error_handler(self.matching_func, role.name, role1.name) \
+                        or match_error_handler(self.matching_func, role1.name, role.name) \
                         and duplicate_judge():
                     self.all_roles[role.get_key()].add_role(role1)
 
-                if self.matching_func(role.name, role2.name) or self.matching_func(role2.name, role.name) \
+                if match_error_handler(self.matching_func, role.name, role2.name) \
+                        or match_error_handler(self.matching_func, role2.name, role.name) \
                         and duplicate_judge():
                     self.all_roles[role2.get_key()].add_role(role)
 
@@ -288,3 +290,10 @@ def role_domain_wrapper(obj, name, domain):
 
 def two_role_domain_wrapper(obj, name1, name2, domain):
     return role_domain_wrapper(obj, name1, domain), role_domain_wrapper(obj, name2, domain)
+
+
+def match_error_handler(fn, key1, key2):
+    try:
+        return fn(key1, key2)
+    except:
+        return False
