@@ -4,11 +4,12 @@ from casbin.util import regex_match_func
 import time
 from concurrent.futures import ThreadPoolExecutor
 
+
 def get_role_manager():
     return default_role_manager.RoleManager(max_hierarchy_level=10)
 
-class TestDefaultRoleManager(TestCase):
 
+class TestDefaultRoleManager(TestCase):
     def test_role(self):
         rm = get_role_manager()
         rm.add_link("u1", "g1")
@@ -197,29 +198,28 @@ class TestDefaultRoleManager(TestCase):
         self.assertTrue(rm.has_link("u1", "root"))
 
         rm.clear()
-        
+
         rm.add_link("u1", "g1")
         rm.add_link(r"g\d+", "root")
         self.assertTrue(rm.has_link("u1", "root"))
 
         rm.clear()
-        
+
         rm.add_link("u1", r"g\d+")
         rm.add_link("g1", "root")
         self.assertTrue(rm.has_link("u1", "root"))
 
         rm.clear()
-        
+
         rm.add_link("g1", "root")
         rm.add_link("u1", r"g\d+")
         self.assertTrue(rm.has_link("u1", "root"))
 
     def test_concurrent_has_link_with_matching_func(self):
-        
         def matching_func(*args):
             time.sleep(0.01)
             return regex_match_func(*args)
-        
+
         rm = get_role_manager()
         rm.add_matching_func(matching_func)
         rm.add_link(r"u\d+", "users")
@@ -228,7 +228,6 @@ class TestDefaultRoleManager(TestCase):
             return rm.has_link(role, "users")
 
         executor = ThreadPoolExecutor(10)
-        futures = [executor.submit(test_has_link, "u"+str(i)) for i in range(10)]
+        futures = [executor.submit(test_has_link, "u" + str(i)) for i in range(10)]
         for future in futures:
             self.assertTrue(future.result())
-    

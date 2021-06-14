@@ -1,13 +1,14 @@
 from collections import OrderedDict
 import re
 
-eval_reg = re.compile(r'\beval\((?P<rule>[^)]*)\)')
+eval_reg = re.compile(r"\beval\((?P<rule>[^)]*)\)")
+
 
 def escape_assertion(s):
     """escapes the dots in the assertion, because the expression evaluation doesn't support such variable names."""
 
-    s = re.sub(r'\br\.', 'r_', s)
-    s = re.sub(r'\bp\.', 'p_', s)
+    s = re.sub(r"\br\.", "r_", s)
+    s = re.sub(r"\bp\.", "p_", s)
 
     return s
 
@@ -38,35 +39,40 @@ def params_to_string(*s):
 
     return ", ".join(s)
 
+
 def join_slice(a, *b):
-    ''' joins a string and a slice into a new slice.'''
+    """joins a string and a slice into a new slice."""
     res = [a]
 
     res.extend(b)
 
     return res
 
+
 def set_subtract(a, b):
-    ''' returns the elements in `a` that aren't in `b`. '''
+    """returns the elements in `a` that aren't in `b`."""
     return [i for i in a if i not in b]
 
+
 def has_eval(s):
-    '''determine whether matcher contains function eval'''
+    """determine whether matcher contains function eval"""
     return eval_reg.search(s)
 
+
 def replace_eval(expr, rules):
-    ''' replace all occurences of function eval with rules '''
+    """replace all occurences of function eval with rules"""
     pos = 0
     match = eval_reg.search(expr, pos)
     while match:
         rule = "(" + rules.pop(0) + ")"
-        expr = expr[:match.start()] + rule + expr[match.end():]
+        expr = expr[: match.start()] + rule + expr[match.end() :]
         pos = match.start() + len(rule)
         match = eval_reg.search(expr, pos)
 
     return expr
 
+
 def get_eval_value(s):
-    '''returns the parameters of function eval'''
+    """returns the parameters of function eval"""
     sub_match = eval_reg.findall(s)
     return sub_match.copy()

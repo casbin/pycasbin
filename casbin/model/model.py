@@ -2,14 +2,15 @@ from . import Assertion
 from casbin import util, config
 from .policy import Policy
 
+
 class Model(Policy):
 
     section_name_map = {
-        'r': 'request_definition',
-        'p': 'policy_definition',
-        'g': 'role_definition',
-        'e': 'policy_effect',
-        'm': 'matchers',
+        "r": "request_definition",
+        "p": "policy_definition",
+        "g": "role_definition",
+        "e": "policy_effect",
+        "m": "matchers",
     }
 
     def _load_assertion(self, cfg, sec, key):
@@ -27,7 +28,7 @@ class Model(Policy):
 
         if "r" == sec or "p" == sec:
             ast.tokens = ast.value.split(",")
-            for i,token in enumerate(ast.tokens):
+            for i, token in enumerate(ast.tokens):
                 ast.tokens[i] = key + "_" + token.strip()
         else:
             ast.value = util.remove_comments(util.escape_assertion(ast.value))

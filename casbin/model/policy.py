@@ -1,5 +1,6 @@
 import logging
 
+
 class Policy:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
@@ -48,8 +49,12 @@ class Policy:
     def get_filtered_policy(self, sec, ptype, field_index, *field_values):
         """gets rules based on field filters from a policy."""
         return [
-            rule for rule in self.model[sec][ptype].policy
-            if all(value == "" or rule[field_index + i] == value for i, value in enumerate(field_values))
+            rule
+            for rule in self.model[sec][ptype].policy
+            if all(
+                value == "" or rule[field_index + i] == value
+                for i, value in enumerate(field_values)
+            )
         ]
 
     def has_policy(self, sec, ptype, rule):
@@ -70,11 +75,11 @@ class Policy:
 
         return False
 
-    def add_policies(self,sec,ptype,rules):
+    def add_policies(self, sec, ptype, rules):
         """adds policy rules to the model."""
 
         for rule in rules:
-            if self.has_policy(sec,ptype,rule):
+            if self.has_policy(sec, ptype, rule):
                 return False
 
         for rule in rules:
@@ -133,9 +138,11 @@ class Policy:
                 if old_rule[priority_index] == new_rule[priority_index]:
                     ast.policy[idx] = new_rule
                 else:
-                    raise Exception("New rule should have the same priority with old rule.")
+                    raise Exception(
+                        "New rule should have the same priority with old rule."
+                    )
         else:
-            for idx, old_rule, new_rule in zip(old_rules_index ,old_rules, new_rules):
+            for idx, old_rule, new_rule in zip(old_rules_index, old_rules, new_rules):
                 ast.policy[idx] = new_rule
 
         return True
@@ -153,7 +160,7 @@ class Policy:
         """RemovePolicies removes policy rules from the model."""
 
         for rule in rules:
-            if not self.has_policy(sec,ptype,rule):
+            if not self.has_policy(sec, ptype, rule):
                 return False
             self.model[sec][ptype].policy.remove(rule)
             if rule in self.model[sec][ptype].policy:
@@ -170,14 +177,16 @@ class Policy:
 
         return effected
 
-    def remove_filtered_policy_returns_effects(self, sec, ptype, field_index, *field_values):
+    def remove_filtered_policy_returns_effects(
+        self, sec, ptype, field_index, *field_values
+    ):
         """
         remove_filtered_policy_returns_effects removes policy rules based on field filters from the model.
         """
         tmp = []
         effects = []
 
-        if(len(field_values) == 0):
+        if len(field_values) == 0:
             return []
         if sec not in self.model.keys():
             return []
@@ -185,7 +194,10 @@ class Policy:
             return []
 
         for rule in self.model[sec][ptype].policy:
-            if all(value == "" or rule[field_index + i] == value for i, value in enumerate(field_values[0])):
+            if all(
+                value == "" or rule[field_index + i] == value
+                for i, value in enumerate(field_values[0])
+            ):
                 effects.append(rule)
             else:
                 tmp.append(rule)
@@ -193,7 +205,6 @@ class Policy:
         self.model[sec][ptype].policy = tmp
 
         return effects
-
 
     def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes policy rules based on field filters from the model."""
@@ -206,7 +217,10 @@ class Policy:
             return res
 
         for rule in self.model[sec][ptype].policy:
-            if all(value == "" or rule[field_index + i] == value for i, value in enumerate(field_values)):
+            if all(
+                value == "" or rule[field_index + i] == value
+                for i, value in enumerate(field_values)
+            ):
                 res = True
             else:
                 tmp.append(rule)
