@@ -98,8 +98,9 @@ class RoleManager(RoleManager):
             return role1.has_role(name2, self.max_hierarchy_level)
         else:
             for key, role in self.all_roles.items():
-                if self.matching_func(name1, key) and role.has_role(name2, self.max_hierarchy_level,
-                                                                    self.matching_func):
+                if self.matching_func(name1, key) and role.has_role(
+                    name2, self.max_hierarchy_level, self.matching_func
+                ):
                     return True
             return False
 
@@ -117,7 +118,7 @@ class RoleManager(RoleManager):
         roles = self.create_role(name).get_roles()
         if domain:
             for key, value in enumerate(roles):
-                roles[key] = value[len(domain) + 2:]
+                roles[key] = value[len(domain) + 2 :]
 
         return roles
 
@@ -138,7 +139,7 @@ class RoleManager(RoleManager):
         for role in self.all_roles.values():
             if role.has_direct_role(name):
                 if len(domain) == 1:
-                    names.append(role.name[len(domain[0]) + 2:])
+                    names.append(role.name[len(domain[0]) + 2 :])
                 else:
                     names.append(role.name)
 

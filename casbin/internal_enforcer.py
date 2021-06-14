@@ -1,9 +1,10 @@
 from casbin.core_enforcer import CoreEnforcer
 from casbin.model.policy_op import PolicyOp
 
+
 class InternalEnforcer(CoreEnforcer):
     """
-        InternalEnforcer = CoreEnforcer + Internal API.
+    InternalEnforcer = CoreEnforcer + Internal API.
     """
 
     def _add_policy(self, sec, ptype, rule):
@@ -20,17 +21,17 @@ class InternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rule_added
-    
-    def _add_policies(self,sec,ptype,rules):
+
+    def _add_policies(self, sec, ptype, rules):
         """adds rules to the current policy."""
         rules_added = self.model.add_policies(sec, ptype, rules)
         if not rules_added:
             return rules_added
 
         if self.adapter and self.auto_save:
-            if hasattr(self.adapter,'add_policies') is False:
+            if hasattr(self.adapter, "add_policies") is False:
                 return False
-                
+
             if self.adapter.add_policies(sec, ptype, rules) is False:
                 return False
 
@@ -72,7 +73,7 @@ class InternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rules_updated
-    
+
     def _remove_policy(self, sec, ptype, rule):
         """removes a rule from the current policy."""
         rule_removed = self.model.remove_policy(sec, ptype, rule)
@@ -95,7 +96,7 @@ class InternalEnforcer(CoreEnforcer):
             return rules_removed
 
         if self.adapter and self.auto_save:
-            if hasattr(self.adapter,'remove_policies') is False:
+            if hasattr(self.adapter, "remove_policies") is False:
                 return False
 
             if self.adapter.remove_policies(sec, ptype, rules) is False:
@@ -108,12 +109,19 @@ class InternalEnforcer(CoreEnforcer):
 
     def _remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes rules based on field filters from the current policy."""
-        rule_removed = self.model.remove_filtered_policy(sec, ptype, field_index, *field_values)
+        rule_removed = self.model.remove_filtered_policy(
+            sec, ptype, field_index, *field_values
+        )
         if not rule_removed:
             return rule_removed
 
         if self.adapter and self.auto_save:
-            if self.adapter.remove_filtered_policy(sec, ptype, field_index, *field_values) is False:
+            if (
+                self.adapter.remove_filtered_policy(
+                    sec, ptype, field_index, *field_values
+                )
+                is False
+            ):
                 return False
 
             if self.watcher:

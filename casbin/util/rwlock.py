@@ -2,8 +2,9 @@ from threading import RLock, Condition
 
 # This implementation was adapted from https://en.wikipedia.org/wiki/Readers%E2%80%93writer_lock
 
-class RWLockWrite():
-    ''' write preferring readers-wirter lock '''
+
+class RWLockWrite:
+    """write preferring readers-wirter lock"""
 
     def __init__(self):
         self._lock = RLock()
@@ -17,7 +18,7 @@ class RWLockWrite():
             while self._waiting_writers > 0 or self._writer_active:
                 self._cond.wait()
             self._active_readers += 1
-    
+
     def release_read(self):
         with self._lock:
             self._active_readers -= 1
@@ -43,8 +44,8 @@ class RWLockWrite():
     def gen_wlock(self):
         return WriteRWLock(self)
 
-class ReadRWLock():
 
+class ReadRWLock:
     def __init__(self, rwlock):
         self.rwlock = rwlock
 
@@ -55,8 +56,8 @@ class ReadRWLock():
         self.rwlock.release_read()
         return False
 
-class WriteRWLock():
 
+class WriteRWLock:
     def __init__(self, rwlock):
         self.rwlock = rwlock
 

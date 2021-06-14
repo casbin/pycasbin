@@ -1,0 +1,2 @@
+-r requirements.txt
+black==21.6b0

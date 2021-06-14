@@ -1,9 +1,10 @@
 from casbin.management_enforcer import ManagementEnforcer
 from casbin.util import join_slice, set_subtract
 
+
 class Enforcer(ManagementEnforcer):
     """
-        Enforcer = ManagementEnforcer + RBAC_API + RBAC_WITH_DOMAIN_API
+    Enforcer = ManagementEnforcer + RBAC_API + RBAC_WITH_DOMAIN_API
     """
 
     """creates an enforcer via file or DB.
@@ -16,15 +17,15 @@ class Enforcer(ManagementEnforcer):
     """
 
     def get_roles_for_user(self, name):
-        """ gets the roles that a user has. """
+        """gets the roles that a user has."""
         return self.model.model["g"]["g"].rm.get_roles(name)
 
     def get_users_for_role(self, name):
-        """ gets the users that has a role. """
+        """gets the users that has a role."""
         return self.model.model["g"]["g"].rm.get_users(name)
 
     def has_role_for_user(self, name, role):
-        """ determines whether a user has a role. """
+        """determines whether a user has a role."""
         roles = self.get_roles_for_user(name)
         return any(r == role for r in roles)
 
@@ -190,11 +191,11 @@ class Enforcer(ManagementEnforcer):
 
     def get_roles_for_user_in_domain(self, name, domain):
         """gets the roles that a user has inside a domain."""
-        return self.model.model['g']['g'].rm.get_roles(name, domain)
+        return self.model.model["g"]["g"].rm.get_roles(name, domain)
 
     def get_users_for_role_in_domain(self, name, domain):
         """gets the users that has a role inside a domain."""
-        return self.model.model['g']['g'].rm.get_users(name, domain)
+        return self.model.model["g"]["g"].rm.get_users(name, domain)
 
     def add_role_for_user_in_domain(self, user, role, domain):
         """adds a role for a user inside a domain."""
