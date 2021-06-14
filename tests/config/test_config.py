@@ -40,8 +40,12 @@ class TestConfig(TestCase):
         self.assertEqual(config.get("multi5::name"), "r.sub==p.sub && r.obj==p.obj")
 
         self.assertEqual(config.get_bool("multi5::name"), False)
-        self.assertEqual(config.get_string("multi5::name"), "r.sub==p.sub && r.obj==p.obj")
-        self.assertEqual(config.get_strings("multi5::name"), ['r.sub==p.sub && r.obj==p.obj'])
+        self.assertEqual(
+            config.get_string("multi5::name"), "r.sub==p.sub && r.obj==p.obj"
+        )
+        self.assertEqual(
+            config.get_strings("multi5::name"), ["r.sub==p.sub && r.obj==p.obj"]
+        )
         with self.assertRaises(ValueError):
             config.get_int("multi5::name")
         with self.assertRaises(ValueError):

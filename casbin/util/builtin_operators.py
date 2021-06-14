@@ -3,8 +3,8 @@ import re
 
 from wcmatch import pathlib
 
-KEY_MATCH2_PATTERN = re.compile(r'(.*?):[^\/]+(.*?)')
-KEY_MATCH3_PATTERN = re.compile(r'(.*?){[^\/]+}(.*?)')
+KEY_MATCH2_PATTERN = re.compile(r"(.*?):[^\/]+(.*?)")
+KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+}(.*?)")
 
 
 def key_match(key1, key2):
@@ -22,8 +22,7 @@ def key_match(key1, key2):
 
 
 def key_match_func(*args):
-    """The wrapper for key_match.
-    """
+    """The wrapper for key_match."""
     name1 = args[0]
     name2 = args[1]
 
@@ -36,7 +35,7 @@ def key_match2(key1, key2):
     """
 
     key2 = key2.replace("/*", "/.*")
-    key2 = KEY_MATCH2_PATTERN.sub(r'\g<1>[^\/]+\g<2>', key2, 0)
+    key2 = KEY_MATCH2_PATTERN.sub(r"\g<1>[^\/]+\g<2>", key2, 0)
 
     return regex_match(key1, "^" + key2 + "$")
 
@@ -54,7 +53,7 @@ def key_match3(key1, key2):
     """
 
     key2 = key2.replace("/*", "/.*")
-    key2 = KEY_MATCH3_PATTERN.sub(r'\g<1>[^\/]+\g<2>', key2, 0)
+    key2 = KEY_MATCH3_PATTERN.sub(r"\g<1>[^\/]+\g<2>", key2, 0)
 
     return regex_match(key1, "^" + key2 + "$")
 

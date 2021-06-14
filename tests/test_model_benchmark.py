@@ -21,7 +21,9 @@ def print_time_diff(start, end, time):
 
 class TestModelBenchmark(TestCaseBase):
     def test_benchmark_basic_model(self):
-        e = self.get_enforcer(get_examples("basic_model.conf"), get_examples("basic_policy.csv"))
+        e = self.get_enforcer(
+            get_examples("basic_model.conf"), get_examples("basic_policy.csv")
+        )
 
         time = 10000
         start = datetime.datetime.now()
@@ -31,7 +33,9 @@ class TestModelBenchmark(TestCaseBase):
         print_time_diff(start, end, time)
 
     def test_benchmark_rbac_model(self):
-        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
+        e = self.get_enforcer(
+            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
+        )
 
         time = 10000
         start = datetime.datetime.now()
@@ -40,8 +44,8 @@ class TestModelBenchmark(TestCaseBase):
         end = datetime.datetime.now()
         print_time_diff(start, end, time)
 
-class TestModelBenchmarkSynced(TestModelBenchmark):
 
+class TestModelBenchmarkSynced(TestModelBenchmark):
     def get_enforcer(self, model=None, adapter=None):
         return casbin.SyncedEnforcer(
             model,

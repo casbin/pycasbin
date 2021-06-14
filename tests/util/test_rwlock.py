@@ -4,8 +4,8 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 import queue
 
-class TestRWLock(TestCase):
 
+class TestRWLock(TestCase):
     def gen_locks(self):
         rw_lock = RWLockWrite()
         rl = rw_lock.gen_rlock()
@@ -14,8 +14,8 @@ class TestRWLock(TestCase):
 
     def test_multiple_readers(self):
         [rl, _] = self.gen_locks()
-        
-        delay = 5/1000 #5ms
+
+        delay = 5 / 1000  # 5ms
         num_readers = 10
         start = time.time()
 
@@ -27,13 +27,13 @@ class TestRWLock(TestCase):
         futures = [executor.submit(read) for i in range(num_readers)]
         [future.result() for future in futures]
         exec_time = time.time() - start
-        
-        self.assertLess(exec_time, delay*num_readers)
+
+        self.assertLess(exec_time, delay * num_readers)
 
     def test_single_writer(self):
         [_, wl] = self.gen_locks()
 
-        delay = 5/1000 #5ms
+        delay = 5 / 1000  # 5ms
         num_writers = 10
         start = time.time()
 
@@ -45,41 +45,36 @@ class TestRWLock(TestCase):
         futures = [executor.submit(write) for i in range(num_writers)]
         [future.result() for future in futures]
         exec_time = time.time() - start
-        
-        self.assertGreaterEqual(exec_time, delay*num_writers)
+
+        self.assertGreaterEqual(exec_time, delay * num_writers)
 
     def test_writer_preference(self):
         [rl, wl] = self.gen_locks()
 
         q = queue.Queue()
-        delay = 5/1000 #5ms
+        delay = 5 / 1000  # 5ms
         start = time.time()
 
         def read():
             with rl:
                 time.sleep(delay)
-                q.put('r')
+                q.put("r")
 
         def write():
             with wl:
                 time.sleep(delay)
-                q.put('w')
+                q.put("w")
 
         executor = ThreadPoolExecutor(10)
         futures = [executor.submit(read) for i in range(3)]
-        time.sleep(1/1000)
+        time.sleep(1 / 1000)
         futures += [executor.submit(write) for i in range(3)]
-        time.sleep(1/1000)
+        time.sleep(1 / 1000)
         futures += [executor.submit(read) for i in range(3)]
         [future.result() for future in futures]
 
-        sequence = ''
+        sequence = ""
         while not q.empty():
             sequence += q.get()
 
-        self.assertEqual(sequence, 'rrrwwwrrr')
-
-
-
-
-        
+        self.assertEqual(sequence, "rrrwwwrrr")

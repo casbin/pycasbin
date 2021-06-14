@@ -53,7 +53,11 @@ class CoreEnforcer:
     def init_with_model_and_adapter(self, m, adapter=None):
         """initializes an enforcer with a model and a database adapter."""
 
-        if not isinstance(m, Model) or adapter is not None and not isinstance(adapter, Adapter):
+        if (
+            not isinstance(m, Model)
+            or adapter is not None
+            and not isinstance(adapter, Adapter)
+        ):
             raise RuntimeError("Invalid parameters for enforcer.")
 
         self.adapter = adapter
@@ -131,11 +135,11 @@ class CoreEnforcer:
 
     def get_role_manager(self):
         """gets the current role manager."""
-        return self.rm_map['g']
+        return self.rm_map["g"]
 
     def set_role_manager(self, rm):
         """sets the current role manager."""
-        self.rm_map['g'] = rm
+        self.rm_map["g"] = rm
 
     def set_effector(self, eft):
         """sets the current effector."""
@@ -143,13 +147,13 @@ class CoreEnforcer:
         self.eft = eft
 
     def clear_policy(self):
-        """ clears all policy."""
+        """clears all policy."""
 
         self.model.clear_policy()
 
     def init_rm_map(self):
-        if 'g' in self.model.model.keys():
-            for ptype in self.model.model['g']:
+        if "g" in self.model.model.keys():
+            for ptype in self.model.model["g"]:
                 self.rm_map[ptype] = default_role_manager.RoleManager(10)
 
     def load_policy(self):
@@ -296,7 +300,10 @@ class CoreEnforcer:
 
                 if util.has_eval(exp_string):
                     rule_names = util.get_eval_value(exp_string)
-                    rules = [util.escape_assertion(p_parameters[rule_name]) for rule_name in rule_names]
+                    rules = [
+                        util.escape_assertion(p_parameters[rule_name])
+                        for rule_name in rule_names
+                    ]
                     exp_with_rule = util.replace_eval(exp_string, rules)
                     expression = self._get_expression(exp_with_rule, functions)
 
@@ -324,13 +331,18 @@ class CoreEnforcer:
                 else:
                     policy_effects.add(Effector.ALLOW)
 
-                if self.eft.intermediate_effect(policy_effects) != Effector.INDETERMINATE:
+                if (
+                    self.eft.intermediate_effect(policy_effects)
+                    != Effector.INDETERMINATE
+                ):
                     explain_index = i
                     break
 
         else:
             if has_eval:
-                raise RuntimeError("please make sure rule exists in policy when using eval() in matcher")
+                raise RuntimeError(
+                    "please make sure rule exists in policy when using eval() in matcher"
+                )
 
             parameters = r_parameters.copy()
 

@@ -1,5 +1,6 @@
 class Dispatcher:
     """Dispatcher is the interface for pycasbin dispatcher"""
+
     def add_policies(self, sec, ptype, rules):
         """add_policies adds policies rule to all instance."""
         pass

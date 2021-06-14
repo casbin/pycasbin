@@ -1,10 +1,9 @@
 name: build
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
@@ -14,11 +13,10 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
         os: [ubuntu-18.04, macOS-latest, windows-latest]
-        include:
-          # pypy3 on Mac OS currently fails trying to compile
-          # brotlipy. Moving pypy3 to only test linux.
-          - python-version: pypy3
-            os: ubuntu-latest
+#      pypy3 currently fails trying to find the header #include "codecs.h". Removed pypy3 for now.
+#      include:
+#      - python-version: pypy3
+#        os: ubuntu-latest
 
     steps:
     - name: Checkout
@@ -32,6 +30,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+        pip install -r requirements_dev.txt
         pip install coveralls
 
     - name: Run tests
@@ -43,6 +42,20 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         COVERALLS_FLAG_NAME: ${{ matrix.os }} - ${{ matrix.python-version }}
         COVERALLS_PARALLEL: true
+
+  lint:
+    name: Run Linters
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Super-Linter
+        uses: github/super-linter@v4.2.2
+        env:
+          VALIDATE_PYTHON_BLACK: true
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   coveralls:
     name: Indicate completion to coveralls.io

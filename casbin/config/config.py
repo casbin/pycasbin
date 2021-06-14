@@ -5,13 +5,13 @@ class Config:
     """represents an implementation of the ConfigInterface"""
 
     # DEFAULT_SECTION specifies the name of a section if no name provided
-    DEFAULT_SECTION = 'default'
+    DEFAULT_SECTION = "default"
     # DEFAULT_COMMENT defines what character(s) indicate a comment `#`
-    DEFAULT_COMMENT = '#'
+    DEFAULT_COMMENT = "#"
     # DEFAULT_COMMENT_SEM defines what alternate character(s) indicate a comment `;`
-    DEFAULT_COMMENT_SEM = ';'
+    DEFAULT_COMMENT_SEM = ";"
     # DEFAULT_MULTI_LINE_SEPARATOR defines what character indicates a multi-line content
-    DEFAULT_MULTI_LINE_SEPARATOR = '\\'
+    DEFAULT_MULTI_LINE_SEPARATOR = "\\"
 
     _data = dict()
 
@@ -32,7 +32,7 @@ class Config:
         return c
 
     def add_config(self, section, option, value):
-        if section == '':
+        if section == "":
             section = self.DEFAULT_SECTION
 
         if section not in self._data.keys():
@@ -41,11 +41,11 @@ class Config:
         self._data[section][option] = value
 
     def _parse(self, fname):
-        with open(fname, 'r', encoding='utf-8') as f:
+        with open(fname, "r", encoding="utf-8") as f:
             self._parse_buffer(f)
 
     def _parse_buffer(self, f):
-        section = ''
+        section = ""
         line_num = 0
         buf = []
         can_write = False
@@ -63,19 +63,23 @@ class Config:
                 break
             line = line.strip()
 
-            if '' == line or self.DEFAULT_COMMENT == line[0:1] or self.DEFAULT_COMMENT_SEM == line[0:1]:
+            if (
+                "" == line
+                or self.DEFAULT_COMMENT == line[0:1]
+                or self.DEFAULT_COMMENT_SEM == line[0:1]
+            ):
                 can_write = True
                 continue
-            elif '[' == line[0:1] and ']' == line[-1]:
+            elif "[" == line[0:1] and "]" == line[-1]:
                 if len(buf) > 0:
                     self._write(section, line_num, buf)
                     can_write = False
                 section = line[1:-1]
             else:
-                p = ''
+                p = ""
                 if self.DEFAULT_MULTI_LINE_SEPARATOR == line[-1]:
                     p = line[0:-1].strip()
-                    p = p + ' ' 
+                    p = p + " "
                 else:
                     p = line
                     can_write = True
@@ -86,10 +90,14 @@ class Config:
         buf = "".join(b)
         if len(buf) <= 0:
             return
-        option_val = buf.split('=', 1)
+        option_val = buf.split("=", 1)
 
         if len(option_val) != 2:
-            raise RuntimeError('parse the content error : line {} , {} = ?'.format(line_num, option_val[0]))
+            raise RuntimeError(
+                "parse the content error : line {} , {} = ?".format(
+                    line_num, option_val[0]
+                )
+            )
 
         option = option_val[0].strip()
         value = option_val[1].strip()
@@ -125,7 +133,7 @@ class Config:
         if len(key) == 0:
             raise RuntimeError("key is empty")
 
-        keys = key.lower().split('::')
+        keys = key.lower().split("::")
         if len(keys) >= 2:
             section = keys[0]
             option = keys[1]
@@ -137,7 +145,7 @@ class Config:
     def get(self, key):
         """section.key or key"""
 
-        keys = key.lower().split('::')
+        keys = key.lower().split("::")
         if len(keys) >= 2:
             section = keys[0]
             option = keys[1]
@@ -148,4 +156,4 @@ class Config:
         if section in self._data.keys():
             if option in self._data[section].keys():
                 return self._data[section][option]
-        return ''
+        return ""
