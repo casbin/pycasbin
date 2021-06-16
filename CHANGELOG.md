@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.1.3](https://github.com/casbin/pycasbin/compare/v1.1.2...v1.1.3) (2021-06-16)
+
+
+### Bug Fixes
+
+* get_implicit_users_for_permission() ([#168](https://github.com/casbin/pycasbin/issues/168)) ([92e1110](https://github.com/casbin/pycasbin/commit/92e1110e18b73cf993935bbf9db3bfb79be59e67))
+
 ## [1.1.2](https://github.com/casbin/pycasbin/compare/v1.1.1...v1.1.2) (2021-06-07)
 
 
