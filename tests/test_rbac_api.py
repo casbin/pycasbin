@@ -296,6 +296,15 @@ class TestRbacApi(TestCaseBase):
             ["alice", "bob"], e.get_implicit_users_for_permission("data2", "write")
         )
 
+        e.clear_policy()
+        e.add_policy("admin", "data1", "read")
+        e.add_policy("bob", "data1", "read")
+        e.add_grouping_policy("alice", "admin")
+
+        self.assertEqual(
+            ["alice", "bob"], e.get_implicit_users_for_permission("data1", "read")
+        )
+
 
 class TestRbacApiSynced(TestRbacApi):
     def get_enforcer(self, model=None, adapter=None):
