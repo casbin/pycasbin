@@ -1,5 +1,5 @@
 from casbin.management_enforcer import ManagementEnforcer
-from casbin.util import join_slice, set_subtract
+from casbin.util import join_slice, array_remove_duplicates, set_subtract
 
 
 class Enforcer(ManagementEnforcer):
@@ -174,13 +174,15 @@ class Enforcer(ManagementEnforcer):
         get_implicit_users_for_permission("data1", "read") will get: ["alice", "bob"].
         Note: only users will be returned, roles (2nd arg in "g") will be excluded.
         """
-        subjects = self.get_all_subjects()
-        roles = self.get_all_roles()
-
-        users = set_subtract(subjects, roles)
+        p_subjects = self.get_all_subjects()
+        g_inherit = self.model.get_values_for_field_in_policy("g", "g", 1)
+        g_subjects = self.model.get_values_for_field_in_policy("g", "g", 0)
+        subjects = array_remove_duplicates(g_subjects + p_subjects)
 
         res = list()
-        for user in users:
+        subjects = set_subtract(subjects, g_inherit)
+
+        for user in subjects:
             req = join_slice(user, *permission)
             allowed = self.enforce(*req)
 
