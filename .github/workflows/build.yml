@@ -13,10 +13,6 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
         os: [ubuntu-18.04, macOS-latest, windows-latest]
-#      pypy3 currently fails trying to find the header #include "codecs.h". Removed pypy3 for now.
-#      include:
-#      - python-version: pypy3
-#        os: ubuntu-latest
 
     steps:
     - name: Checkout
@@ -98,6 +94,6 @@ jobs:
       
       - name: Release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: npx semantic-release
