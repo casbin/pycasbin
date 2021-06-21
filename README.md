@@ -9,6 +9,8 @@ PyCasbin
 [![Download](https://img.shields.io/pypi/dm/casbin.svg)](https://pypi.org/project/casbin/)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
 
+**News**: Async version PyCasbin can be found at: https://pypi.org/project/asynccasbin/
+
 **News**: still worry about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
 
 Casbin is a powerful and efficient open-source access control library for Python projects. It provides support for enforcing authorization based on various [access control models](https://en.wikipedia.org/wiki/Computer_security_model).
