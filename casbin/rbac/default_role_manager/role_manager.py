@@ -86,14 +86,18 @@ class RoleManager(RoleManager):
                 def duplicate_judge():
                     return role1.name != role.name and role2.name != role.name
 
-                if match_error_handler(self.matching_func, role.name, role1.name) \
-                        or match_error_handler(self.matching_func, role1.name, role.name) \
-                        and duplicate_judge():
+                if (
+                    match_error_handler(self.matching_func, role.name, role1.name)
+                    or match_error_handler(self.matching_func, role1.name, role.name)
+                    and duplicate_judge()
+                ):
                     self.all_roles[role.get_key()].add_role(role1)
 
-                if match_error_handler(self.matching_func, role.name, role2.name) \
-                        or match_error_handler(self.matching_func, role2.name, role.name) \
-                        and duplicate_judge():
+                if (
+                    match_error_handler(self.matching_func, role.name, role2.name)
+                    or match_error_handler(self.matching_func, role2.name, role.name)
+                    and duplicate_judge()
+                ):
                     self.all_roles[role2.get_key()].add_role(role)
 
     def delete_link(self, name1, name2, *domain):
@@ -133,9 +137,12 @@ class RoleManager(RoleManager):
                     continue
 
             def role_judge():
-                if role.has_role(role2, self.max_hierarchy_level,
-                                 self.matching_func,
-                                 self.domain_matching_func):
+                if role.has_role(
+                    role2,
+                    self.max_hierarchy_level,
+                    self.matching_func,
+                    self.domain_matching_func,
+                ):
                     return True
                 return False
 
@@ -202,8 +209,12 @@ class Role:
         self.roles = []
         self.domain = domain
 
-    def __eq__(self, other: 'Role'):
-        return type(other) == type(self) and self.name == other.name and self.domain == other.domain
+    def __eq__(self, other: "Role"):
+        return (
+            type(other) == type(self)
+            and self.name == other.name
+            and self.domain == other.domain
+        )
 
     def __hash__(self):
         return hash(self.name + "::" + self.domain)
@@ -213,16 +224,22 @@ class Role:
             return self.domain + "::" + self.name
         return self.name
 
-    def add_role(self, role: 'Role'):
+    def add_role(self, role: "Role"):
         if role in self.roles:
             return
         self.roles.append(role)
 
-    def delete_role(self, role: 'Role'):
+    def delete_role(self, role: "Role"):
         if role in self.roles:
             self.roles.remove(role)
 
-    def has_role(self, role: 'Role', hierarchy_level: int, matching_func=None, domain_matching_func=None):
+    def has_role(
+        self,
+        role: "Role",
+        hierarchy_level: int,
+        matching_func=None,
+        domain_matching_func=None,
+    ):
 
         if self.has_direct_role(role, matching_func, domain_matching_func):
             return True
@@ -230,12 +247,16 @@ class Role:
             return False
 
         for knownRole in self.roles:
-            if knownRole.has_role(role, hierarchy_level - 1, matching_func, domain_matching_func):
+            if knownRole.has_role(
+                role, hierarchy_level - 1, matching_func, domain_matching_func
+            ):
                 return True
 
         return False
 
-    def has_direct_role(self, role: 'Role', matching_func=None, domain_matching_func=None):
+    def has_direct_role(
+        self, role: "Role", matching_func=None, domain_matching_func=None
+    ):
         for known_role in self.roles:
             if matching_func:
                 if not matching_func(role.name, known_role.name):
@@ -289,7 +310,9 @@ def role_domain_wrapper(obj, name, domain):
 
 
 def two_role_domain_wrapper(obj, name1, name2, domain):
-    return role_domain_wrapper(obj, name1, domain), role_domain_wrapper(obj, name2, domain)
+    return role_domain_wrapper(obj, name1, domain), role_domain_wrapper(
+        obj, name2, domain
+    )
 
 
 def match_error_handler(fn, key1, key2):
