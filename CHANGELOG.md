@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.2.0](https://github.com/casbin/pycasbin/compare/v1.1.3...v1.2.0) (2021-06-27)
+
+
+### Features
+
+* add support for add_domain_matching_function ([#165](https://github.com/casbin/pycasbin/issues/165)) ([19b9503](https://github.com/casbin/pycasbin/commit/19b9503ced6e75ec9a818e2fb1803319ea997166))
+
 ## [1.1.3](https://github.com/casbin/pycasbin/compare/v1.1.2...v1.1.3) (2021-06-16)
 
 
