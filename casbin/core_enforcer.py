@@ -237,11 +237,11 @@ class CoreEnforcer:
 
     def add_named_domain_matching_func(self, ptype, fn):
         """add_named_domain_matching_func add MatchingFunc by ptype to RoleManager"""
-        try:
+        if ptype in self.rm_map.keys():
             self.rm_map[ptype].add_domain_matching_func(fn)
             return True
-        except:
-            return False
+
+        return False
 
     def enforce(self, *rvals):
         """decides whether a "subject" can access a "object" with the operation "action",

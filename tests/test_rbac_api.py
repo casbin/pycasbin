@@ -172,6 +172,7 @@ class TestRbacApi(TestCaseBase):
             get_examples("rbac_model.conf"),
             get_examples("rbac_with_hierarchy_policy.csv"),
         )
+
         self.assertTrue(
             e.get_permissions_for_user("alice") == [["alice", "data1", "read"]]
         )
@@ -220,6 +221,7 @@ class TestRbacApi(TestCaseBase):
             get_examples("rbac_with_domains_model.conf"),
             get_examples("rbac_with_domains_policy.csv"),
         )
+        print(e.get_users_for_role_in_domain("admin", "domain1"))
         self.assertTrue(e.get_users_for_role_in_domain("admin", "domain1") == ["alice"])
         self.assertTrue(e.get_users_for_role_in_domain("non_exist", "domain1") == [])
         self.assertTrue(e.get_users_for_role_in_domain("admin", "domain2") == ["bob"])
@@ -296,14 +298,23 @@ class TestRbacApi(TestCaseBase):
             ["alice", "bob"], e.get_implicit_users_for_permission("data2", "write")
         )
 
-        e.clear_policy()
-        e.add_policy("admin", "data1", "read")
-        e.add_policy("bob", "data1", "read")
-        e.add_grouping_policy("alice", "admin")
-
-        self.assertEqual(
-            ["alice", "bob"], e.get_implicit_users_for_permission("data1", "read")
+    def test_domain_match_model(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domain_pattern_model.conf"),
+            get_examples("rbac_with_domain_pattern_policy.csv"),
         )
+        e.get_role_manager().add_domain_matching_func(casbin.util.key_match2_func)
+
+        self.assertTrue(e.enforce("alice", "domain1", "data1", "read"))
+        self.assertTrue(e.enforce("alice", "domain1", "data1", "write"))
+        self.assertFalse(e.enforce("alice", "domain1", "data2", "read"))
+        self.assertFalse(e.enforce("alice", "domain1", "data2", "write"))
+        self.assertTrue(e.enforce("alice", "domain2", "data2", "read"))
+        self.assertTrue(e.enforce("alice", "domain2", "data2", "write"))
+        self.assertFalse(e.enforce("bob", "domain2", "data1", "read"))
+        self.assertFalse(e.enforce("bob", "domain2", "data1", "write"))
+        self.assertTrue(e.enforce("bob", "domain2", "data2", "read"))
+        self.assertTrue(e.enforce("bob", "domain2", "data2", "write"))
 
 
 class TestRbacApiSynced(TestRbacApi):
