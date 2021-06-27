@@ -16,7 +16,7 @@ class TestRWLock(TestCase):
         [rl, _] = self.gen_locks()
 
         delay = 5 / 1000  # 5ms
-        num_readers = 10
+        num_readers = 1000
         start = time.time()
 
         def read():

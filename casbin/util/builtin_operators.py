@@ -37,6 +37,9 @@ def key_match2(key1, key2):
     key2 = key2.replace("/*", "/.*")
     key2 = KEY_MATCH2_PATTERN.sub(r"\g<1>[^\/]+\g<2>", key2, 0)
 
+    if key2 == "*":
+        key2 = "(.*)"
+
     return regex_match(key1, "^" + key2 + "$")
 
 

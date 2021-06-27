@@ -136,7 +136,7 @@ class Enforcer(ManagementEnforcer):
 
         return res
 
-    def get_implicit_permissions_for_user(self, user, domain=None):
+    def get_implicit_permissions_for_user(self, user, domain=""):
         """
         gets implicit permissions for a user or role.
         Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.
