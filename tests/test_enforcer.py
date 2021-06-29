@@ -249,8 +249,8 @@ class TestConfig(TestCaseBase):
 
     def test_rbac_with_multipy_matched_pattern(self):
         e = self.get_enforcer(
-            get_examples("rbac_with_multipy_matched_pattern.conf"),
-            get_examples("rbac_with_multipy_matched_pattern.csv"),
+            get_examples("rbac_with_multiply_matched_pattern.conf"),
+            get_examples("rbac_with_multiply_matched_pattern.csv"),
         )
 
         e.add_named_matching_func("g2", casbin.util.glob_match)
