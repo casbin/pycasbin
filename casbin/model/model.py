@@ -33,10 +33,10 @@ class Model(Policy):
         else:
             ast.value = util.remove_comments(util.escape_assertion(ast.value))
 
-        if sec not in self.model.keys():
-            self.model[sec] = {}
+        if sec not in self.keys():
+            self[sec] = {}
 
-        self.model[sec][key] = ast
+        self[sec][key] = ast
 
         return True
 
@@ -76,6 +76,6 @@ class Model(Policy):
 
     def print_model(self):
         self.logger.info("Model:")
-        for k, v in self.model.items():
+        for k, v in self.items():
             for i, j in v.items():
                 self.logger.info("%s.%s: %s", k, i, j.value)

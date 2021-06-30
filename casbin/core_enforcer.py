@@ -75,7 +75,7 @@ class CoreEnforcer:
 
     def _initialize(self):
         self.rm_map = dict()
-        self.eft = get_effector(self.model.model["e"]["e"].value)
+        self.eft = get_effector(self.model["e"]["e"].value)
         self.watcher = None
 
         self.enabled = True
@@ -152,8 +152,8 @@ class CoreEnforcer:
         self.model.clear_policy()
 
     def init_rm_map(self):
-        if "g" in self.model.model.keys():
-            for ptype in self.model.model["g"]:
+        if "g" in self.model.keys():
+            for ptype in self.model["g"]:
                 self.rm_map[ptype] = default_role_manager.RoleManager(10)
 
     def load_policy(self):
@@ -261,24 +261,24 @@ class CoreEnforcer:
 
         functions = self.fm.get_functions()
 
-        if "g" in self.model.model.keys():
-            for key, ast in self.model.model["g"].items():
+        if "g" in self.model.keys():
+            for key, ast in self.model["g"].items():
                 rm = ast.rm
                 functions[key] = generate_g_function(rm)
 
-        if "m" not in self.model.model.keys():
+        if "m" not in self.model.keys():
             raise RuntimeError("model is undefined")
 
-        if "m" not in self.model.model["m"].keys():
+        if "m" not in self.model["m"].keys():
             raise RuntimeError("model is undefined")
 
-        r_tokens = self.model.model["r"]["r"].tokens
-        p_tokens = self.model.model["p"]["p"].tokens
+        r_tokens = self.model["r"]["r"].tokens
+        p_tokens = self.model["p"]["p"].tokens
 
         if len(r_tokens) != len(rvals):
             raise RuntimeError("invalid request size")
 
-        exp_string = self.model.model["m"]["m"].value
+        exp_string = self.model["m"]["m"].value
         has_eval = util.has_eval(exp_string)
         if not has_eval:
             expression = self._get_expression(exp_string, functions)
@@ -287,11 +287,11 @@ class CoreEnforcer:
 
         r_parameters = dict(zip(r_tokens, rvals))
 
-        policy_len = len(self.model.model["p"]["p"].policy)
+        policy_len = len(self.model["p"]["p"].policy)
 
         explain_index = -1
         if not 0 == policy_len:
-            for i, pvals in enumerate(self.model.model["p"]["p"].policy):
+            for i, pvals in enumerate(self.model["p"]["p"].policy):
                 if len(p_tokens) != len(pvals):
                     raise RuntimeError("invalid policy size")
 
@@ -346,7 +346,7 @@ class CoreEnforcer:
 
             parameters = r_parameters.copy()
 
-            for token in self.model.model["p"]["p"].tokens:
+            for token in self.model["p"]["p"].tokens:
                 parameters[token] = ""
 
             result = expression.eval(parameters)
@@ -373,7 +373,7 @@ class CoreEnforcer:
 
         explain_rule = []
         if explain_index != -1 and explain_index < policy_len:
-            explain_rule = self.model.model["p"]["p"].policy[explain_index]
+            explain_rule = self.model["p"]["p"].policy[explain_index]
 
         return result, explain_rule
 
