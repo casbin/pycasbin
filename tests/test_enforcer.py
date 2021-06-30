@@ -247,6 +247,16 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("bob", "/pen2/1", "GET"))
         self.assertTrue(e.enforce("bob", "/pen2/2", "GET"))
 
+    def test_rbac_with_multipy_matched_pattern(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_multiply_matched_pattern.conf"),
+            get_examples("rbac_with_multiply_matched_pattern.csv"),
+        )
+
+        e.add_named_matching_func("g2", casbin.util.glob_match)
+
+        self.assertTrue(e.enforce("root@localhost", "/", "org.create"))
+
     def test_enforce_abac_log_enabled(self):
         e = self.get_enforcer(get_examples("abac_model.conf"))
         sub = "alice"

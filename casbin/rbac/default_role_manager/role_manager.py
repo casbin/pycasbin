@@ -148,10 +148,14 @@ class RoleManager(RoleManager):
 
             if self.has_pattern:
                 if self.matching_func(role1.name, role.name):
-                    return role_judge()
+                    if role_judge():
+                        return True
+                    continue
             else:
                 if role1.name == role.name:
-                    return role_judge()
+                    if role_judge():
+                        return True
+                    continue
         return False
 
     def get_roles(self, name, *domain):

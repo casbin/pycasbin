@@ -1,0 +1,16 @@
+# https://github.com/casbin/pycasbin/issues/171
+p, root, *, owner
+
+g, root@localhost, root
+
+g2, *.read, viewer
+
+g2, *.read, editor
+g2, *.update, editor
+
+g2, *.read, admin
+g2, *.update, admin
+g2, *.create, admin
+g2, *.delete, admin
+
+g2, *.*, owner
