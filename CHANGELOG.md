@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.2.1](https://github.com/casbin/pycasbin/compare/v1.2.0...v1.2.1) (2021-06-30)
+
+
+### Bug Fixes
+
+* matching_func works with multiply match ([#172](https://github.com/casbin/pycasbin/issues/172)) ([bbe45ad](https://github.com/casbin/pycasbin/commit/bbe45ad8a526477d0c0ca3c3915896e85cbfb2f4))
+
 # [1.2.0](https://github.com/casbin/pycasbin/compare/v1.1.3...v1.2.0) (2021-06-27)
 
 
