@@ -137,13 +137,20 @@ class CoreEnforcer:
         """gets the current role manager."""
         return self.rm_map["g"]
 
+    def get_named_role_manager(self, ptype):
+        if ptype in self.rm_map.keys():
+            return self.rm_map.get(ptype)
+        raise ValueError("ptype not found")
+
     def set_role_manager(self, rm):
         """sets the current role manager."""
         self.rm_map["g"] = rm
 
+    def set_named_role_manager(self, ptype, rm):
+        self.rm_map[ptype] = rm
+
     def set_effector(self, eft):
         """sets the current effector."""
-
         self.eft = eft
 
     def clear_policy(self):
