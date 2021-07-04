@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.3.0](https://github.com/casbin/pycasbin/compare/v1.2.1...v1.3.0) (2021-07-04)
+
+
+### Features
+
+* add API for role manager besides "g" ([#173](https://github.com/casbin/pycasbin/issues/173)) ([23d39a5](https://github.com/casbin/pycasbin/commit/23d39a56da06968ab76659a30b430054c45db14b))
+
 ## [1.2.1](https://github.com/casbin/pycasbin/compare/v1.2.0...v1.2.1) (2021-06-30)
 
 
