@@ -60,7 +60,7 @@ class TestConfig(TestCaseBase):
             self.assertTrue(e.model is None)
             # creating new model
             e.load_model()
-            self.assertTrue(e.model)
+            self.assertTrue(e.model is not None)
 
     def test_enforcer_basic_without_spaces(self):
         e = self.get_enforcer(

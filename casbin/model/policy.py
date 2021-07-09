@@ -6,51 +6,66 @@ class Policy:
         self.logger = logging.getLogger(__name__)
         self.model = {}
 
+    def __getitem__(self, item):
+        return self.model.get(item)
+
+    def __setitem__(self, key, value):
+        self.model[key] = value
+
+    def keys(self):
+        return self.model.keys()
+
+    def values(self):
+        return self.model.values()
+
+    def items(self):
+        return self.model.items()
+
     def build_role_links(self, rm_map):
         """initializes the roles in RBAC."""
 
-        if "g" not in self.model.keys():
+        if "g" not in self.keys():
             return
 
-        for ptype, ast in self.model["g"].items():
+        for ptype, ast in self["g"].items():
             rm = rm_map[ptype]
             ast.build_role_links(rm)
 
     def build_incremental_role_links(self, rm, op, sec, ptype, rules):
         if sec == "g":
-            self.model.get(sec).get(ptype).build_incremental_role_links(rm, op, rules)
+            self[sec].get(ptype).build_incremental_role_links(rm, op, rules)
 
     def print_policy(self):
         """Log using info"""
 
         self.logger.info("Policy:")
         for sec in ["p", "g"]:
-            if sec not in self.model.keys():
+            if sec not in self.keys():
                 continue
 
-            for key, ast in self.model[sec].items():
+            for key, ast in self[sec].items():
                 self.logger.info("{} : {} : {}".format(key, ast.value, ast.policy))
 
     def clear_policy(self):
         """clears all current policy."""
 
         for sec in ["p", "g"]:
-            if sec not in self.model.keys():
+            if sec not in self.keys():
                 continue
 
-            for key in self.model[sec].keys():
-                self.model[sec][key].policy = []
+            for key in self[sec].keys():
+                self[sec][key].policy = []
 
     def get_policy(self, sec, ptype):
         """gets all rules in a policy."""
 
-        return self.model[sec][ptype].policy
+        return self[sec][ptype].policy
 
     def get_filtered_policy(self, sec, ptype, field_index, *field_values):
         """gets rules based on field filters from a policy."""
         return [
             rule
-            for rule in self.model[sec][ptype].policy
+            for rule in self[sec][ptype].policy
             if all(
                 value == "" or rule[field_index + i] == value
                 for i, value in enumerate(field_values)
@@ -59,18 +74,18 @@ class Policy:
 
     def has_policy(self, sec, ptype, rule):
         """determines whether a model has the specified policy rule."""
-        if sec not in self.model.keys():
+        if sec not in self.keys():
             return False
-        if ptype not in self.model[sec]:
+        if ptype not in self[sec]:
             return False
 
-        return rule in self.model[sec][ptype].policy
+        return rule in self[sec][ptype].policy
 
     def add_policy(self, sec, ptype, rule):
         """adds a policy rule to the model."""
 
         if not self.has_policy(sec, ptype, rule):
-            self.model[sec][ptype].policy.append(rule)
+            self[sec][ptype].policy.append(rule)
             return True
 
         return False
@@ -83,19 +98,19 @@ class Policy:
                 return False
 
         for rule in rules:
-            self.model[sec][ptype].policy.append(rule)
+            self[sec][ptype].policy.append(rule)
 
         return True
 
     def update_policy(self, sec, ptype, old_rule, new_rule):
         """update a policy rule from the model."""
 
-        if sec not in self.model.keys():
+        if sec not in self.keys():
             return False
-        if ptype not in self.model[sec]:
+        if ptype not in self[sec]:
             return False
 
-        ast = self.model[sec][ptype]
+        ast = self[sec][ptype]
 
         if old_rule in ast.policy:
             rule_index = ast.policy.index(old_rule)
@@ -116,14 +131,14 @@ class Policy:
     def update_policies(self, sec, ptype, old_rules, new_rules):
         """update policy rules from the model."""
 
-        if sec not in self.model.keys():
+        if sec not in self.keys():
             return False
-        if ptype not in self.model[sec]:
+        if ptype not in self[sec]:
             return False
         if len(old_rules) != len(new_rules):
             return False
 
-        ast = self.model[sec][ptype]
+        ast = self[sec][ptype]
         old_rules_index = []
 
         for old_rule in old_rules:
@@ -152,9 +167,9 @@ class Policy:
         if not self.has_policy(sec, ptype, rule):
             return False
 
-        self.model[sec][ptype].policy.remove(rule)
+        self[sec][ptype].policy.remove(rule)
 
-        return rule not in self.model[sec][ptype].policy
+        return rule not in self[sec][ptype].policy
 
     def remove_policies(self, sec, ptype, rules):
         """RemovePolicies removes policy rules from the model."""
@@ -162,8 +177,8 @@ class Policy:
         for rule in rules:
             if not self.has_policy(sec, ptype, rule):
                 return False
-            self.model[sec][ptype].policy.remove(rule)
-            if rule in self.model[sec][ptype].policy:
+            self[sec][ptype].policy.remove(rule)
+            if rule in self[sec][ptype].policy:
                 return False
 
         return True
@@ -188,12 +203,12 @@ class Policy:
 
         if len(field_values) == 0:
             return []
-        if sec not in self.model.keys():
+        if sec not in self.keys():
             return []
-        if ptype not in self.model[sec]:
+        if ptype not in self[sec]:
             return []
 
-        for rule in self.model[sec][ptype].policy:
+        for rule in self[sec][ptype].policy:
             if all(
                 value == "" or rule[field_index + i] == value
                 for i, value in enumerate(field_values[0])
@@ -202,7 +217,7 @@ class Policy:
             else:
                 tmp.append(rule)
 
-        self.model[sec][ptype].policy = tmp
+        self[sec][ptype].policy = tmp
 
         return effects
 
@@ -211,12 +226,12 @@ class Policy:
         tmp = []
         res = False
 
-        if sec not in self.model.keys():
+        if sec not in self.keys():
             return res
-        if ptype not in self.model[sec]:
+        if ptype not in self[sec]:
             return res
 
-        for rule in self.model[sec][ptype].policy:
+        for rule in self[sec][ptype].policy:
             if all(
                 value == "" or rule[field_index + i] == value
                 for i, value in enumerate(field_values)
@@ -225,19 +240,19 @@ class Policy:
             else:
                 tmp.append(rule)
 
-        self.model[sec][ptype].policy = tmp
+        self[sec][ptype].policy = tmp
 
         return res
 
     def get_values_for_field_in_policy(self, sec, ptype, field_index):
         """gets all values for a field for all rules in a policy, duplicated values are removed."""
         values = []
-        if sec not in self.model.keys():
+        if sec not in self.keys():
             return values
-        if ptype not in self.model[sec]:
+        if ptype not in self[sec]:
             return values
 
-        for rule in self.model[sec][ptype].policy:
+        for rule in self[sec][ptype].policy:
             value = rule[field_index]
             if value not in values:
                 values.append(value)
