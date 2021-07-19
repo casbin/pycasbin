@@ -7,3 +7,9 @@ class UpdateAdapter:
         This is part of the Auto-Save feature.
         """
         pass
+
+    def update_policies(self, sec, ptype, old_rules, new_rules):
+        """
+        UpdatePolicies updates some policy rules to storage, like db, redis.
+        """
+        pass
