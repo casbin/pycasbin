@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.4.0](https://github.com/casbin/pycasbin/compare/v1.3.0...v1.4.0) (2021-07-19)
+
+
+### Features
+
+* finish up UpdateAdapter ([#177](https://github.com/casbin/pycasbin/issues/177)) ([d69a2df](https://github.com/casbin/pycasbin/commit/d69a2dfa7711aebcf7cec880fa724f5d3b3d3944))
+
 # [1.3.0](https://github.com/casbin/pycasbin/compare/v1.2.1...v1.3.0) (2021-07-04)
 
 
