@@ -589,3 +589,6 @@ class SyncedEnforcer:
         self.get_model().build_incremental_role_links(
             self.get_role_manager(), op, "g", ptype, rules
         )
+
+    def new_enforce_context(self, suffix: str) -> "EnforceContext":
+        return self._e.new_enforce_context(suffix)
