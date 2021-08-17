@@ -8,6 +8,18 @@ from casbin.rbac import default_role_manager
 from casbin.util import generate_g_function, SimpleEval, util
 
 
+class EnforceContext:
+    """
+    EnforceContext is used as the first element of the parameter "rvals" in method "enforce"
+    """
+
+    def __init__(self, rtype: str, ptype: str, etype: str, mtype: str):
+        self.rtype: str = rtype
+        self.ptype: str = ptype
+        self.etype: str = etype
+        self.mtype: str = mtype
+
+
 class CoreEnforcer:
     """CoreEnforcer defines the core functionality of an enforcer."""
 
@@ -250,6 +262,15 @@ class CoreEnforcer:
 
         return False
 
+    def new_enforce_context(self, suffix: str) -> EnforceContext:
+
+        return EnforceContext(
+            rtype="r" + suffix,
+            ptype="p" + suffix,
+            etype="e" + suffix,
+            mtype="m" + suffix,
+        )
+
     def enforce(self, *rvals):
         """decides whether a "subject" can access a "object" with the operation "action",
         input parameters are usually: (sub, obj, act).
@@ -263,6 +284,11 @@ class CoreEnforcer:
         return judge result with reason
         """
 
+        rtype = "r"
+        ptype = "p"
+        etype = "e"
+        mtype = "m"
+
         if not self.enabled:
             return [False, []]
 
@@ -273,19 +299,28 @@ class CoreEnforcer:
                 rm = ast.rm
                 functions[key] = generate_g_function(rm)
 
+        if len(rvals) != 0:
+            if isinstance(rvals[0], EnforceContext):
+                enforce_context = rvals[0]
+                rtype = enforce_context.rtype
+                ptype = enforce_context.ptype
+                etype = enforce_context.etype
+                mtype = enforce_context.mtype
+                rvals = rvals[1:]
+
         if "m" not in self.model.keys():
             raise RuntimeError("model is undefined")
 
         if "m" not in self.model["m"].keys():
             raise RuntimeError("model is undefined")
 
-        r_tokens = self.model["r"]["r"].tokens
-        p_tokens = self.model["p"]["p"].tokens
+        r_tokens = self.model["r"][rtype].tokens
+        p_tokens = self.model["p"][ptype].tokens
 
         if len(r_tokens) != len(rvals):
             raise RuntimeError("invalid request size")
 
-        exp_string = self.model["m"]["m"].value
+        exp_string = self.model["m"][mtype].value
         has_eval = util.has_eval(exp_string)
         if not has_eval:
             expression = self._get_expression(exp_string, functions)
@@ -294,11 +329,11 @@ class CoreEnforcer:
 
         r_parameters = dict(zip(r_tokens, rvals))
 
-        policy_len = len(self.model["p"]["p"].policy)
+        policy_len = len(self.model["p"][ptype].policy)
 
         explain_index = -1
         if not 0 == policy_len:
-            for i, pvals in enumerate(self.model["p"]["p"].policy):
+            for i, pvals in enumerate(self.model["p"][ptype].policy):
                 if len(p_tokens) != len(pvals):
                     raise RuntimeError("invalid policy size")
 
@@ -327,8 +362,9 @@ class CoreEnforcer:
                 else:
                     raise RuntimeError("matcher result should be bool, int or float")
 
-                if "p_eft" in parameters.keys():
-                    eft = parameters["p_eft"]
+                p_eft_key = ptype + "_eft"
+                if p_eft_key in parameters.keys():
+                    eft = parameters[p_eft_key]
                     if "allow" == eft:
                         policy_effects.add(Effector.ALLOW)
                     elif "deny" == eft:
@@ -353,7 +389,7 @@ class CoreEnforcer:
 
             parameters = r_parameters.copy()
 
-            for token in self.model["p"]["p"].tokens:
+            for token in self.model["p"][ptype].tokens:
                 parameters[token] = ""
 
             result = expression.eval(parameters)
@@ -380,7 +416,7 @@ class CoreEnforcer:
 
         explain_rule = []
         if explain_index != -1 and explain_index < policy_len:
-            explain_rule = self.model["p"]["p"].policy[explain_index]
+            explain_rule = self.model["p"][ptype].policy[explain_index]
 
         return result, explain_rule
 

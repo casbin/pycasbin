@@ -148,6 +148,25 @@ class TestConfig(TestCaseBase):
         )
         self.assertFalse(e.enforce("alice", "data1", "read"))
 
+    def test_multiple_policy_definitions(self):
+
+        e = self.get_enforcer(
+            get_examples("multiple_policy_definitions_model.conf"),
+            get_examples("multiple_policy_definitions_policy.csv"),
+        )
+
+        enforce_context = e.new_enforce_context("2")
+        enforce_context.etype = "e"
+
+        sub1 = TestSub("alice", 70)
+        sub2 = TestSub("bob", 30)
+
+        self.assertTrue(e.enforce("alice", "data2", "read"))
+        self.assertFalse(e.enforce(enforce_context, sub1, "/data1", "read"))
+        self.assertTrue(e.enforce(enforce_context, sub2, "/data1", "read"))
+        self.assertFalse(e.enforce(enforce_context, sub2, "/data1", "write"))
+        self.assertFalse(e.enforce(enforce_context, sub1, "/data2", "read"))
+
     def test_enforce_rbac(self):
         e = self.get_enforcer(
             get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
@@ -161,7 +180,7 @@ class TestConfig(TestCaseBase):
             e.enforce("bogus", "data2", "write")
         )  # test non-existant subject
 
-    def test_enforce_rbac__empty_policy(self):
+    def test_enforce_rbac_empty_policy(self):
         e = self.get_enforcer(
             get_examples("rbac_model.conf"), get_examples("empty_policy.csv")
         )
