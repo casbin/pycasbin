@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.5.0](https://github.com/casbin/pycasbin/compare/v1.4.0...v1.5.0) (2021-08-17)
+
+
+### Features
+
+* multiple request, policy, effect, matcher type support ([#181](https://github.com/casbin/pycasbin/issues/181)) ([468503b](https://github.com/casbin/pycasbin/commit/468503b1c573ac835e55eb4d0d6d23b638030c63))
+
 # [1.4.0](https://github.com/casbin/pycasbin/compare/v1.3.0...v1.4.0) (2021-07-19)
 
 
