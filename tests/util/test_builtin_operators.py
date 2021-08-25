@@ -87,6 +87,55 @@ class TestBuiltinOperators(TestCase):
             util.key_match3_func("/myid/using/myresid", "/{id/using/{resId}")
         )
 
+    def test_key_match4(self):
+        self.assertTrue(
+            util.key_match4_func("/parent/123/child/123", "/parent/{id}/child/{id}")
+        )
+        self.assertFalse(
+            util.key_match4_func("/parent/123/child/456", "/parent/{id}/child/{id}")
+        )
+
+        self.assertTrue(
+            util.key_match4_func(
+                "/parent/123/child/123", "/parent/{id}/child/{another_id}"
+            )
+        )
+        self.assertTrue(
+            util.key_match4_func(
+                "/parent/123/child/456", "/parent/{id}/child/{another_id}"
+            )
+        )
+
+        self.assertTrue(
+            util.key_match4_func(
+                "/parent/123/child/456", "/parent/{id}/child/{another_id}"
+            )
+        )
+        self.assertFalse(
+            util.key_match4_func(
+                "/parent/123/child/123/book/456", "/parent/{id}/child/{id}/book/{id}"
+            )
+        )
+        self.assertFalse(
+            util.key_match4_func(
+                "/parent/123/child/456/book/123", "/parent/{id}/child/{id}/book/{id}"
+            )
+        )
+        self.assertFalse(
+            util.key_match4_func(
+                "/parent/123/child/456/book/", "/parent/{id}/child/{id}/book/{id}"
+            )
+        )
+        self.assertFalse(
+            util.key_match4_func(
+                "/parent/123/child/456", "/parent/{id}/child/{id}/book/{id}"
+            )
+        )
+
+        self.assertFalse(
+            util.key_match4_func("/parent/123/child/123", "/parent/{i/d}/child/{i/d}")
+        )
+
     def test_regex_match(self):
         self.assertTrue(util.regex_match_func("/topic/create", "/topic/create"))
         self.assertTrue(util.regex_match_func("/topic/create/123", "/topic/create"))
