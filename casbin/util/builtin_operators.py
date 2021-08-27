@@ -5,6 +5,7 @@ from wcmatch import pathlib
 
 KEY_MATCH2_PATTERN = re.compile(r"(.*?):[^\/]+(.*?)")
 KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+}(.*?)")
+KEY_MATCH4_PATTERN = re.compile(r"{([^/]+)}")
 
 
 def key_match(key1, key2):
@@ -66,6 +67,55 @@ def key_match3_func(*args):
     name2 = args[1]
 
     return key_match3(name1, name2)
+
+
+def key_match4(key1: str, key2: str) -> bool:
+    """
+    key_match4 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
+    Besides what key_match3 does, key_match4 can also match repeated patterns:
+    "/parent/123/child/123" matches "/parent/{id}/child/{id}"
+    "/parent/123/child/456" does not match "/parent/{id}/child/{id}"
+    But key_match3 will match both.
+    """
+    key2 = key2.replace("/*", "/.*")
+
+    tokens: [str] = []
+
+    def repl(matchobj):
+        tokens.append(matchobj.group(1))
+        return "([^/]+)"
+
+    key2 = KEY_MATCH4_PATTERN.sub(repl, key2)
+
+    regexp = re.compile("^" + key2 + "$")
+    matches = regexp.match(key1)
+
+    if matches is None:
+        return False
+    if len(tokens) != len(matches.groups()):
+        raise Exception("KeyMatch4: number of tokens is not equal to number of values")
+
+    tokens_matches = dict()
+
+    for i in range(len(tokens)):
+        token, match = tokens[i], matches.groups()[i]
+
+        if token not in tokens_matches.keys():
+            tokens_matches[token] = match
+        else:
+            if tokens_matches[token] != match:
+                return False
+    return True
+
+
+def key_match4_func(*args) -> bool:
+    """
+    key_match4_func is the wrapper for key_match4.
+    """
+    name1 = args[0]
+    name2 = args[1]
+
+    return key_match4(name1, name2)
 
 
 def regex_match(key1, key2):
