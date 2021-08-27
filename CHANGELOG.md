@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.6.0](https://github.com/casbin/pycasbin/compare/v1.5.0...v1.6.0) (2021-08-27)
+
+
+### Features
+
+* key_match4 builtin operator added ([#183](https://github.com/casbin/pycasbin/issues/183)) ([ef127b3](https://github.com/casbin/pycasbin/commit/ef127b352313fb17b3010d5a9bb5029e732c1546))
+
 # [1.5.0](https://github.com/casbin/pycasbin/compare/v1.4.0...v1.5.0) (2021-08-17)
 
 
