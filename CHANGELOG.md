@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.7.0](https://github.com/casbin/pycasbin/compare/v1.6.0...v1.7.0) (2021-08-29)
+
+
+### Features
+
+* support in operator on list/set and other compound types ([3f6ee8f](https://github.com/casbin/pycasbin/commit/3f6ee8f0069ce0a3e0554b5143403a28c6afdfc1))
+
 # [1.6.0](https://github.com/casbin/pycasbin/compare/v1.5.0...v1.6.0) (2021-08-27)
 
 
