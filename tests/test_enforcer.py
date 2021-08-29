@@ -337,6 +337,17 @@ class TestConfig(TestCaseBase):
         self.assertFalse(e.enforce(sub4, "/data1", "write"))
         self.assertTrue(e.enforce(sub4, "/data2", "write"))
 
+    def test_matcher_using_in_operator_bracket(self):
+        e = self.get_enforcer(
+            get_examples("rbac_model_matcher_using_in_op_bracket.conf"),
+            get_examples("rbac_policy.csv"),
+        )
+
+        self.assertTrue(e.enforce("alice", "data1", "read"))
+        self.assertTrue(e.enforce("alice", "data2", "read"))
+        self.assertTrue(e.enforce("alice", "data3", "scribble"))
+        self.assertFalse(e.enforce("alice", "data4", "scribble"))
+
 
 class TestConfigSynced(TestConfig):
     def get_enforcer(self, model=None, adapter=None):

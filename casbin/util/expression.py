@@ -1,8 +1,8 @@
-from simpleeval import SimpleEval
+from simpleeval import EvalWithCompoundTypes
 import ast
 
 
-class SimpleEval(SimpleEval):
+class SimpleEval(EvalWithCompoundTypes):
     """Rewrite SimpleEval.
     >>> s = SimpleEval("20 + 30 - ( 10 * 5)")
     >>> s.eval()
