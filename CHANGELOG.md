@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.8.0](https://github.com/casbin/pycasbin/compare/v1.7.0...v1.8.0) (2021-08-31)
+
+
+### Features
+
+* PyCasbin Watcher interfaces added ([#186](https://github.com/casbin/pycasbin/issues/186)) ([d98429f](https://github.com/casbin/pycasbin/commit/d98429f02ac130fc5b7c4ad1448d967998c3d891))
+
 # [1.7.0](https://github.com/casbin/pycasbin/compare/v1.6.0...v1.7.0) (2021-08-29)
 
 
