@@ -2,7 +2,10 @@ from casbin import util
 
 
 class FunctionMap:
-    fm = dict()
+    fm = None
+
+    def __init__(self):
+        self.fm = dict()
 
     def add_function(self, name, func):
         self.fm[name] = func
