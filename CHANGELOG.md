@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.8.1](https://github.com/casbin/pycasbin/compare/v1.8.0...v1.8.1) (2021-09-16)
+
+
+### Bug Fixes
+
+* fm instance property ([#189](https://github.com/casbin/pycasbin/issues/189)) ([e06078a](https://github.com/casbin/pycasbin/commit/e06078ada44ba9b3d794367bc8f52c1547dd2249))
+
 # [1.8.0](https://github.com/casbin/pycasbin/compare/v1.7.0...v1.8.0) (2021-08-31)
 
 
