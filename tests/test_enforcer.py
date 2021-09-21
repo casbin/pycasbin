@@ -141,6 +141,32 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("bob", "data2", "read"))
         self.assertFalse(e.enforce("bob", "data2", "write"))
 
+    def test_enforce_priority_explicit(self):
+        e = self.get_enforcer(
+            get_examples("priority_model_explicit.conf"),
+            get_examples("priority_policy_explicit.csv"),
+        )
+
+        self.assertTrue(e.enforce("alice", "data1", "write"))
+        self.assertTrue(e.enforce("alice", "data1", "read"))
+        self.assertFalse(e.enforce("bob", "data2", "read"))
+        self.assertTrue(e.enforce("bob", "data2", "write"))
+        self.assertFalse(e.enforce("data1_deny_group", "data1", "read"))
+        self.assertFalse(e.enforce("data1_deny_group", "data1", "write"))
+        self.assertTrue(e.enforce("data2_allow_group", "data2", "read"))
+        self.assertTrue(e.enforce("data2_allow_group", "data2", "write"))
+
+        e.add_policy("1", "bob", "data2", "write", "deny")
+
+        self.assertTrue(e.enforce("alice", "data1", "write"))
+        self.assertTrue(e.enforce("alice", "data1", "read"))
+        self.assertFalse(e.enforce("bob", "data2", "read"))
+        self.assertFalse(e.enforce("bob", "data2", "write"))
+        self.assertFalse(e.enforce("data1_deny_group", "data1", "read"))
+        self.assertFalse(e.enforce("data1_deny_group", "data1", "write"))
+        self.assertTrue(e.enforce("data2_allow_group", "data2", "read"))
+        self.assertTrue(e.enforce("data2_allow_group", "data2", "write"))
+
     def test_enforce_priority_indeterminate(self):
         e = self.get_enforcer(
             get_examples("priority_model.conf"),

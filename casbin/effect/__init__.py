@@ -16,7 +16,7 @@ def get_effector(expr):
         return DenyOverrideEffector()
     elif expr == "some(where (p_eft == allow)) && !some(where (p_eft == deny))":
         return AllowAndDenyEffector()
-    elif expr == "priority(p_eft) || deny":
+    elif expr == "priority(p_eft) || deny" or expr == "subjectPriority(p_eft) || deny":
         return PriorityEffector()
     else:
         raise RuntimeError("unsupported effect")

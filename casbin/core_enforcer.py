@@ -181,6 +181,8 @@ class CoreEnforcer:
         self.model.clear_policy()
         self.adapter.load_policy(self.model)
 
+        self.model.sort_policies_by_priority()
+
         self.init_rm_map()
         self.model.print_policy()
         if self.auto_build_role_links:
@@ -194,6 +196,9 @@ class CoreEnforcer:
             raise ValueError("filtered policies are not supported by this adapter")
 
         self.adapter.load_filtered_policy(self.model, filter)
+
+        self.model.sort_policies_by_priority()
+
         self.init_rm_map()
         self.model.print_policy()
         if self.auto_build_role_links:

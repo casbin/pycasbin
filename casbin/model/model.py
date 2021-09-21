@@ -79,3 +79,22 @@ class Model(Policy):
         for k, v in self.items():
             for i, j in v.items():
                 self.logger.info("%s.%s: %s", k, i, j.value)
+
+    def sort_policies_by_priority(self):
+        for ptype, assertion in self["p"].items():
+            for index, token in enumerate(assertion.tokens):
+                if token == f"{ptype}_priority":
+                    assertion.priority_index = index
+                    break
+
+            if assertion.priority_index == -1:
+                continue
+
+            assertion.policy = sorted(
+                assertion.policy, key=lambda x: x[assertion.priority_index]
+            )
+
+            for i, policy in enumerate(assertion.policy):
+                assertion.policy_map[",".join(policy)] = i
+
+        return None
