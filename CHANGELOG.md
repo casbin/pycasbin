@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.9.0](https://github.com/casbin/pycasbin/compare/v1.8.1...v1.9.0) (2021-09-25)
+
+
+### Features
+
+* add explicit priority support ([#190](https://github.com/casbin/pycasbin/issues/190)) ([9445086](https://github.com/casbin/pycasbin/commit/94450866a6e3103df8a42fc76893f91e0cb555a4))
+
 ## [1.8.1](https://github.com/casbin/pycasbin/compare/v1.8.0...v1.8.1) (2021-09-16)
 
 
