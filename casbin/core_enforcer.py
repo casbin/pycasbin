@@ -1,4 +1,4 @@
-import logging
+import logging, copy
 
 from casbin.effect import Effector, get_effector, effect_to_bool
 from casbin.model import Model, FunctionMap
@@ -177,14 +177,36 @@ class CoreEnforcer:
 
     def load_policy(self):
         """reloads the policy from file/database."""
+        need_to_rebuild = False
+        new_model = copy.copy(self.model)
+        new_model.clear_policy()
 
-        self.model.clear_policy()
-        self.adapter.load_policy(self.model)
+        try:
 
-        self.init_rm_map()
-        self.model.print_policy()
-        if self.auto_build_role_links:
-            self.build_role_links()
+            self.adapter.load_policy(new_model)
+
+            new_model.sort_policies_by_priority()
+
+            self.init_rm_map()
+            self.model.print_policy()
+
+            if self.auto_build_role_links:
+
+                need_to_rebuild = True
+                for rm in self.rm_map.values():
+                    rm.clear()
+
+                new_model.build_role_links(self.rm_map)
+                self.build_role_links()
+
+            self.model = new_model
+
+        except Exception as e:
+
+            if self.auto_build_role_links and need_to_rebuild:
+                self.build_role_links()
+
+            raise e
 
     def load_filtered_policy(self, filter):
         """reloads a filtered policy from file/database."""
@@ -194,6 +216,9 @@ class CoreEnforcer:
             raise ValueError("filtered policies are not supported by this adapter")
 
         self.adapter.load_filtered_policy(self.model, filter)
+
+        self.model.sort_policies_by_priority()
+
         self.init_rm_map()
         self.model.print_policy()
         if self.auto_build_role_links:
