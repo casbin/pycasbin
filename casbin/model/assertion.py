@@ -10,6 +10,8 @@ class Assertion:
         self.tokens = []
         self.policy = []
         self.rm = None
+        self.priority_index: int = -1
+        self.policy_map: dict = {}
 
     def build_role_links(self, rm):
         self.rm = rm
