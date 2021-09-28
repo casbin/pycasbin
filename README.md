@@ -152,7 +152,7 @@ https://casbin.org/docs/en/tutorials
 
 ## Get started
 
-1. New a Casbin enforcer with a model file and a policy file:
+1. New Casbin enforcer with a model file and a policy file:
 
 ```python
 import casbin
