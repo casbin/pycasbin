@@ -5,7 +5,7 @@ desc_file = "README.md"
 
 here = path.abspath(path.dirname(__file__))
 
-with open(desc_file, "r") as fh:
+with open(desc_file, "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 # get the dependencies and installs
