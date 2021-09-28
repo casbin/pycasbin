@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.9.1](https://github.com/casbin/pycasbin/compare/v1.9.0...v1.9.1) (2021-09-28)
+
+
+### Bug Fixes
+
+* added utf8 encoding ([#194](https://github.com/casbin/pycasbin/issues/194)) ([6b42210](https://github.com/casbin/pycasbin/commit/6b42210031ce7383823f17a2b8134a58f5f5a71d))
+
 # [1.9.0](https://github.com/casbin/pycasbin/compare/v1.8.1...v1.9.0) (2021-09-25)
 
 
