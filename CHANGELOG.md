@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.9.2](https://github.com/casbin/pycasbin/compare/v1.9.1...v1.9.2) (2021-09-29)
+
+
+### Bug Fixes
+
+* 'keyMatch4' not defined([#198](https://github.com/casbin/pycasbin/issues/198)) ([#199](https://github.com/casbin/pycasbin/issues/199)) ([b888965](https://github.com/casbin/pycasbin/commit/b888965c080df08c6415f45e606a24ba45698b90))
+
 ## [1.9.1](https://github.com/casbin/pycasbin/compare/v1.9.0...v1.9.1) (2021-09-28)
 
 
