@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.9.3](https://github.com/casbin/pycasbin/compare/v1.9.2...v1.9.3) (2021-10-24)
+
+
+### Bug Fixes
+
+* update simpleeval version to 0.9.11 ([79fdf21](https://github.com/casbin/pycasbin/commit/79fdf212639263c44be4c27b545017e3b50863b0))
+
 ## [1.9.2](https://github.com/casbin/pycasbin/compare/v1.9.1...v1.9.2) (2021-09-29)
 
 
