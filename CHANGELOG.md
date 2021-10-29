@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.9.4](https://github.com/casbin/pycasbin/compare/v1.9.3...v1.9.4) (2021-10-29)
+
+
+### Bug Fixes
+
+* load_policy_line function load error ([bca7eed](https://github.com/casbin/pycasbin/commit/bca7eed0cf61ecab381ed462921b776ec6aa7e3c))
+
 ## [1.9.3](https://github.com/casbin/pycasbin/compare/v1.9.2...v1.9.3) (2021-10-24)
 
 
