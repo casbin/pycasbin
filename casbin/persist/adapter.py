@@ -7,7 +7,7 @@ def load_policy_line(line, model):
     if line[:1] == "#":
         return
 
-    tokens = line.split(", ")
+    tokens = [token.strip() for token in line.split(",")]
     key = tokens[0]
     sec = key[0]
 
