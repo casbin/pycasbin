@@ -1,282 +1,46 @@
 import logging
+from collections import namedtuple
+from enum import Enum
 
-from casbin.rbac import RoleManager
+from casbin.rbac import RoleManager as RM
+
+Link = namedtuple("Link", ["user", "role"])
 
 
-class RoleManager(RoleManager):
-    """provides a default implementation for the RoleManager interface"""
-
-    all_roles = dict()
-    max_hierarchy_level = 0
-
-    def __init__(self, max_hierarchy_level=10):
-        self.logger = logging.getLogger(__name__)
-        self.all_roles = dict()
-        self.max_hierarchy_level = max_hierarchy_level
-        self.matching_func = None
-        self.domain_matching_func = None
-        self.has_pattern = False
-        self.has_domain_pattern = False
-
-    def add_matching_func(self, fn=None):
-        self.has_pattern = True
-        self.matching_func = fn
-
-    def add_domain_matching_func(self, fn=None):
-        self.has_domain_pattern = True
-        self.domain_matching_func = fn
-
-    def has_role(self, role):
-
-        if not self.has_pattern and not self.has_domain_pattern:
-            return role in self.all_roles.values()
-
-        for known_role in list(self.all_roles.values()):
-            if self.has_pattern:
-                if not self.matching_func(role.name, known_role.name):
-                    continue
-            else:
-                if not role.name == known_role.name:
-                    continue
-
-            if self.has_domain_pattern:
-                if not self.domain_matching_func(role.domain, known_role.domain):
-                    continue
-            else:
-                if not role.domain == known_role.domain:
-                    continue
-            return True
-
-    def create_role(self, name, domain=""):
-        role = Role(name, domain)
-        if domain:
-            key = domain + "::" + name
-        else:
-            key = name
-
-        if key not in self.all_roles.keys():
-            self.all_roles[key] = role
-
-        return self.all_roles[key]
-
-    def clear(self):
-        self.all_roles.clear()
-
-    def add_link(self, name1, name2, *domain):
-        if len(domain) > 1:
-            raise RuntimeError("error: domain should be 1 parameter")
-        elif len(domain) == 1:
-            domain = domain[0]
-        else:
-            domain = ""
-
-        role1 = self.create_role(name1, domain)
-        role2 = self.create_role(name2, domain)
-        role1.add_role(role2)
-
-        if self.has_pattern:
-            for role in self.all_roles.values():
-                if self.has_domain_pattern:
-                    if not self.domain_matching_func(domain, role.domain):
-                        continue
-                else:
-                    if domain != role.domain:
-                        continue
-
-                def duplicate_judge():
-                    return role1.name != role.name and role2.name != role.name
-
-                if (
-                    match_error_handler(self.matching_func, role.name, role1.name)
-                    or match_error_handler(self.matching_func, role1.name, role.name)
-                    and duplicate_judge()
-                ):
-                    self.all_roles[role.get_key()].add_role(role1)
-
-                if (
-                    match_error_handler(self.matching_func, role.name, role2.name)
-                    or match_error_handler(self.matching_func, role2.name, role.name)
-                    and duplicate_judge()
-                ):
-                    self.all_roles[role2.get_key()].add_role(role)
-
-    def delete_link(self, name1, name2, *domain):
-        role1, role2 = two_role_domain_wrapper(self, name1, name2, domain)
-
-        if not self.has_role(role1) or not self.has_role(role2):
-            raise RuntimeError("error: name1 or name2 does not exist")
-
-        role1.delete_role(role2)
-
-    def has_link(self, name1, name2, *domain):
-        if len(domain) > 1:
-            raise RuntimeError("error: domain should be 1 parameter")
-        elif len(domain) == 1:
-            domain = domain[0]
-        else:
-            domain = ""
-
-        role1, role2 = two_role_domain_wrapper(self, name1, name2, domain)
-
-        if role1 == role2:
-            return True
-
-        if not self.has_role(role1) or not self.has_role(role2):
-            return False
-
-        if not self.has_pattern and not self.has_domain_pattern:
-            return role1.has_role(role2, self.max_hierarchy_level, None, None)
-
-        # Here is has_pattern logic.
-        for role in self.all_roles.values():
-            if self.has_domain_pattern:
-                if not self.domain_matching_func(domain, role.domain):
-                    continue
-            else:
-                if role.domain != domain:
-                    continue
-
-            def role_judge():
-                if role.has_role(
-                    role2,
-                    self.max_hierarchy_level,
-                    self.matching_func,
-                    self.domain_matching_func,
-                ):
-                    return True
-                return False
-
-            if self.has_pattern:
-                if self.matching_func(role1.name, role.name):
-                    if role_judge():
-                        return True
-                    continue
-            else:
-                if role1.name == role.name:
-                    if role_judge():
-                        return True
-                    continue
-        return False
-
-    def get_roles(self, name, *domain):
-        """
-        gets the roles that a subject inherits.
-        domain is a prefix to the roles.
-        """
-        if len(domain) > 1:
-            raise RuntimeError("error: domain should be 1 parameter")
-        elif len(domain) == 1:
-            domain = domain[0]
-        else:
-            domain = ""
-
-        role = role_domain_wrapper(self, name, domain)
-
-        if not self.has_role(role):
-            return []
-
-        roles = self.create_role(name, domain).get_roles()
-
-        return roles
-
-    def get_users(self, name, *domain):
-        """
-        gets the users that inherits a subject.
-        domain is an unreferenced parameter here, may be used in other implementations.
-        """
-        target_role = role_domain_wrapper(self, name, domain)
-
-        if not self.has_role(target_role):
-            return []
-
-        roles = []
-        for role in self.all_roles.values():
-            if role.has_direct_role(target_role):
-                roles.append(role.name)
-
-        return roles
-
-    def print_roles(self):
-        line = []
-        for role in self.all_roles.values():
-            text = role.to_string()
-            if text:
-                line.append(text)
-        self.logger.info(", ".join(line))
+class MatchOrder(Enum):
+    STR_PATTERN = 0
+    PATTERN_STR = 1
+    PATTERN_PATTERN = 2
 
 
 class Role:
-    """represents the data structure for a role in RBAC."""
-
-    def __init__(self, name: str, domain: str = ""):
+    def __init__(self, name):
         self.name = name
-        self.roles = []
-        self.domain = domain
+        self.roles = set()
+        self.users = set()
 
-    def __eq__(self, other: "Role"):
-        return (
-            type(other) == type(self)
-            and self.name == other.name
-            and self.domain == other.domain
-        )
+    def add_role(self, role):
+        self.roles.add(role)
+        role._add_user(self)
 
-    def __hash__(self):
-        return hash(self.name + "::" + self.domain)
+    def remove_role(self, role):
+        self.roles.remove(role)
+        role._remove_user(self)
 
-    def get_key(self):
-        if self.domain:
-            return self.domain + "::" + self.name
-        return self.name
+    def _add_user(self, user):
+        self.users.add(user)
 
-    def add_role(self, role: "Role"):
-        if role in self.roles:
-            return
-        self.roles.append(role)
+    def _remove_user(self, user):
+        self.users.remove(user)
 
-    def delete_role(self, role: "Role"):
-        if role in self.roles:
-            self.roles.remove(role)
+    def copy_from(self, role):
+        for r in role.roles:
+            self.add_role(r)
+        for u in role.users:
+            u.add_role(self)
 
-    def has_role(
-        self,
-        role: "Role",
-        hierarchy_level: int,
-        matching_func=None,
-        domain_matching_func=None,
-    ):
-
-        if self.has_direct_role(role, matching_func, domain_matching_func):
-            return True
-        if hierarchy_level <= 0:
-            return False
-
-        for knownRole in self.roles:
-            if knownRole.has_role(
-                role, hierarchy_level - 1, matching_func, domain_matching_func
-            ):
-                return True
-
-        return False
-
-    def has_direct_role(
-        self, role: "Role", matching_func=None, domain_matching_func=None
-    ):
-        for known_role in self.roles:
-            if matching_func:
-                if not matching_func(role.name, known_role.name):
-                    continue
-            else:
-                if not role.name == known_role.name:
-                    continue
-
-            if domain_matching_func:
-                if not domain_matching_func(role.domain, known_role.domain):
-                    continue
-            else:
-                if not role.domain == known_role.domain:
-                    continue
-            return True
-        return False
+    def empty(self):
+        return len(self.users) + len(self.roles) == 0
 
     def to_string(self):
         if len(self.roles) == 0:
@@ -297,26 +61,278 @@ class Role:
         return roles
 
 
-def role_domain_wrapper(obj, name, domain):
-    if type(domain) != str:
-        if not domain or len(domain) == 0:
-            domain = ""
+class RoleManager(RM):
+    """provides a default implementation for the RoleManager interface"""
+
+    def __init__(self, max_hierarchy_level=10):
+        self.logger = logging.getLogger(__name__)
+        self.max_hierarchy_level = max_hierarchy_level
+        self.matching_func = lambda name1, name2: name1 == name2
+        self.all_links = list()
+        self.all_roles = dict()
+
+    def _rebuild(self):
+        self.all_roles = dict()
+        links = self.all_links
+        self.all_links = list()
+        for link in links:
+            self.add_link(link.user, link.role)
+
+    def _matching_fn(self, str1, str2, match_order=MatchOrder.STR_PATTERN):
+        if match_order == MatchOrder.PATTERN_STR:
+            return match_error_handler(self.matching_func, str2, str1)
+        elif match_order == MatchOrder.PATTERN_PATTERN:
+            return match_error_handler(
+                self.matching_func, str1, str2
+            ) or match_error_handler(self.matching_func, str2, str1)
+        else:  # match_order == MatchOrder.STR_PATTERN
+            return match_error_handler(self.matching_func, str1, str2)
+
+    def _matching_roles(self, name, match_order=MatchOrder.STR_PATTERN):
+        return [
+            role
+            for role_name, role in list(
+                self.all_roles.items()
+            )  # convert view to list to avoid RuntimeError: dictionary changed size during iteration
+            if self._matching_fn(name, role_name, match_order)
+        ]
+
+    def _get_role(self, name):
+        if name not in self.all_roles:
+            role = Role(name)
+            for pattern_role in self._matching_roles(name):
+                role.copy_from(pattern_role)
+            self.all_roles[name] = role
+        return self.all_roles[name]
+
+    def add_matching_func(self, fn):
+        self.matching_func = fn
+        self._rebuild()
+
+    def add_domain_matching_func(self, fn=None):
+        self.domain_matching_func = fn
+
+    def clear(self):
+        self.all_roles = dict()
+        self.all_links = list()
+
+    def add_link(self, name1, name2, *domain):
+        self.all_links.append(Link(name1, name2))
+
+        user = self._get_role(name1)
+        role = self._get_role(name2)
+
+        user.add_role(role)
+
+        for r in self.all_roles.values():
+            if r.name != user.name and self._matching_fn(
+                user.name, r.name, MatchOrder.PATTERN_STR
+            ):
+                r.add_role(role)
+            if r.name != role.name and self._matching_fn(
+                role.name, r.name, MatchOrder.PATTERN_STR
+            ):
+                role.add_role(r)
+
+    def delete_link(self, name1, name2, *domain):
+        if Link(name1, name2) not in self.all_links:
+            raise RuntimeError(
+                f"error: link between {name1} and {name2} does not exist"
+            )
+        self.all_links.remove(Link(name1, name2))
+
+        user = self._get_role(name1)
+        role = self._get_role(name2)
+        user.remove_role(role)
+
+        for r in self.all_roles.values():
+            if r.name != user.name and self._matching_fn(
+                user.name, r.name, MatchOrder.PATTERN_STR
+            ):
+                r.remove_role(role)
+            if r.name != role.name and self._matching_fn(
+                role.name, r.name, MatchOrder.PATTERN_STR
+            ):
+                role.remove_role(r)
+
+    def has_link(self, name1, name2, *domain):
+        user = self._get_role(name1)
+        role = self._get_role(name2)
+
+        return self._has_link(name2, [user], self.max_hierarchy_level)
+
+    def _has_link(self, name, roles, level):
+        if level <= 0 or len(roles) == 0:
+            return False
+
+        next_roles = set()
+        for role in roles:
+            if name == role.name:
+                return True
+            next_roles.update(set(role.roles))
+
+        return self._has_link(name, list(next_roles), level - 1)
+
+    def get_roles(self, name, *domain):
+        user = self._get_role(name)
+        return [r.name for r in user.roles]
+
+    def get_users(self, name, *domain):
+        role = self._get_role(name)
+        return [u.name for u in role.users]
+
+    def to_string(self):
+        line = []
+        for role in self.all_roles.values():
+            text = role.to_string()
+            if text:
+                line.append(text)
+        return ", ".join(line)
+
+    def print_roles(self):
+        self.logger.info(self.to_string())
+
+
+class DomainManagerBase(RM):
+    def __init__(self, max_hierarchy_level=10):
+        self.logger = logging.getLogger(__name__)
+        self.all_links = dict()
+        self.max_hierarchy_level = max_hierarchy_level
+        self.domain_matching_func = lambda domain1, domain2: domain1 == domain2
+        self.matching_func = lambda name1, name2: name1 == name2
+
+    def add_matching_func(self, fn):
+        self.matching_func = fn
+
+    def add_domain_matching_func(self, fn=None):
+        self.domain_matching_func = fn
+
+    def _get_domain(self, *domain):
+        if len(domain) > 1:
+            raise RuntimeError("error: domain should be 1 parameter")
         elif len(domain) == 1:
             domain = domain[0]
-        elif len(domain) > 1:
-            raise RuntimeError("error: domain should be 1 parameter")
+        else:
+            domain = ""
 
-    role = Role(name, domain)
+        return domain
 
-    if not obj.has_role(role):
-        return role
-    return obj.create_role(name, domain)
+    def _get_links(self, *domain):
+        domain = self._get_domain(*domain)
+
+        if domain not in self.all_links:
+            self.all_links[domain] = []
+
+        return self.all_links[domain]
+
+    def _get_role_manager(self, *domain):
+        domain1 = self._get_domain(*domain)
+        domain_links = []
+
+        for domain2, links in self.all_links.items():
+            if match_error_handler(self.domain_matching_func, domain1, domain2):
+                domain_links = domain_links + links
+
+        rm = RoleManager(max_hierarchy_level=self.max_hierarchy_level)
+        rm.add_matching_func(self.matching_func)
+        for link in domain_links:
+            rm.add_link(link[0], link[1])
+        return rm
+
+    def clear(self):
+        self.all_links = dict()
+
+    def add_link(self, name1, name2, *domain):
+        links = self._get_links(*domain)
+        links.append(Link(name1, name2))
+
+    def delete_link(self, name1, name2, *domain):
+        links = self._get_links(*domain)
+        if Link(name1, name2) not in links:
+            raise RuntimeError(
+                f"error: link between {name1} and {name2} does not exist"
+            )
+        links.remove(Link(name1, name2))
+
+    def has_link(self, name1, name2, *domain):
+        rm = self._get_role_manager(*domain)
+        return rm.has_link(name1, name2)
+
+    def get_roles(self, name, *domain):
+        rm = self._get_role_manager(*domain)
+        return rm.get_roles(name)
+
+    def get_users(self, name, *domain):
+        rm = self._get_role_manager(*domain)
+        return rm.get_users(name)
+
+    def print_roles(self):
+        pass
 
 
-def two_role_domain_wrapper(obj, name1, name2, domain):
-    return role_domain_wrapper(obj, name1, domain), role_domain_wrapper(
-        obj, name2, domain
-    )
+class DomainManager(DomainManagerBase):
+    def __init__(self, max_hierarchy_level=10):
+        super().__init__(max_hierarchy_level)
+        self.rm_map = dict()  # type: dict[str, RoleManager]
+
+    def _rebuild(self):
+        self.rm_map = dict()
+
+    def _get_role_manager(self, *domain):
+        domain1 = self._get_domain(*domain)
+        if domain1 not in self.rm_map:
+            self.rm_map[domain1] = super()._get_role_manager(*domain)
+
+        return self.rm_map[domain1]
+
+    def _affected_role_managers(self, *domain):
+        domain_pattern = self._get_domain(*domain)
+        return [
+            self.rm_map[domain_str]
+            for domain_str in self.rm_map.keys()
+            if match_error_handler(
+                self.domain_matching_func, domain_str, domain_pattern
+            )
+        ]
+
+    def add_matching_func(self, fn):
+        super().add_matching_func(fn)
+        for rm in self.rm_map.values():
+            rm.add_matching_func(fn)
+
+    def add_domain_matching_func(self, fn):
+        super().add_domain_matching_func(fn)
+        for rm in self.rm_map.values():
+            rm.add_domain_matching_func(fn)
+        self._rebuild()
+
+    def clear(self):
+        super().clear()
+        self.rm_map = dict()
+
+    def add_link(self, name1, name2, *domain):
+        super().add_link(name1, name2, *domain)
+        for rm in self._affected_role_managers(*domain):
+            rm.add_link(name1, name2, *domain)
+
+    def delete_link(self, name1, name2, *domain):
+        super().delete_link(name1, name2, *domain)
+        for rm in self._affected_role_managers(*domain):
+            rm.delete_link(name1, name2, *domain)
+
+    def has_link(self, name1, name2, *domain):
+        return super().has_link(name1, name2, *domain)
+
+    def get_roles(self, name, *domain):
+        return super().get_roles(name, *domain)
+
+    def get_users(self, name, *domain):
+        return super().get_users(name, *domain)
+
+    def print_roles(self):
+        for domain, rm in self.rm_map.items():
+            line = rm.to_string()
+            self.logger.info(f"{domain}: {line}")
 
 
 def match_error_handler(fn, key1, key2):

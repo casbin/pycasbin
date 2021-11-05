@@ -110,7 +110,7 @@ class Enforcer(ManagementEnforcer):
         """
         return self.has_policy(join_slice(user, *permission))
 
-    def get_implicit_roles_for_user(self, name, domain=None):
+    def get_implicit_roles_for_user(self, name, domain=""):
         """
         gets implicit roles that a user has.
         Compared to get_roles_for_user(), this function retrieves indirect roles besides direct roles.

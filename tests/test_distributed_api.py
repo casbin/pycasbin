@@ -53,7 +53,6 @@ class TestDistributedApi(TestCaseBase):
         self.assertTrue(e.enforce("tom", "data1", "write"))
 
         e.remove_policy_self(False, "p", "p", [["alice", "data1", "write"]])
-        e.remove_policy_self(False, "g", "g", [["alice", "data2_admin"]])
 
         self.assertFalse(e.enforce("alice", "data1", "read"))
         self.assertFalse(e.enforce("alice", "data1", "write"))
