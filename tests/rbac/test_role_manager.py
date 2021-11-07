@@ -40,13 +40,13 @@ class TestRoleManager(TestCase):
         self.assertTrue(rm.has_link("u4", "g2"))
         self.assertTrue(rm.has_link("u4", "g3"))
 
-        self.assertCountEqual(rm.get_roles("u1"), ["g1"])
-        self.assertCountEqual(rm.get_roles("u2"), ["g1"])
-        self.assertCountEqual(rm.get_roles("u3"), ["g2"])
-        self.assertCountEqual(rm.get_roles("u4"), ["g2", "g3"])
-        self.assertCountEqual(rm.get_roles("g1"), ["g3"])
-        self.assertCountEqual(rm.get_roles("g2"), [])
-        self.assertCountEqual(rm.get_roles("g3"), [])
+        self.assertEqual(rm.get_roles("u1"), ["g1"])
+        self.assertEqual(rm.get_roles("u2"), ["g1"])
+        self.assertEqual(rm.get_roles("u3"), ["g2"])
+        self.assertEqual(sorted(rm.get_roles("u4")), sorted(["g2", "g3"]))
+        self.assertEqual(rm.get_roles("g1"), ["g3"])
+        self.assertEqual(rm.get_roles("g2"), [])
+        self.assertEqual(rm.get_roles("g3"), [])
 
         rm.delete_link("g1", "g3")
         rm.delete_link("u4", "g2")
@@ -71,13 +71,13 @@ class TestRoleManager(TestCase):
         self.assertFalse(rm.has_link("u4", "g2"))
         self.assertTrue(rm.has_link("u4", "g3"))
 
-        self.assertCountEqual(rm.get_roles("u1"), ["g1"])
-        self.assertCountEqual(rm.get_roles("u2"), ["g1"])
-        self.assertCountEqual(rm.get_roles("u3"), ["g2"])
-        self.assertCountEqual(rm.get_roles("u4"), ["g3"])
-        self.assertCountEqual(rm.get_roles("g1"), [])
-        self.assertCountEqual(rm.get_roles("g2"), [])
-        self.assertCountEqual(rm.get_roles("g3"), [])
+        self.assertEqual(rm.get_roles("u1"), ["g1"])
+        self.assertEqual(rm.get_roles("u2"), ["g1"])
+        self.assertEqual(rm.get_roles("u3"), ["g2"])
+        self.assertEqual(rm.get_roles("u4"), ["g3"])
+        self.assertEqual(rm.get_roles("g1"), [])
+        self.assertEqual(rm.get_roles("g2"), [])
+        self.assertEqual(rm.get_roles("g3"), [])
 
         rm.clear()
 
@@ -110,19 +110,21 @@ class TestRoleManager(TestCase):
         self.assertTrue(rm.has_link("g1", "any_group"))
         self.assertTrue(rm.has_link("g2", "any_group"))
 
-        self.assertCountEqual(rm.get_roles("u1"), ["g1", "any_user"])
-        self.assertCountEqual(rm.get_roles("u2"), ["g2", "g1", r"g\d+", "any_user"])
-        self.assertCountEqual(rm.get_roles(r"u\d+"), ["any_user"])
-        self.assertCountEqual(rm.get_roles("u3"), ["any_user"])
-        self.assertCountEqual(rm.get_roles("g1"), ["any_group"])
-        self.assertCountEqual(rm.get_roles("g2"), ["any_group"])
+        self.assertEqual(sorted(rm.get_roles("u1")), sorted(["g1", "any_user"]))
+        self.assertEqual(
+            sorted(rm.get_roles("u2")), sorted(["g2", "g1", r"g\d+", "any_user"])
+        )
+        self.assertEqual(rm.get_roles(r"u\d+"), ["any_user"])
+        self.assertEqual(rm.get_roles("u3"), ["any_user"])
+        self.assertEqual(rm.get_roles("g1"), ["any_group"])
+        self.assertEqual(rm.get_roles("g2"), ["any_group"])
 
         rm.delete_link(r"u\d+", "any_user")
         rm.delete_link(r"g\d+", "any_group")
         rm.delete_link("u1", "g1")
         rm.add_link("u1", "g2")
 
-        self.assertCountEqual(rm.get_roles("u1"), ["g2"])
+        self.assertEqual(rm.get_roles("u1"), ["g2"])
 
         rm.clear()
 
