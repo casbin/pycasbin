@@ -211,7 +211,7 @@ class ManagementEnforcer(InternalEnforcer):
             rule_added = self._add_policy("g", ptype, list(params))
 
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.build_incremental_role_links()
         return rule_added
 
     def add_named_grouping_policies(self, ptype, rules):
@@ -221,7 +221,7 @@ class ManagementEnforcer(InternalEnforcer):
         Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
         rules_added = self._add_policies("g", ptype, rules)
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.build_incremental_role_links()
 
         return rules_added
 
@@ -249,7 +249,7 @@ class ManagementEnforcer(InternalEnforcer):
             rule_removed = self._remove_policy("g", ptype, list(params))
 
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.build_incremental_role_links()
         return rule_removed
 
     def remove_named_grouping_policies(self, ptype, rules):
@@ -257,7 +257,7 @@ class ManagementEnforcer(InternalEnforcer):
         rules_removed = self._remove_policies("g", ptype, rules)
 
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.build_incremental_role_links()
 
         return rules_removed
 
@@ -268,7 +268,7 @@ class ManagementEnforcer(InternalEnforcer):
         )
 
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.build_incremental_role_links()
         return rule_removed
 
     def add_function(self, name, func):
