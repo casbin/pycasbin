@@ -128,3 +128,27 @@ class InternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rule_removed
+
+    def _remove_filtered_policy_returns_effects(
+        self, sec, ptype, field_index, *field_values
+    ):
+        """removes rules based on field filters from the current policy."""
+        rule_removed = self.model.remove_filtered_policy_returns_effects(
+            sec, ptype, field_index, *field_values
+        )
+        if len(rule_removed) == 0:
+            return rule_removed
+
+        if self.adapter and self.auto_save:
+            if (
+                self.adapter.remove_filtered_policy(
+                    sec, ptype, field_index, *field_values
+                )
+                is False
+            ):
+                return False
+
+            if self.watcher:
+                self.watcher.update()
+
+        return rule_removed
