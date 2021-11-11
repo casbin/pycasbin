@@ -1,4 +1,5 @@
 from casbin.internal_enforcer import InternalEnforcer
+from casbin.model.policy_op import PolicyOp
 
 
 class ManagementEnforcer(InternalEnforcer):
@@ -204,14 +205,19 @@ class ManagementEnforcer(InternalEnforcer):
         Otherwise the function returns true by adding the new rule.
         """
 
+        rules = []
         if len(params) == 1 and isinstance(params[0], list):
             str_slice = params[0]
             rule_added = self._add_policy("g", ptype, str_slice)
+            rules.append(str_slice)
         else:
             rule_added = self._add_policy("g", ptype, list(params))
+            rules.append(list(params))
 
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules
+            )
         return rule_added
 
     def add_named_grouping_policies(self, ptype, rules):
@@ -221,7 +227,9 @@ class ManagementEnforcer(InternalEnforcer):
         Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
         rules_added = self._add_policies("g", ptype, rules)
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules
+            )
 
         return rules_added
 
@@ -242,14 +250,19 @@ class ManagementEnforcer(InternalEnforcer):
     def remove_named_grouping_policy(self, ptype, *params):
         """removes a role inheritance rule from the current named policy."""
 
+        rules = []
         if len(params) == 1 and isinstance(params[0], list):
             str_slice = params[0]
             rule_removed = self._remove_policy("g", ptype, str_slice)
+            rules.append(str_slice)
         else:
             rule_removed = self._remove_policy("g", ptype, list(params))
+            rules.append(list(params))
 
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules
+            )
         return rule_removed
 
     def remove_named_grouping_policies(self, ptype, rules):
@@ -257,18 +270,22 @@ class ManagementEnforcer(InternalEnforcer):
         rules_removed = self._remove_policies("g", ptype, rules)
 
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules
+            )
 
         return rules_removed
 
     def remove_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
         """removes a role inheritance rule from the current named policy, field filters can be specified."""
-        rule_removed = self._remove_filtered_policy(
+        rule_removed = self._remove_filtered_policy_returns_effects(
             "g", ptype, field_index, *field_values
         )
 
         if self.auto_build_role_links:
-            self.build_role_links()
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rule_removed
+            )
         return rule_removed
 
     def add_function(self, name, func):
