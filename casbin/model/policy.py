@@ -238,7 +238,7 @@ class Policy:
         for rule in self[sec][ptype].policy:
             if all(
                 value == "" or rule[field_index + i] == value
-                for i, value in enumerate(field_values[0])
+                for i, value in enumerate(field_values)
             ):
                 effects.append(rule)
             else:
