@@ -84,7 +84,7 @@ class DistributedEnforcer(SyncedEnforcer):
                 self.logger.log("An exception occurred: " + e)
 
         effects = self.get_model().remove_filtered_policy_returns_effects(
-            sec, ptype, field_index, field_values
+            sec, ptype, field_index, *field_values
         )
 
         if sec == "g":
