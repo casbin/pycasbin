@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.9.6](https://github.com/casbin/pycasbin/compare/v1.9.5...v1.9.6) (2021-11-12)
+
+
+### Bug Fixes
+
+* replace build_role_links with build_incremental_role_links ([1d60cd3](https://github.com/casbin/pycasbin/commit/1d60cd36887995b034dca7561179e13e9aae0c9f))
+
 ## [1.9.5](https://github.com/casbin/pycasbin/compare/v1.9.4...v1.9.5) (2021-11-12)
 
 
