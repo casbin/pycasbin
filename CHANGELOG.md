@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.9.5](https://github.com/casbin/pycasbin/compare/v1.9.4...v1.9.5) (2021-11-12)
+
+
+### Bug Fixes
+
+* remove_filtered_policy_returns_effects inconsistent input with remove_filtered_policy ([#211](https://github.com/casbin/pycasbin/issues/211)) ([e7e6696](https://github.com/casbin/pycasbin/commit/e7e669675c4d4225b96a3d391da04433926f9726))
+
 ## [1.9.4](https://github.com/casbin/pycasbin/compare/v1.9.3...v1.9.4) (2021-10-29)
 
 
