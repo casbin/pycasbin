@@ -1,1 +1,1 @@
-from .role_manager import RoleManager
+from .role_manager import RoleManager, DomainManager

@@ -173,7 +173,11 @@ class CoreEnforcer:
     def init_rm_map(self):
         if "g" in self.model.keys():
             for ptype in self.model["g"]:
-                self.rm_map[ptype] = default_role_manager.RoleManager(10)
+                assertion = self.model["g"][ptype]
+                if assertion.value.count("_") == 2:
+                    self.rm_map[ptype] = default_role_manager.RoleManager(10)
+                else:
+                    self.rm_map[ptype] = default_role_manager.DomainManager(10)
 
     def load_policy(self):
         """reloads the policy from file/database."""
