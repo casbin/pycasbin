@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.9.7](https://github.com/casbin/pycasbin/compare/v1.9.6...v1.9.7) (2021-11-18)
+
+
+### Bug Fixes
+
+* reimplement default role manager ([b8f7fa7](https://github.com/casbin/pycasbin/commit/b8f7fa7fd515e70b685a4d044fa3d568935ae337))
+
 ## [1.9.6](https://github.com/casbin/pycasbin/compare/v1.9.5...v1.9.6) (2021-11-12)
 
 
