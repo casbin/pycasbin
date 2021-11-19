@@ -136,7 +136,9 @@ class Enforcer(ManagementEnforcer):
 
         return res
 
-    def get_implicit_permissions_for_user(self, user, domain=""):
+    def get_implicit_permissions_for_user(
+        self, user, domain="", filter_policy_dom=True
+    ):
         """
         gets implicit permissions for a user or role.
         Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.
@@ -147,6 +149,9 @@ class Enforcer(ManagementEnforcer):
 
         get_permissions_for_user("alice") can only get: [["alice", "data2", "read"]].
         But get_implicit_permissions_for_user("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
+
+        Inherited roles can be matched by domain.
+        filter_policy_dom: bool - For given *domain*, policies will be filtered by domain as well. Default = True
         """
         roles = self.get_implicit_roles_for_user(user, domain)
 
@@ -154,7 +159,7 @@ class Enforcer(ManagementEnforcer):
 
         res = []
         for role in roles:
-            if domain:
+            if domain and filter_policy_dom:
                 permissions = self.get_permissions_for_user_in_domain(role, domain)
             else:
                 permissions = self.get_permissions_for_user(role)
