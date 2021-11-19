@@ -127,6 +127,23 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("alice", "/alice_data/resource", "GET"))
         self.assertTrue(e.enforce("alice", "/alice_data2/123/using/456", "GET"))
 
+    def test_enforce_key_match_custom_model(self):
+        e = self.get_enforcer(
+            get_examples('keymatch_custom_model.conf'), get_examples('keymatch2_policy.csv')
+        )
+
+        def custom_function(key1, key2):
+            if key1 == "/alice_data2/myid/using/res_id" and key2 == "/alice_data/:resource":
+                return True
+            elif key1 == "/alice_data2/myid/using/res_id" and key2 == "/alice_data2/:id/using/:resId":
+                return True
+            return False
+
+        e.add_function("keyMatchCustom", custom_function)
+
+        self.assertFalse(e.enforce("alice", "/alice_data2/myid", "GET"))
+        self.assertTrue(e.enforce("alice", "/alice_data2/myid/using/res_id", "GET"))
+
     def test_enforce_priority(self):
         e = self.get_enforcer(
             get_examples("priority_model.conf"), get_examples("priority_policy.csv")
