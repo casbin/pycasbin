@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.10.0](https://github.com/casbin/pycasbin/compare/v1.9.7...v1.10.0) (2021-11-20)
+
+
+### Features
+
+* port the test case of add_function() example to pycasbin ([#217](https://github.com/casbin/pycasbin/issues/217)) ([c19d065](https://github.com/casbin/pycasbin/commit/c19d0658687bfb4e0a59c7323024c2842b226d56))
+
 ## [1.9.7](https://github.com/casbin/pycasbin/compare/v1.9.6...v1.9.7) (2021-11-18)
 
 
