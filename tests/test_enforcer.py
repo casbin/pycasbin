@@ -129,13 +129,20 @@ class TestConfig(TestCaseBase):
 
     def test_enforce_key_match_custom_model(self):
         e = self.get_enforcer(
-            get_examples('keymatch_custom_model.conf'), get_examples('keymatch2_policy.csv')
+            get_examples("keymatch_custom_model.conf"),
+            get_examples("keymatch2_policy.csv"),
         )
 
         def custom_function(key1, key2):
-            if key1 == "/alice_data2/myid/using/res_id" and key2 == "/alice_data/:resource":
+            if (
+                key1 == "/alice_data2/myid/using/res_id"
+                and key2 == "/alice_data/:resource"
+            ):
                 return True
-            elif key1 == "/alice_data2/myid/using/res_id" and key2 == "/alice_data2/:id/using/:resId":
+            elif (
+                key1 == "/alice_data2/myid/using/res_id"
+                and key2 == "/alice_data2/:id/using/:resId"
+            ):
                 return True
             return False
 
