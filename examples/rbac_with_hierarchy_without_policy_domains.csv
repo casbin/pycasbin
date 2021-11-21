@@ -1,0 +1,12 @@
+# All policies domain *neutral*. Only roles are domain dependent
+
+p, role:reader, data1, read
+p, role:writer, data1, write
+p, alice, data2, read
+
+g, role:global_admin, role:reader, domain1
+g, role:global_admin, role:writer, domain1
+
+g, alice, role:global_admin, domain1
+
+

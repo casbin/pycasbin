@@ -443,7 +443,7 @@ class SyncedEnforcer:
         with self._rl:
             return self._e.get_implicit_roles_for_user(name, *domain)
 
-    def get_implicit_permissions_for_user(self, user, *domain):
+    def get_implicit_permissions_for_user(self, user, *domain, filter_policy_dom=True):
         """
         gets implicit permissions for a user or role.
         Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.
@@ -456,7 +456,9 @@ class SyncedEnforcer:
         But get_implicit_permissions_for_user("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
         """
         with self._rl:
-            return self._e.get_implicit_permissions_for_user(user, *domain)
+            return self._e.get_implicit_permissions_for_user(
+                user, *domain, filter_policy_dom=filter_policy_dom
+            )
 
     def get_implicit_users_for_permission(self, *permission):
         """
