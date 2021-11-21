@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.11.1](https://github.com/casbin/pycasbin/compare/v1.11.0...v1.11.1) (2021-11-21)
+
+
+### Bug Fixes
+
+* add glob_match() test cases from Go to Python ([658d3bb](https://github.com/casbin/pycasbin/commit/658d3bb189749a06089c678f708d546e26aebe11))
+
 # [1.11.0](https://github.com/casbin/pycasbin/compare/v1.10.1...v1.11.0) (2021-11-21)
 
 
