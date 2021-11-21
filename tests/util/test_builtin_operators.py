@@ -184,6 +184,20 @@ class TestBuiltinOperators(TestCase):
         self.assertFalse(util.glob_match_func("/prefix/subprefix/foobar", "*/foo*"))
         self.assertFalse(util.glob_match_func("/prefix/subprefix/foobar", "*/foo/*"))
 
+    def test_glob_match2(self):
+        # add missing tests from Go to Python
+        self.assertFalse(util.glob_match_func("/foo", "*/foo"))  # different from Go
+        self.assertFalse(util.glob_match_func("/foo", "*/foo*"))  # different from Go
+        self.assertFalse(util.glob_match_func("/foo", "*/foo/*"))
+        self.assertFalse(util.glob_match_func("/foo/bar", "*/foo"))
+        self.assertFalse(util.glob_match_func("/foo/bar", "*/foo*"))
+        self.assertFalse(
+            util.glob_match_func("/foo/bar", "*/foo/*")
+        )  # different from Go
+        self.assertFalse(util.glob_match_func("/foobar", "*/foo"))
+        self.assertFalse(util.glob_match_func("/foobar", "*/foo*"))  # different from Go
+        self.assertFalse(util.glob_match_func("/foobar", "*/foo/*"))
+
     def test_ip_match(self):
         self.assertTrue(util.ip_match_func("192.168.2.123", "192.168.2.0/24"))
         self.assertFalse(util.ip_match_func("192.168.2.123", "192.168.3.0/24"))
