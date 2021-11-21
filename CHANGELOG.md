@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.11.0](https://github.com/casbin/pycasbin/compare/v1.10.1...v1.11.0) (2021-11-21)
+
+
+### Features
+
+* ignore policies with domain when get_implicit_permissions_for_user ([5ca47b7](https://github.com/casbin/pycasbin/commit/5ca47b7224299d07c19d80c9e2e4846a4135f151))
+
 ## [1.10.1](https://github.com/casbin/pycasbin/compare/v1.10.0...v1.10.1) (2021-11-21)
 
 
