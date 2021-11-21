@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.10.1](https://github.com/casbin/pycasbin/compare/v1.10.0...v1.10.1) (2021-11-21)
+
+
+### Bug Fixes
+
+* linter bug in test_enforcer.py ([782f229](https://github.com/casbin/pycasbin/commit/782f229f3bc39d8743731a0ce860d827dba14dab))
+
 # [1.10.0](https://github.com/casbin/pycasbin/compare/v1.9.7...v1.10.0) (2021-11-20)
 
 
