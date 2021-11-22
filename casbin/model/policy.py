@@ -69,7 +69,8 @@ class Policy:
             rule
             for rule in self[sec][ptype].policy
             if all(
-                value == "" or rule[field_index + i] == value
+                (callable(value) and value(rule[field_index + i]))
+                or (value == "" or rule[field_index + i] == value)
                 for i, value in enumerate(field_values)
             )
         ]
