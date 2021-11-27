@@ -1,3 +1,5 @@
+from functools import partial
+
 import casbin
 from tests.test_enforcer import get_examples, TestCaseBase
 
@@ -98,6 +100,91 @@ class TestManagementApi(TestCaseBase):
         )
         self.assertTrue(e.has_grouping_policy(["alice", "data2_admin"]))
         self.assertFalse(e.has_grouping_policy(["bob", "data2_admin"]))
+
+    def test_get_policy_matching_function(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
+            get_examples("rbac_with_domain_and_policy_pattern_policy.csv"),
+        )
+
+        self.assertEqual(
+            e.get_policy(),
+            [
+                ["admin", "domain.*", "data1", "read"],
+                ["user", "domain.1", "data2", "read"],
+                ["user", "domain.1", "data2", "write"],
+            ],
+        )
+
+        km2_fn = casbin.util.key_match2_func
+        self.assertEqual(
+            e.get_filtered_grouping_policy(2, partial(km2_fn, "domain.3")),
+            [["alice", "user", "*"], ["bob", "admin", "domain.3"]],
+        )
+
+        self.assertEqual(
+            e.get_filtered_grouping_policy(2, partial(km2_fn, "domain.1")),
+            [["alice", "user", "*"]],
+        )
+
+        # first p record matches to domain.3
+        self.assertEqual(
+            e.get_filtered_policy(1, partial(km2_fn, "domain.3")),
+            [["admin", "domain.*", "data1", "read"]],
+        )
+
+        # first and second p record should be matched to (.., domain.1, read)
+        self.assertEqual(
+            e.get_filtered_policy(1, partial(km2_fn, "domain.1"), "", "read"),
+            [
+                ["admin", "domain.*", "data1", "read"],
+                ["user", "domain.1", "data2", "read"],
+            ],
+        )
+
+    def test_get_policy_multiple_matching_functions(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
+            get_examples("rbac_with_domain_and_policy_pattern_policy.csv"),
+        )
+
+        self.assertEqual(
+            e.get_policy(),
+            [
+                ["admin", "domain.*", "data1", "read"],
+                ["user", "domain.1", "data2", "read"],
+                ["user", "domain.1", "data2", "write"],
+            ],
+        )
+
+        km2_fn = casbin.util.key_match2_func
+
+        self.assertEqual(
+            e.get_filtered_policy(
+                1, partial(km2_fn, "domain.2"), lambda a: "data" in a
+            ),
+            [["admin", "domain.*", "data1", "read"]],
+        )
+
+        self.assertEqual(
+            e.get_filtered_policy(
+                1, partial(km2_fn, "domain.1"), lambda a: "data" in a, "read"
+            ),
+            [
+                ["admin", "domain.*", "data1", "read"],
+                ["user", "domain.1", "data2", "read"],
+            ],
+        )
+
+        self.assertEqual(
+            e.get_filtered_policy(
+                1, partial(km2_fn, "domain.1"), "", "reading".startswith
+            ),
+            [
+                ["admin", "domain.*", "data1", "read"],
+                ["user", "domain.1", "data2", "read"],
+            ],
+        )
 
     def test_modify_policy_api(self):
         e = self.get_enforcer(
