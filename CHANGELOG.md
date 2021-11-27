@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.12.0](https://github.com/casbin/pycasbin/compare/v1.11.1...v1.12.0) (2021-11-27)
+
+
+### Features
+
+* support matching functions to filter policies ([#222](https://github.com/casbin/pycasbin/issues/222)) ([9d0528d](https://github.com/casbin/pycasbin/commit/9d0528db85b8aedfc6b337f3d98bad19c64103e7))
+
 ## [1.11.1](https://github.com/casbin/pycasbin/compare/v1.11.0...v1.11.1) (2021-11-21)
 
 
