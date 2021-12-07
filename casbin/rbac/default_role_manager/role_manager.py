@@ -67,7 +67,7 @@ class RoleManager(RM):
     def __init__(self, max_hierarchy_level=10):
         self.logger = logging.getLogger(__name__)
         self.max_hierarchy_level = max_hierarchy_level
-        self.matching_func = lambda name1, name2: name1 == name2
+        self.matching_func = None
         self.all_links = list()
         self.all_roles = dict()
 
@@ -100,8 +100,9 @@ class RoleManager(RM):
     def _get_role(self, name):
         if name not in self.all_roles:
             role = Role(name)
-            for pattern_role in self._matching_roles(name):
-                role.copy_from(pattern_role)
+            if self.matching_func != None:
+                for pattern_role in self._matching_roles(name):
+                    role.copy_from(pattern_role)
             self.all_roles[name] = role
         return self.all_roles[name]
 
@@ -124,15 +125,16 @@ class RoleManager(RM):
 
         user.add_role(role)
 
-        for r in self.all_roles.values():
-            if r.name != user.name and self._matching_fn(
-                user.name, r.name, MatchOrder.PATTERN_STR
-            ):
-                r.add_role(role)
-            if r.name != role.name and self._matching_fn(
-                role.name, r.name, MatchOrder.PATTERN_STR
-            ):
-                role.add_role(r)
+        if self.matching_func != None:
+            for r in self.all_roles.values():
+                if r.name != user.name and self._matching_fn(
+                    user.name, r.name, MatchOrder.PATTERN_STR
+                ):
+                    r.add_role(role)
+                if r.name != role.name and self._matching_fn(
+                    role.name, r.name, MatchOrder.PATTERN_STR
+                ):
+                    role.add_role(r)
 
     def delete_link(self, name1, name2, *domain):
         if Link(name1, name2) not in self.all_links:
