@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.13.0](https://github.com/casbin/pycasbin/compare/v1.12.0...v1.13.0) (2021-12-08)
+
+
+### Features
+
+* get implicit permissions filter policies domain by matching function ([#226](https://github.com/casbin/pycasbin/issues/226)) ([e16dfb3](https://github.com/casbin/pycasbin/commit/e16dfb3c2992b0195b99b2aa07f30569d5d273af))
+
 # [1.12.0](https://github.com/casbin/pycasbin/compare/v1.11.1...v1.12.0) (2021-11-27)
 
 
