@@ -233,6 +233,43 @@ class TestRbacApi(TestCaseBase):
         )
         self.assertEqual(e.get_implicit_permissions_for_user("bob", "domain1"), [])
 
+    def test_enforce_implicit_permissions_api_with_domain_matching_function(self):
+
+        e = self.get_enforcer(
+            get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
+            get_examples("rbac_with_domain_and_policy_pattern_policy.csv"),
+        )
+
+        e.get_role_manager().add_domain_matching_func(casbin.util.key_match2_func)
+
+        self.assertEqual(
+            e.get_implicit_permissions_for_user("alice", "domain.3"),
+            [["user", "domain.*", "data3", "read"]],
+        )
+
+        self.assertEqual(
+            e.get_implicit_permissions_for_user("alice", "domain.1"),
+            [
+                ["user", "domain.*", "data3", "read"],
+                ["user", "domain.1", "data2", "read"],
+                ["user", "domain.1", "data2", "write"],
+            ],
+        )
+
+        self.assertEqual(
+            e.get_implicit_permissions_for_user("bob", "domain.3"),
+            [["admin", "domain.*", "data1", "read"]],
+        )
+
+        self.assertEqual(
+            e.get_implicit_permissions_for_user("bob", "domain.2"),
+            [],
+        )
+
+        self.assertEqual(
+            sorted(e.get_implicit_permissions_for_user("bob", "domain.1")), []
+        )
+
     def test_enforce_implicit_permissions_api_with_domain_ignore_domain_policies_filter(
         self,
     ):
