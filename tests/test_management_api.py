@@ -111,6 +111,7 @@ class TestManagementApi(TestCaseBase):
             e.get_policy(),
             [
                 ["admin", "domain.*", "data1", "read"],
+                ["user", "domain.*", "data3", "read"],
                 ["user", "domain.1", "data2", "read"],
                 ["user", "domain.1", "data2", "write"],
             ],
@@ -127,19 +128,24 @@ class TestManagementApi(TestCaseBase):
             [["alice", "user", "*"]],
         )
 
-        # first p record matches to domain.3
+        # first and second p record matches to domain.3
         self.assertEqual(
             e.get_filtered_policy(1, partial(km2_fn, "domain.3")),
-            [["admin", "domain.*", "data1", "read"]],
-        )
-
-        # first and second p record should be matched to (.., domain.1, read)
-        self.assertEqual(
-            e.get_filtered_policy(1, partial(km2_fn, "domain.1"), "", "read"),
             [
                 ["admin", "domain.*", "data1", "read"],
-                ["user", "domain.1", "data2", "read"],
+                ["user", "domain.*", "data3", "read"],
             ],
+        )
+
+        self.assertEqual(
+            sorted(e.get_filtered_policy(1, partial(km2_fn, "domain.1"), "", "read")),
+            sorted(
+                [
+                    ["admin", "domain.*", "data1", "read"],
+                    ["user", "domain.1", "data2", "read"],
+                    ["user", "domain.*", "data3", "read"],
+                ]
+            ),
         )
 
     def test_get_policy_multiple_matching_functions(self):
@@ -152,6 +158,7 @@ class TestManagementApi(TestCaseBase):
             e.get_policy(),
             [
                 ["admin", "domain.*", "data1", "read"],
+                ["user", "domain.*", "data3", "read"],
                 ["user", "domain.1", "data2", "read"],
                 ["user", "domain.1", "data2", "write"],
             ],
@@ -160,30 +167,47 @@ class TestManagementApi(TestCaseBase):
         km2_fn = casbin.util.key_match2_func
 
         self.assertEqual(
-            e.get_filtered_policy(
-                1, partial(km2_fn, "domain.2"), lambda a: "data" in a
+            sorted(
+                e.get_filtered_policy(
+                    1, partial(km2_fn, "domain.2"), lambda a: "data" in a
+                )
             ),
-            [["admin", "domain.*", "data1", "read"]],
+            sorted(
+                [
+                    ["admin", "domain.*", "data1", "read"],
+                    ["user", "domain.*", "data3", "read"],
+                ]
+            ),
         )
 
         self.assertEqual(
-            e.get_filtered_policy(
-                1, partial(km2_fn, "domain.1"), lambda a: "data" in a, "read"
+            sorted(
+                e.get_filtered_policy(
+                    1, partial(km2_fn, "domain.1"), lambda a: "data" in a, "read"
+                )
             ),
-            [
-                ["admin", "domain.*", "data1", "read"],
-                ["user", "domain.1", "data2", "read"],
-            ],
+            sorted(
+                [
+                    ["admin", "domain.*", "data1", "read"],
+                    ["user", "domain.1", "data2", "read"],
+                    ["user", "domain.*", "data3", "read"],
+                ]
+            ),
         )
 
         self.assertEqual(
-            e.get_filtered_policy(
-                1, partial(km2_fn, "domain.1"), "", "reading".startswith
+            sorted(
+                e.get_filtered_policy(
+                    1, partial(km2_fn, "domain.1"), "", "reading".startswith
+                )
             ),
-            [
-                ["admin", "domain.*", "data1", "read"],
-                ["user", "domain.1", "data2", "read"],
-            ],
+            sorted(
+                [
+                    ["admin", "domain.*", "data1", "read"],
+                    ["user", "domain.1", "data2", "read"],
+                    ["user", "domain.*", "data3", "read"],
+                ]
+            ),
         )
 
     def test_modify_policy_api(self):

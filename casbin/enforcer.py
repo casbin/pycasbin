@@ -1,3 +1,5 @@
+from functools import partial
+
 from casbin.management_enforcer import ManagementEnforcer
 from casbin.util import join_slice, array_remove_duplicates, set_subtract
 
@@ -150,7 +152,10 @@ class Enforcer(ManagementEnforcer):
         get_permissions_for_user("alice") can only get: [["alice", "data2", "read"]].
         But get_implicit_permissions_for_user("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
 
-        Inherited roles can be matched by domain.
+        For given domain policies are filtered by corresponding domain matching function of DomainManager
+        Inherited roles can be matched by domain. For domain neutral policies set:
+         filter_policy_dom = False
+
         filter_policy_dom: bool - For given *domain*, policies will be filtered by domain as well. Default = True
         """
         roles = self.get_implicit_roles_for_user(user, domain)
@@ -158,12 +163,15 @@ class Enforcer(ManagementEnforcer):
         roles.insert(0, user)
 
         res = []
-        for role in roles:
-            if domain and filter_policy_dom:
-                permissions = self.get_permissions_for_user_in_domain(role, domain)
-            else:
-                permissions = self.get_permissions_for_user(role)
 
+        # policy domain should be matched by domain_match_fn of DomainManager
+        if domain:
+            domain = partial(self.get_role_manager().domain_matching_func, domain)
+
+        for role in roles:
+            permissions = self.get_permissions_for_user_in_domain(
+                role, domain if filter_policy_dom else ""
+            )
             res.extend(permissions)
 
         return res
