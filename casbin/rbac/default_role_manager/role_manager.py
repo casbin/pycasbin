@@ -68,6 +68,7 @@ class RoleManager(RM):
         self.logger = logging.getLogger(__name__)
         self.max_hierarchy_level = max_hierarchy_level
         self.matching_func = None
+        self.domain_matching_func = None
         self.all_links = list()
         self.all_roles = dict()
 
@@ -200,7 +201,8 @@ class DomainManagerBase(RM):
         self.logger = logging.getLogger(__name__)
         self.all_links = dict()
         self.max_hierarchy_level = max_hierarchy_level
-        self.domain_matching_func = lambda domain1, domain2: domain1 == domain2
+        self.matching_func = None
+        self.domain_matching_func = None
         self.matching_func = lambda name1, name2: name1 == name2
 
     def add_matching_func(self, fn):
@@ -229,11 +231,14 @@ class DomainManagerBase(RM):
 
     def _get_role_manager(self, *domain):
         domain1 = self._get_domain(*domain)
-        domain_links = []
+        domain_links = self.all_links.get(domain1, [])
 
-        for domain2, links in self.all_links.items():
-            if match_error_handler(self.domain_matching_func, domain1, domain2):
-                domain_links = domain_links + links
+        if self.domain_matching_func != None:
+            for domain2, links in self.all_links.items():
+                if domain1 != domain2 and match_error_handler(
+                    self.domain_matching_func, domain1, domain2
+                ):
+                    domain_links = domain_links + links
 
         rm = RoleManager(max_hierarchy_level=self.max_hierarchy_level)
         rm.add_matching_func(self.matching_func)
@@ -289,13 +294,19 @@ class DomainManager(DomainManagerBase):
 
     def _affected_role_managers(self, *domain):
         domain_pattern = self._get_domain(*domain)
-        return [
-            self.rm_map[domain_str]
-            for domain_str in self.rm_map.keys()
-            if match_error_handler(
-                self.domain_matching_func, domain_str, domain_pattern
+
+        if self.domain_matching_func != None:
+            return [
+                self.rm_map[domain_str]
+                for domain_str in self.rm_map.keys()
+                if match_error_handler(
+                    self.domain_matching_func, domain_str, domain_pattern
+                )
+            ]
+        else:
+            return (
+                [self.rm_map[domain_pattern]] if domain_pattern in self.rm_map else []
             )
-        ]
 
     def add_matching_func(self, fn):
         super().add_matching_func(fn)

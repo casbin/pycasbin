@@ -165,8 +165,9 @@ class Enforcer(ManagementEnforcer):
         res = []
 
         # policy domain should be matched by domain_match_fn of DomainManager
-        if domain:
-            domain = partial(self.get_role_manager().domain_matching_func, domain)
+        domain_matching_func = self.get_role_manager().domain_matching_func
+        if domain and domain_matching_func != None:
+            domain = partial(domain_matching_func, domain)
 
         for role in roles:
             permissions = self.get_permissions_for_user_in_domain(
