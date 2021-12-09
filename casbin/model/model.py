@@ -98,3 +98,33 @@ class Model(Policy):
                 assertion.policy_map[",".join(policy)] = i
 
         return None
+
+    def to_text(self):
+        s = []
+
+        def write_string(sec):
+            for p_type in self[sec]:
+                value = self[sec][p_type].value
+                s.append(
+                    "{} = {}\n".format(
+                        sec, value.replace("p_", "p.").replace("r_", "r.")
+                    )
+                )
+
+        s.append("[request_definition]\n")
+        write_string("r")
+        s.append("[policy_definition]\n")
+        write_string("p")
+        if "g" in self.keys():
+            s.append("[role_definition]\n")
+            for p_type in self["g"]:
+                s.append("{} = {}\n".format(p_type, self["g"][p_type].value))
+        s.append("[policy_effect]\n")
+        write_string("e")
+        s.append("[matchers]\n")
+        write_string("m")
+
+        # remove last \n
+        s[-1] = s[-1].strip()
+
+        return "".join(s)
