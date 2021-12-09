@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.14.0](https://github.com/casbin/pycasbin/compare/v1.13.0...v1.14.0) (2021-12-09)
+
+
+### Features
+
+* casbin_js_get_permission_for_user ([#229](https://github.com/casbin/pycasbin/issues/229)) ([075ca10](https://github.com/casbin/pycasbin/commit/075ca1078ea850498bc058767524468cdf05458d))
+
 # [1.13.0](https://github.com/casbin/pycasbin/compare/v1.12.0...v1.13.0) (2021-12-08)
 
 
