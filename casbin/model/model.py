@@ -2,6 +2,9 @@ from . import Assertion
 from casbin import util, config
 from .policy import Policy
 
+DEFAULT_DOMAIN = ""
+DEFAULT_SEPARATOR = "::"
+
 
 class Model(Policy):
 
@@ -98,6 +101,78 @@ class Model(Policy):
                 assertion.policy_map[",".join(policy)] = i
 
         return None
+
+    def sort_policies_by_subject_hierarchy(self):
+        if self["e"]["e"].value != "subjectPriority(p_eft) || deny":
+            return
+
+        sub_index = 0
+        domain_index = -1
+        for ptype, assertion in self["p"].items():
+            for index, token in enumerate(assertion.tokens):
+                if token == "{}_dom".format(ptype):
+                    domain_index = index
+                    break
+
+            subject_hierarchy_map = self.get_subject_hierarchy_map(
+                self["g"]["g"].policy
+            )
+
+            def compare_policy(policy):
+                domain = DEFAULT_DOMAIN
+                if domain_index != -1:
+                    domain = policy[domain_index]
+                name = self.get_name_with_domain(domain, policy[sub_index])
+                return subject_hierarchy_map[name]
+
+            assertion.policy = sorted(
+                assertion.policy, key=compare_policy, reverse=True
+            )
+            for i, policy in enumerate(assertion.policy):
+                assertion.policy_map[",".join(policy)] = i
+
+    def get_subject_hierarchy_map(self, policies):
+        subject_hierarchy_map = {}
+        # Tree structure of role
+        policy_map = {}
+        for policy in policies:
+            if len(policy) < 2:
+                raise RuntimeError("policy g expect 2 more params")
+            domain = DEFAULT_DOMAIN
+            if len(policy) != 2:
+                domain = policy[2]
+            child = self.get_name_with_domain(domain, policy[0])
+            parent = self.get_name_with_domain(domain, policy[1])
+            if parent not in policy_map.keys():
+                policy_map[parent] = [child]
+            else:
+                policy_map[parent].append(child)
+            if child not in subject_hierarchy_map.keys():
+                subject_hierarchy_map[child] = 0
+            if parent not in subject_hierarchy_map.keys():
+                subject_hierarchy_map[parent] = 0
+            subject_hierarchy_map[child] = 1
+        # Use queues for levelOrder
+        queue = []
+        for k, v in subject_hierarchy_map.items():
+            root = k
+            if v != 0:
+                continue
+            lv = 0
+            queue.append(root)
+            while len(queue) != 0:
+                sz = len(queue)
+                for _ in range(sz):
+                    node = queue.pop(0)
+                    subject_hierarchy_map[node] = lv
+                    if node in policy_map.keys():
+                        for child in policy_map[node]:
+                            queue.append(child)
+                lv += 1
+        return subject_hierarchy_map
+
+    def get_name_with_domain(self, domain, name):
+        return "{}{}{}".format(domain, DEFAULT_SEPARATOR, name)
 
     def to_text(self):
         s = []
