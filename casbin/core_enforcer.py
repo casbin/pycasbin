@@ -189,6 +189,8 @@ class CoreEnforcer:
 
             self.adapter.load_policy(new_model)
 
+            self.model.sort_policies_by_subject_hierarchy()
+
             new_model.sort_policies_by_priority()
 
             self.init_rm_map()
