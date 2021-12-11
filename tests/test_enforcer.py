@@ -198,6 +198,22 @@ class TestConfig(TestCaseBase):
         )
         self.assertFalse(e.enforce("alice", "data1", "read"))
 
+    def test_enforce_subpriority(self):
+        e = self.get_enforcer(
+            get_examples("subject_priority_model.conf"),
+            get_examples("subject_priority_policy.csv"),
+        )
+        self.assertTrue(e.enforce("jane", "data1", "read"))
+        self.assertTrue(e.enforce("alice", "data1", "read"))
+
+    def test_enforce_subpriority_with_domain(self):
+        e = self.get_enforcer(
+            get_examples("subject_priority_model_with_domain.conf"),
+            get_examples("subject_priority_policy_with_domain.csv"),
+        )
+        self.assertTrue(e.enforce("alice", "data1", "domain1", "write"))
+        self.assertTrue(e.enforce("bob", "data2", "domain2", "write"))
+
     def test_multiple_policy_definitions(self):
 
         e = self.get_enforcer(
