@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.15.0](https://github.com/casbin/pycasbin/compare/v1.14.0...v1.15.0) (2021-12-11)
+
+
+### Features
+
+* subject priority ([#231](https://github.com/casbin/pycasbin/issues/231)) ([b38169d](https://github.com/casbin/pycasbin/commit/b38169dbf3d122e17d764e058ef13915a1861eec))
+
 # [1.14.0](https://github.com/casbin/pycasbin/compare/v1.13.0...v1.14.0) (2021-12-09)
 
 
