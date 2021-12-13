@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.15.1](https://github.com/casbin/pycasbin/compare/v1.15.0...v1.15.1) (2021-12-13)
+
+
+### Performance Improvements
+
+* add pytest-benchmark and judge whether use regex in rabc ([#228](https://github.com/casbin/pycasbin/issues/228)) ([252c288](https://github.com/casbin/pycasbin/commit/252c288e20c138b97b7cd58aa3c47d4434b0c742))
+
 # [1.15.0](https://github.com/casbin/pycasbin/compare/v1.14.0...v1.15.0) (2021-12-11)
 
 
