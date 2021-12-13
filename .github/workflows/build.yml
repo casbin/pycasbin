@@ -28,9 +28,17 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements_dev.txt
         pip install coveralls
+        pip install pytest
+        pip install pytest-benchmark
 
     - name: Run tests
       run: coverage run -m unittest discover -s tests -t tests
+
+    - name: Run benchmark 
+      run: python3 -m pytest 
+            --benchmark-verbose 
+            --benchmark-columns=mean,stddev,iqr,ops,rounds 
+            tests/benchmarks/benchmark_model.py
 
     - name: Upload coverage data to coveralls.io
       run: coveralls --service=github
