@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.15.2](https://github.com/casbin/pycasbin/compare/v1.15.1...v1.15.2) (2021-12-15)
+
+
+### Bug Fixes
+
+* Apache 2.0 license headers ([#233](https://github.com/casbin/pycasbin/issues/233)) ([16e4f0a](https://github.com/casbin/pycasbin/commit/16e4f0a0f82ac93688e1b735b3da173929524107))
+
 ## [1.15.1](https://github.com/casbin/pycasbin/compare/v1.15.0...v1.15.1) (2021-12-13)
 
 
