@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+## [1.15.2](https://github.com/casbin/pycasbin/compare/v1.15.1...v1.15.2) (2021-12-17)
+
+
+### Bug Fixes
+
+* Apache 2.0 license headers ([#233](https://github.com/casbin/pycasbin/issues/233)) ([16e4f0a](https://github.com/casbin/pycasbin/commit/16e4f0a0f82ac93688e1b735b3da173929524107))
+* disabled casbin should allow all requests ([#235](https://github.com/casbin/pycasbin/issues/235)) ([ecd4ff8](https://github.com/casbin/pycasbin/commit/ecd4ff8cbee8dede7923eb7d617cc251e0de5582))
+
+
+### Performance Improvements
+
+* judge whether use domain_matching_func ([#232](https://github.com/casbin/pycasbin/issues/232)) ([bb12c0f](https://github.com/casbin/pycasbin/commit/bb12c0f03c1a30cfb8e3cf3e77b4d1b6c0aad1d4))
+
 ## [1.15.2](https://github.com/casbin/pycasbin/compare/v1.15.1...v1.15.2) (2021-12-15)
 
 
