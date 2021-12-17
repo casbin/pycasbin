@@ -335,7 +335,7 @@ class CoreEnforcer:
         mtype = "m"
 
         if not self.enabled:
-            return [False, []]
+            return [True, []]
 
         functions = self.fm.get_functions()
 
