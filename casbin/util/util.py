@@ -20,14 +20,14 @@ eval_reg = re.compile(r"\beval\((?P<rule>[^)]*)\)")
 
 def escape_assertion(s):
     """escapes the dots in the assertion, because the expression evaluation doesn't support such variable names."""
-    eval_p = re.search(r"\bp(\d?)\.", s)
+    eval_p = re.search(r"\bp(\d*)\.", s)
     if eval_p is not None:
         p_suffix = eval_p.group(1)
         p_before = re.compile(f"\\bp{p_suffix}\\.")
         p_after = f"p{p_suffix}_"
         s = re.sub(p_before, p_after, s)
 
-    eval_r = re.search(r"\br(\d?)\.", s)
+    eval_r = re.search(r"\br(\d*)\.", s)
     if eval_r is not None:
         r_suffix = eval_r.group(1)
         r_before = re.compile(f"\\br{r_suffix}\\.")
