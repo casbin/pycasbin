@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.15.3](https://github.com/casbin/pycasbin/compare/v1.15.2...v1.15.3) (2022-01-13)
+
+
+### Bug Fixes
+
+* [#239](https://github.com/casbin/pycasbin/issues/239), not allowing more than 9 types of policies/requests ([dcf4392](https://github.com/casbin/pycasbin/commit/dcf43924bbdd59901d1b6632a5a1796ad546cc09))
+
 ## [1.15.2](https://github.com/casbin/pycasbin/compare/v1.15.1...v1.15.2) (2021-12-17)
 
 
