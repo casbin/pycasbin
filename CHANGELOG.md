@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.15.4](https://github.com/casbin/pycasbin/compare/v1.15.3...v1.15.4) (2022-01-13)
+
+
+### Bug Fixes
+
+* [#238](https://github.com/casbin/pycasbin/issues/238), avoid calling has_eval in enforcing loop ([#240](https://github.com/casbin/pycasbin/issues/240)) ([8188b27](https://github.com/casbin/pycasbin/commit/8188b274e7954838c0717c10f2b772b47130b1e8))
+
 ## [1.15.3](https://github.com/casbin/pycasbin/compare/v1.15.2...v1.15.3) (2022-01-13)
 
 
