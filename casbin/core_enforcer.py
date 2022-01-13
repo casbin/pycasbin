@@ -366,8 +366,8 @@ class CoreEnforcer:
             raise RuntimeError("invalid request size")
 
         exp_string = self.model["m"][mtype].value
-        has_eval = util.has_eval(exp_string)
-        if not has_eval:
+        exp_has_eval = util.has_eval(exp_string)
+        if not exp_has_eval:
             expression = self._get_expression(exp_string, functions)
 
         policy_effects = set()
@@ -385,7 +385,7 @@ class CoreEnforcer:
                 p_parameters = dict(zip(p_tokens, pvals))
                 parameters = dict(r_parameters, **p_parameters)
 
-                if util.has_eval(exp_string):
+                if exp_has_eval:
                     rule_names = util.get_eval_value(exp_string)
                     rules = [
                         util.escape_assertion(p_parameters[rule_name])
@@ -427,7 +427,7 @@ class CoreEnforcer:
                     break
 
         else:
-            if has_eval:
+            if exp_has_eval:
                 raise RuntimeError(
                     "please make sure rule exists in policy when using eval() in matcher"
                 )
