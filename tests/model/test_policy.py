@@ -172,3 +172,20 @@ class TestPolicy(TestCase):
 
         res = m.remove_filtered_policy("p", "p", 1, "domain1", "data1")
         self.assertFalse(res)
+
+    def test_remove_filtered_policy_with_function(self):
+        m = Model()
+        m.load_model(get_examples("rbac_with_domains_model.conf"))
+
+        rule = ["admin", "domain1", "data1", "read"]
+        m.add_policy("p", "p", rule)
+
+        res = m.remove_filtered_policy(
+            "p", "p", 1, lambda v: v == "domain1", lambda v: v == "data1"
+        )
+        self.assertTrue(res)
+
+        res = m.remove_filtered_policy(
+            "p", "p", 1, lambda v: v == "domain1", lambda v: v == "data1"
+        )
+        self.assertFalse(res)
