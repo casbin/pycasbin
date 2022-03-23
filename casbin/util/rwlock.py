@@ -27,7 +27,7 @@ class RWLockWrite:
         self._waiting_writers = 0
         self._writer_active = False
 
-    def aquire_read(self):
+    def acquire_read(self):
         with self._lock:
             while self._waiting_writers > 0 or self._writer_active:
                 self._cond.wait()
@@ -39,7 +39,7 @@ class RWLockWrite:
             if self._active_readers == 0:
                 self._cond.notify_all()
 
-    def aquire_write(self):
+    def acquire_write(self):
         with self._lock:
             self._waiting_writers += 1
             while self._active_readers > 0 or self._writer_active:
@@ -64,7 +64,7 @@ class ReadRWLock:
         self.rwlock = rwlock
 
     def __enter__(self):
-        self.rwlock.aquire_read()
+        self.rwlock.acquire_read()
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.rwlock.release_read()
@@ -76,7 +76,7 @@ class WriteRWLock:
         self.rwlock = rwlock
 
     def __enter__(self):
-        self.rwlock.aquire_write()
+        self.rwlock.acquire_write()
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.rwlock.release_write()

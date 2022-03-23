@@ -21,14 +21,14 @@ class InternalEnforcer(CoreEnforcer):
     InternalEnforcer = CoreEnforcer + Internal API.
     """
 
-    def _add_policy(self, sec, ptype, rule):
+    async def _add_policy(self, sec, ptype, rule):
         """adds a rule to the current policy."""
         rule_added = self.model.add_policy(sec, ptype, rule)
         if not rule_added:
             return rule_added
 
         if self.adapter and self.auto_save:
-            if self.adapter.add_policy(sec, ptype, rule) is False:
+            if await self.adapter.add_policy(sec, ptype, rule) is False:
                 return False
 
             if self.watcher:
@@ -36,7 +36,7 @@ class InternalEnforcer(CoreEnforcer):
 
         return rule_added
 
-    def _add_policies(self, sec, ptype, rules):
+    async def _add_policies(self, sec, ptype, rules):
         """adds rules to the current policy."""
         rules_added = self.model.add_policies(sec, ptype, rules)
         if not rules_added:
@@ -46,7 +46,7 @@ class InternalEnforcer(CoreEnforcer):
             if hasattr(self.adapter, "add_policies") is False:
                 return False
 
-            if self.adapter.add_policies(sec, ptype, rules) is False:
+            if await self.adapter.add_policies(sec, ptype, rules) is False:
                 return False
 
             if self.watcher:
@@ -54,7 +54,7 @@ class InternalEnforcer(CoreEnforcer):
 
         return rules_added
 
-    def _update_policy(self, sec, ptype, old_rule, new_rule):
+    async def _update_policy(self, sec, ptype, old_rule, new_rule):
         """updates a rule from the current policy."""
         rule_updated = self.model.update_policy(sec, ptype, old_rule, new_rule)
 
@@ -63,7 +63,7 @@ class InternalEnforcer(CoreEnforcer):
 
         if self.adapter and self.auto_save:
 
-            if self.adapter.update_policy(sec, ptype, old_rule, new_rule) is False:
+            if await self.adapter.update_policy(sec, ptype, old_rule, new_rule) is False:
                 return False
 
             if self.watcher:
@@ -71,7 +71,7 @@ class InternalEnforcer(CoreEnforcer):
 
         return rule_updated
 
-    def _update_policies(self, sec, ptype, old_rules, new_rules):
+    async def _update_policies(self, sec, ptype, old_rules, new_rules):
         """updates rules from the current policy."""
         rules_updated = self.model.update_policies(sec, ptype, old_rules, new_rules)
 
@@ -80,7 +80,7 @@ class InternalEnforcer(CoreEnforcer):
 
         if self.adapter and self.auto_save:
 
-            if self.adapter.update_policies(sec, ptype, old_rules, new_rules) is False:
+            if await self.adapter.update_policies(sec, ptype, old_rules, new_rules) is False:
                 return False
 
             if self.watcher:
@@ -103,7 +103,7 @@ class InternalEnforcer(CoreEnforcer):
 
         return rule_removed
 
-    def _remove_policies(self, sec, ptype, rules):
+    async def _remove_policies(self, sec, ptype, rules):
         """RemovePolicies removes policy rules from the model."""
         rules_removed = self.model.remove_policies(sec, ptype, rules)
         if not rules_removed:
@@ -113,7 +113,7 @@ class InternalEnforcer(CoreEnforcer):
             if hasattr(self.adapter, "remove_policies") is False:
                 return False
 
-            if self.adapter.remove_policies(sec, ptype, rules) is False:
+            if await self.adapter.remove_policies(sec, ptype, rules) is False:
                 return False
 
             if self.watcher:
@@ -121,7 +121,7 @@ class InternalEnforcer(CoreEnforcer):
 
         return rules_removed
 
-    def _remove_filtered_policy(self, sec, ptype, field_index, *field_values):
+    async def _remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes rules based on field filters from the current policy."""
         rule_removed = self.model.remove_filtered_policy(
             sec, ptype, field_index, *field_values
@@ -131,7 +131,7 @@ class InternalEnforcer(CoreEnforcer):
 
         if self.adapter and self.auto_save:
             if (
-                self.adapter.remove_filtered_policy(
+                await self.adapter.remove_filtered_policy(
                     sec, ptype, field_index, *field_values
                 )
                 is False
@@ -143,7 +143,7 @@ class InternalEnforcer(CoreEnforcer):
 
         return rule_removed
 
-    def _remove_filtered_policy_returns_effects(
+    async def _remove_filtered_policy_returns_effects(
         self, sec, ptype, field_index, *field_values
     ):
         """removes rules based on field filters from the current policy."""
@@ -155,7 +155,7 @@ class InternalEnforcer(CoreEnforcer):
 
         if self.adapter and self.auto_save:
             if (
-                self.adapter.remove_filtered_policy(
+                await self.adapter.remove_filtered_policy(
                     sec, ptype, field_index, *field_values
                 )
                 is False

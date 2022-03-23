@@ -15,6 +15,7 @@
 import os
 import time
 from unittest import TestCase
+import pytest
 
 import casbin
 
@@ -39,18 +40,22 @@ class TestCaseBase(TestCase):
 
 
 class TestConfig(TestCaseBase):
-    def test_enforcer_basic(self):
+    @pytest.mark.asyncio
+    async def test_enforcer_basic(self):
         e = self.get_enforcer(
             get_examples("basic_model.conf"),
             get_examples("basic_policy.csv"),
         )
+
+        await e.load_policy()
 
         self.assertTrue(e.enforce("alice", "data1", "read"))
         self.assertFalse(e.enforce("alice", "data2", "read"))
         self.assertTrue(e.enforce("bob", "data2", "write"))
         self.assertFalse(e.enforce("bob", "data1", "write"))
 
-    def test_enforce_ex_basic(self):
+    @pytest.mark.asyncio
+    async def test_enforce_ex_basic(self):
         e = self.get_enforcer(
             get_examples("basic_model.conf"),
             get_examples("basic_policy.csv"),
@@ -346,7 +351,7 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("bob", "/pen2/1", "GET"))
         self.assertTrue(e.enforce("bob", "/pen2/2", "GET"))
 
-    def test_rbac_with_multipy_matched_pattern(self):
+    def test_rbac_with_multiply_matched_pattern(self):
         e = self.get_enforcer(
             get_examples("rbac_with_multiply_matched_pattern.conf"),
             get_examples("rbac_with_multiply_matched_pattern.csv"),

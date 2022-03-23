@@ -27,7 +27,7 @@ class DistributedEnforcer(SyncedEnforcer):
         self.logger = logging.getLogger(__name__)
         SyncedEnforcer.__init__(self, model, adapter)
 
-    def add_policy_self(self, should_persist, sec, ptype, rules):
+    async def add_policy_self(self, should_persist, sec, ptype, rules):
         """
         AddPolicySelf provides a method for dispatcher to add authorization rules to the current policy.
         The function returns the rules affected and error.
@@ -41,7 +41,7 @@ class DistributedEnforcer(SyncedEnforcer):
         if should_persist:
             try:
                 if isinstance(self.adapter, batch_adapter):
-                    self.adapter.add_policies(sec, ptype, rules)
+                    await self.adapter.add_policies(sec, ptype, rules)
             except Exception as e:
                 self.logger.log("An error occurred: " + e)
 
@@ -58,7 +58,7 @@ class DistributedEnforcer(SyncedEnforcer):
 
         return no_exists_policy
 
-    def remove_policy_self(self, should_persist, sec, ptype, rules):
+    async def remove_policy_self(self, should_persist, sec, ptype, rules):
         """
         remove_policy_self provides a method for dispatcher to remove policies from current policy.
         The function returns the rules affected and error.
@@ -66,7 +66,7 @@ class DistributedEnforcer(SyncedEnforcer):
         if should_persist:
             try:
                 if isinstance(self.adapter, batch_adapter):
-                    self.adapter.remove_policy(sec, ptype, rules)
+                    await self.adapter.remove_policy(sec, ptype, rules)
             except Exception as e:
                 self.logger.log("An exception occurred: " + e)
 
@@ -81,7 +81,7 @@ class DistributedEnforcer(SyncedEnforcer):
 
         return effected
 
-    def remove_filtered_policy_self(
+    async def remove_filtered_policy_self(
         self, should_persist, sec, ptype, field_index, *field_values
     ):
         """
@@ -91,7 +91,7 @@ class DistributedEnforcer(SyncedEnforcer):
         """
         if should_persist:
             try:
-                self.adapter.remove_filtered_policy(
+                await self.adapter.remove_filtered_policy(
                     sec, ptype, field_index, field_values
                 )
             except Exception as e:
@@ -112,26 +112,26 @@ class DistributedEnforcer(SyncedEnforcer):
 
         return effects
 
-    def clear_policy_self(self, should_persist):
+    async def clear_policy_self(self, should_persist):
         """
         clear_policy_self provides a method for dispatcher to clear all rules from the current policy.
         """
         if should_persist:
             try:
-                self.adapter.save_policy(None)
+                await self.adapter.save_policy(None)
             except Exception as e:
                 self.logger.log("An exception occurred: " + e)
 
         self.get_model().clear_policy()
 
-    def update_policy_self(self, should_persist, sec, ptype, old_rule, new_rule):
+    async def update_policy_self(self, should_persist, sec, ptype, old_rule, new_rule):
         """
         update_policy_self provides a method for dispatcher to update an authorization rule from the current policy.
         """
         if should_persist:
             try:
                 if isinstance(self.adapter, update_adapter):
-                    self.adapter.update_policy(sec, ptype, old_rule, new_rule)
+                    await self.adapter.update_policy(sec, ptype, old_rule, new_rule)
             except Exception as e:
                 self.logger.log("An exception occurred: " + e)
                 return False

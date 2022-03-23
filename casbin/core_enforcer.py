@@ -96,8 +96,8 @@ class CoreEnforcer:
         self._initialize()
 
         # Do not initialize the full policy when using a filtered adapter
-        if self.adapter and not self.is_filtered():
-            self.load_policy()
+        # if self.adapter and not self.is_filtered():
+        #    self.load_policy()
 
     def _initialize(self):
         self.rm_map = dict()
@@ -193,7 +193,7 @@ class CoreEnforcer:
                 else:
                     self.rm_map[ptype] = default_role_manager.DomainManager(10)
 
-    def load_policy(self):
+    async def load_policy(self):
         """reloads the policy from file/database."""
         need_to_rebuild = False
         new_model = copy.copy(self.model)
@@ -201,7 +201,7 @@ class CoreEnforcer:
 
         try:
 
-            self.adapter.load_policy(new_model)
+            await self.adapter.load_policy(new_model)
 
             self.model.sort_policies_by_subject_hierarchy()
 
@@ -228,14 +228,14 @@ class CoreEnforcer:
 
             raise e
 
-    def load_filtered_policy(self, filter):
+    async def load_filtered_policy(self, filter):
         """reloads a filtered policy from file/database."""
         self.model.clear_policy()
 
         if not hasattr(self.adapter, "is_filtered"):
             raise ValueError("filtered policies are not supported by this adapter")
 
-        self.adapter.load_filtered_policy(self.model, filter)
+        await self.adapter.load_filtered_policy(self.model, filter)
 
         self.model.sort_policies_by_priority()
 
@@ -244,12 +244,12 @@ class CoreEnforcer:
         if self.auto_build_role_links:
             self.build_role_links()
 
-    def load_increment_filtered_policy(self, filter):
+    async def load_increment_filtered_policy(self, filter):
         """LoadIncrementalFilteredPolicy append a filtered policy from file/database."""
         if not hasattr(self.adapter, "is_filtered"):
             raise ValueError("filtered policies are not supported by this adapter")
 
-        self.adapter.load_filtered_policy(self.model, filter)
+        await self.adapter.load_filtered_policy(self.model, filter)
         self.model.print_policy()
         if self.auto_build_role_links:
             self.build_role_links()
@@ -259,11 +259,11 @@ class CoreEnforcer:
 
         return hasattr(self.adapter, "is_filtered") and self.adapter.is_filtered()
 
-    def save_policy(self):
+    async def save_policy(self):
         if self.is_filtered():
             raise RuntimeError("cannot save a filtered policy")
 
-        self.adapter.save_policy(self.model)
+        await self.adapter.save_policy(self.model)
 
         if self.watcher:
             self.watcher.update()

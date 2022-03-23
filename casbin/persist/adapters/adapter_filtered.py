@@ -29,6 +29,7 @@ class FilteredAdapter(FileAdapter, persist.FilteredAdapter):
     _file_path = ""
     filter = Filter()
     # new_filtered_adapte is the constructor for FilteredAdapter.
+
     def __init__(self, file_path):
         self.filtered = True
         self._file_path = file_path
@@ -41,7 +42,7 @@ class FilteredAdapter(FileAdapter, persist.FilteredAdapter):
 
     # load_filtered_policy loads only policy rules that match the filter.
     def load_filtered_policy(self, model, filter):
-        if filter == None:
+        if filter is None:
             return self.load_policy(model)
 
         if not os.path.isfile(self._file_path):
@@ -49,13 +50,13 @@ class FilteredAdapter(FileAdapter, persist.FilteredAdapter):
 
         try:
             filter_value = [filter.__dict__["P"]] + [filter.__dict__["G"]]
-        except:
+        except BaseException:
             raise RuntimeError("invalid filter type")
 
         self.load_filtered_policy_file(model, filter_value, persist.load_policy_line)
         self.filtered = True
 
-    def load_filtered_policy_file(self, model, filter, hanlder):
+    def load_filtered_policy_file(self, model, filter, handler):
         with open(self._file_path, "rb") as file:
             while True:
                 line = file.readline()
@@ -67,7 +68,7 @@ class FilteredAdapter(FileAdapter, persist.FilteredAdapter):
                 if filter_line(line, filter):
                     continue
 
-                hanlder(line, model)
+                handler(line, model)
 
     # is_filtered returns true if the loaded policy has been filtered.
     def is_filtered(self):
@@ -81,7 +82,7 @@ class FilteredAdapter(FileAdapter, persist.FilteredAdapter):
 
 
 def filter_line(line, filter):
-    if filter == None:
+    if filter is None:
         return False
 
     p = line.split(",")

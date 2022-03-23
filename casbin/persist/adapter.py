@@ -38,23 +38,23 @@ def load_policy_line(line, model):
 class Adapter:
     """the interface for Casbin adapters."""
 
-    def load_policy(self, model):
+    async def load_policy(self, model):
         """loads all policy rules from the storage."""
         pass
 
-    def save_policy(self, model):
+    async def save_policy(self, model):
         """saves all policy rules to the storage."""
         pass
 
-    def add_policy(self, sec, ptype, rule):
+    async def add_policy(self, sec, ptype, rule):
         """adds a policy rule to the storage."""
         pass
 
-    def remove_policy(self, sec, ptype, rule):
+    async def remove_policy(self, sec, ptype, rule):
         """removes a policy rule from the storage."""
         pass
 
-    def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
+    async def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes policy rules that match the filter from the storage.
         This is part of the Auto-Save feature.
         """

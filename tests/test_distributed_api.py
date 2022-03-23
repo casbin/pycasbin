@@ -23,12 +23,12 @@ class TestDistributedApi(TestCaseBase):
             adapter,
         )
 
-    def test(self):
+    async def test(self):
         e = self.get_enforcer(
             get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
         )
 
-        e.add_policy_self(
+        await e.add_policy_self(
             False,
             "p",
             "p",
