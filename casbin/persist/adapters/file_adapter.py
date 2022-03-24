@@ -26,7 +26,7 @@ class FileAdapter(persist.Adapter):
     def __init__(self, file_path):
         self._file_path = file_path
 
-    def load_policy(self, model):
+    async def load_policy(self, model):
         if not os.path.isfile(self._file_path):
             raise RuntimeError("invalid file path, file path cannot be empty")
 

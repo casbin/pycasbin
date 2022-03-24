@@ -29,19 +29,19 @@ class ManagementEnforcer(InternalEnforcer):
         """gets the list of subjects that show up in the current named policy."""
         return self.model.get_values_for_field_in_policy("p", ptype, 0)
 
-    async def get_all_objects(self):
+    def get_all_objects(self):
         """gets the list of objects that show up in the current policy."""
-        return await self.get_all_named_objects("p")
+        return self.get_all_named_objects("p")
 
-    async def get_all_named_objects(self, ptype):
+    def get_all_named_objects(self, ptype):
         """gets the list of objects that show up in the current named policy."""
         return self.model.get_values_for_field_in_policy("p", ptype, 1)
 
-    async def get_all_actions(self):
+    def get_all_actions(self):
         """gets the list of actions that show up in the current policy."""
-        return await self.get_all_named_actions("p")
+        return self.get_all_named_actions("p")
 
-    async def get_all_named_actions(self, ptype):
+    def get_all_named_actions(self, ptype):
         """gets the list of actions that show up in the current named policy."""
         return self.model.get_values_for_field_in_policy("p", ptype, 2)
 
@@ -53,41 +53,41 @@ class ManagementEnforcer(InternalEnforcer):
         """gets all the authorization rules in the policy."""
         return self.model.get_values_for_field_in_policy("g", ptype, 1)
 
-    async def get_policy(self):
+    def get_policy(self):
         """gets all the authorization rules in the policy."""
-        return await self.get_named_policy("p")
+        return self.get_named_policy("p")
 
-    async def get_filtered_policy(self, field_index, *field_values):
+    def get_filtered_policy(self, field_index, *field_values):
         """gets all the authorization rules in the policy, field filters can be specified."""
         return self.get_filtered_named_policy("p", field_index, *field_values)
 
-    async def get_named_policy(self, ptype):
+    def get_named_policy(self, ptype):
         """gets all the authorization rules in the named policy."""
         return self.model.get_policy("p", ptype)
 
-    async def get_filtered_named_policy(self, ptype, field_index, *field_values):
+    def get_filtered_named_policy(self, ptype, field_index, *field_values):
         """gets all the authorization rules in the named policy, field filters can be specified."""
         return self.model.get_filtered_policy("p", ptype, field_index, *field_values)
 
-    async def get_grouping_policy(self):
+    def get_grouping_policy(self):
         """gets all the role inheritance rules in the policy."""
-        return await self.get_named_grouping_policy("g")
+        return self.get_named_grouping_policy("g")
 
-    async def get_filtered_grouping_policy(self, field_index, *field_values):
+    def get_filtered_grouping_policy(self, field_index, *field_values):
         """gets all the role inheritance rules in the policy, field filters can be specified."""
-        return await self.get_filtered_named_grouping_policy("g", field_index, *field_values)
+        return self.get_filtered_named_grouping_policy("g", field_index, *field_values)
 
-    async def get_named_grouping_policy(self, ptype):
+    def get_named_grouping_policy(self, ptype):
         """gets all the role inheritance rules in the policy."""
         return self.model.get_policy("g", ptype)
 
-    async def get_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
+    def get_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
         """gets all the role inheritance rules in the policy, field filters can be specified."""
         return self.model.get_filtered_policy("g", ptype, field_index, *field_values)
 
-    async def has_policy(self, *params):
+    def has_policy(self, *params):
         """determines whether an authorization rule exists."""
-        return await self.has_named_policy("p", *params)
+        return self.has_named_policy("p", *params)
 
     def has_named_policy(self, ptype, *params):
         """determines whether a named authorization rule exists."""
@@ -182,12 +182,12 @@ class ManagementEnforcer(InternalEnforcer):
         """removes an authorization rule from the current named policy, field filters can be specified."""
         return await self._remove_filtered_policy("p", ptype, field_index, *field_values)
 
-    async def has_grouping_policy(self, *params):
+    def has_grouping_policy(self, *params):
         """determines whether a role inheritance rule exists."""
 
-        return await self.has_named_grouping_policy("g", *params)
+        return self.has_named_grouping_policy("g", *params)
 
-    async def has_named_grouping_policy(self, ptype, *params):
+    def has_named_grouping_policy(self, ptype, *params):
         """determines whether a named role inheritance rule exists."""
 
         if len(params) == 1 and isinstance(params[0], list):

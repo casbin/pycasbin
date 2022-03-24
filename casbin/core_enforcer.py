@@ -96,8 +96,8 @@ class CoreEnforcer:
         self._initialize()
 
         # Do not initialize the full policy when using a filtered adapter
-        # if self.adapter and not self.is_filtered():
-        #    self.load_policy()
+        #if self.adapter and not self.is_filtered():
+        #    await self.load_policy()
 
     def _initialize(self):
         self.rm_map = dict()

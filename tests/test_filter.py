@@ -25,11 +25,13 @@ class Filter:
 
 
 class TestFilteredAdapter(TestCase):
-    def test_init_filtered_adapter(self):
+    @pytest.mark.asyncio
+    async def test_init_filtered_adapter(self):
         adapter = casbin.persist.adapters.FilteredAdapter(
             get_examples("rbac_with_domains_policy.csv")
         )
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
+        await e.load_policy()
         self.assertFalse(e.has_policy(["admin", "domain1", "data1", "read"]))
 
     @pytest.mark.asyncio

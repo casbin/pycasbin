@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "pycasbin"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+simpleeval = "0.9.11"
+wcmatch = "8.1.2"
+pytest-asyncio = "^0.18.2"
+
+[tool.poetry.dev-dependencies]
+black = "21.6b0"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

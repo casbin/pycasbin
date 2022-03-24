@@ -14,31 +14,36 @@
 
 from functools import partial
 
+from unittest import IsolatedAsyncioTestCase
+import pytest
+
 import casbin
 from tests.test_enforcer import get_examples, TestCaseBase
 
 
-class TestManagementApi(TestCaseBase):
-    def get_enforcer(self, model=None, adapter=None):
-        return casbin.Enforcer(
+class TestManagementApi(IsolatedAsyncioTestCase):
+    async def get_enforcer(self, model=None, adapter=None):
+        e = casbin.Enforcer(
             model,
             adapter,
         )
+        await e.load_policy()
+        return e
 
-    def test_get_list(self):
-        e = self.get_enforcer(
+    async def test_get_list(self):
+        e = await self.get_enforcer(
             get_examples("rbac_model.conf"),
             get_examples("rbac_policy.csv"),
             # True,
         )
 
-        self.assertEqual(e.get_all_subjects(), ["alice", "bob", "data2_admin"])
-        self.assertEqual(e.get_all_objects(), ["data1", "data2"])
-        self.assertEqual(e.get_all_actions(), ["read", "write"])
-        self.assertEqual(e.get_all_roles(), ["data2_admin"])
+        assert (e.get_all_subjects() == ["alice", "bob", "data2_admin"])
+        assert (e.get_all_objects() == ["data1", "data2"])
+        assert (e.get_all_actions() == ["read", "write"])
+        assert (e.get_all_roles() == ["data2_admin"])
 
-    def test_get_policy_api(self):
-        e = self.get_enforcer(
+    async def test_get_policy_api(self):
+        e = await self.get_enforcer(
             get_examples("rbac_model.conf"),
             get_examples("rbac_policy.csv"),
         )
@@ -115,8 +120,9 @@ class TestManagementApi(TestCaseBase):
         self.assertTrue(e.has_grouping_policy(["alice", "data2_admin"]))
         self.assertFalse(e.has_grouping_policy(["bob", "data2_admin"]))
 
-    def test_get_policy_matching_function(self):
-        e = self.get_enforcer(
+    @pytest.mark.asyncio
+    async def test_get_policy_matching_function(self):
+        e = await self.get_enforcer(
             get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
             get_examples("rbac_with_domain_and_policy_pattern_policy.csv"),
         )
@@ -162,8 +168,9 @@ class TestManagementApi(TestCaseBase):
             ),
         )
 
-    def test_get_policy_multiple_matching_functions(self):
-        e = self.get_enforcer(
+    @pytest.mark.asyncio
+    async def test_get_policy_multiple_matching_functions(self):
+        e = await self.get_enforcer(
             get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
             get_examples("rbac_with_domain_and_policy_pattern_policy.csv"),
         )
@@ -224,8 +231,9 @@ class TestManagementApi(TestCaseBase):
             ),
         )
 
-    def test_modify_policy_api(self):
-        e = self.get_enforcer(
+    @pytest.mark.asyncio
+    async def test_modify_policy_api(self):
+        e = await self.get_enforcer(
             get_examples("rbac_model.conf"),
             get_examples("rbac_policy.csv"),
             # True,
@@ -308,9 +316,9 @@ class TestManagementApi(TestCaseBase):
         )
 
 
-class TestManagementApiSynced(TestManagementApi):
-    def get_enforcer(self, model=None, adapter=None):
-        return casbin.SyncedEnforcer(
-            model,
-            adapter,
-        )
+#class TestManagementApiSynced(TestManagementApi):
+#    def get_enforcer(self, model=None, adapter=None):
+#        return casbin.SyncedEnforcer(
+#            model,
+#            adapter,
+#        )
