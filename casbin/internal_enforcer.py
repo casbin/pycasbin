@@ -88,14 +88,14 @@ class InternalEnforcer(CoreEnforcer):
 
         return rules_updated
 
-    def _remove_policy(self, sec, ptype, rule):
+    async def _remove_policy(self, sec, ptype, rule):
         """removes a rule from the current policy."""
         rule_removed = self.model.remove_policy(sec, ptype, rule)
         if not rule_removed:
             return rule_removed
 
         if self.adapter and self.auto_save:
-            if self.adapter.remove_policy(sec, ptype, rule) is False:
+            if await self.adapter.remove_policy(sec, ptype, rule) is False:
                 return False
 
             if self.watcher:

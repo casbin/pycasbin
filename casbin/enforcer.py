@@ -83,7 +83,7 @@ class Enforcer(ManagementEnforcer):
         """
         res1 = await self.remove_filtered_grouping_policy(1, role)
 
-        res2 = self.remove_filtered_policy(0, role)
+        res2 = await self.remove_filtered_policy(0, role)
         return res1 or res2
 
     async def delete_permission(self, *permission):
@@ -114,19 +114,19 @@ class Enforcer(ManagementEnforcer):
         """
         return await self.remove_filtered_policy(0, user)
 
-    async def get_permissions_for_user(self, user):
+    def get_permissions_for_user(self, user):
         """
         gets permissions for a user or role.
         """
-        return await self.get_filtered_policy(0, user)
+        return self.get_filtered_policy(0, user)
 
-    async def has_permission_for_user(self, user, *permission):
+    def has_permission_for_user(self, user, *permission):
         """
         determines whether a user has a permission.
         """
-        return await self.has_policy(join_slice(user, *permission))
+        return self.has_policy(join_slice(user, *permission))
 
-    async def get_implicit_roles_for_user(self, name, domain=""):
+    def get_implicit_roles_for_user(self, name, domain=""):
         """
         gets implicit roles that a user has.
         Compared to get_roles_for_user(), this function retrieves indirect roles besides direct roles.
@@ -152,7 +152,7 @@ class Enforcer(ManagementEnforcer):
 
         return res
 
-    async def get_implicit_permissions_for_user(
+    def get_implicit_permissions_for_user(
         self, user, domain="", filter_policy_dom=True
     ):
         """
@@ -172,7 +172,7 @@ class Enforcer(ManagementEnforcer):
 
         filter_policy_dom: bool - For given *domain*, policies will be filtered by domain as well. Default = True
         """
-        roles = await self.get_implicit_roles_for_user(user, domain)
+        roles = self.get_implicit_roles_for_user(user, domain)
 
         roles.insert(0, user)
 
@@ -237,6 +237,6 @@ class Enforcer(ManagementEnforcer):
         """Returns false if the user does not have any roles (aka not affected)."""
         return await self.remove_filtered_grouping_policy(0, user, role, domain)
 
-    async def get_permissions_for_user_in_domain(self, user, domain):
+    def get_permissions_for_user_in_domain(self, user, domain):
         """gets permissions for a user or role inside domain."""
-        return await self.get_filtered_policy(0, user, domain)
+        return self.get_filtered_policy(0, user, domain)

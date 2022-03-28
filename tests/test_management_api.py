@@ -14,14 +14,13 @@
 
 from functools import partial
 
-from unittest import IsolatedAsyncioTestCase
 import pytest
-
 import casbin
+from unittest import TestCase
 from tests.test_enforcer import get_examples, TestCaseBase
 
 
-class TestManagementApi(IsolatedAsyncioTestCase):
+class TestManagementApi(TestCaseBase):
     async def get_enforcer(self, model=None, adapter=None):
         e = casbin.Enforcer(
             model,
@@ -120,7 +119,6 @@ class TestManagementApi(IsolatedAsyncioTestCase):
         self.assertTrue(e.has_grouping_policy(["alice", "data2_admin"]))
         self.assertFalse(e.has_grouping_policy(["bob", "data2_admin"]))
 
-    @pytest.mark.asyncio
     async def test_get_policy_matching_function(self):
         e = await self.get_enforcer(
             get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
@@ -168,7 +166,6 @@ class TestManagementApi(IsolatedAsyncioTestCase):
             ),
         )
 
-    @pytest.mark.asyncio
     async def test_get_policy_multiple_matching_functions(self):
         e = await self.get_enforcer(
             get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
@@ -231,7 +228,6 @@ class TestManagementApi(IsolatedAsyncioTestCase):
             ),
         )
 
-    @pytest.mark.asyncio
     async def test_modify_policy_api(self):
         e = await self.get_enforcer(
             get_examples("rbac_model.conf"),
@@ -248,8 +244,8 @@ class TestManagementApi(IsolatedAsyncioTestCase):
             ],
         )
 
-        e.add_policy("eve", "data3", "read")
-        e.add_named_policy("p", ["eve", "data3", "write"])
+        await e.add_policy("eve", "data3", "read")
+        await e.add_named_policy("p", ["eve", "data3", "write"])
         self.assertEqual(
             e.get_policy(),
             [
@@ -275,8 +271,8 @@ class TestManagementApi(IsolatedAsyncioTestCase):
             ["leyo", "data4", "write"],
             ["ham", "data4", "read"],
         ]
-        e.add_policies(rules)
-        e.add_named_policies("p", named_policies)
+        await e.add_policies(rules)
+        await e.add_named_policies("p", named_policies)
 
         self.assertEqual(
             e.get_policy(),
@@ -298,10 +294,10 @@ class TestManagementApi(IsolatedAsyncioTestCase):
             ],
         )
 
-        e.remove_policies(rules)
-        e.remove_named_policies("p", named_policies)
+        await e.remove_policies(rules)
+        await e.remove_named_policies("p", named_policies)
 
-        e.add_named_policy("p", "testing")
+        await e.add_named_policy("p", "testing")
         self.assertEqual(
             e.get_policy(),
             [
@@ -316,9 +312,11 @@ class TestManagementApi(IsolatedAsyncioTestCase):
         )
 
 
-#class TestManagementApiSynced(TestManagementApi):
+#class TestManagementApiSynced(TestCase):
 #    def get_enforcer(self, model=None, adapter=None):
-#        return casbin.SyncedEnforcer(
+#        e = casbin.SyncedEnforcer(
 #            model,
 #            adapter,
 #        )
+#        e.load_policy()
+#        return e

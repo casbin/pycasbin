@@ -34,16 +34,16 @@ class FilteredAdapter(FileAdapter, persist.FilteredAdapter):
         self.filtered = True
         self._file_path = file_path
 
-    def load_policy(self, model):
+    async def load_policy(self, model):
         if not os.path.isfile(self._file_path):
             raise RuntimeError("invalid file path, file path cannot be empty")
         self.filtered = False
         self._load_policy_file(model)
 
     # load_filtered_policy loads only policy rules that match the filter.
-    def load_filtered_policy(self, model, filter):
+    async def load_filtered_policy(self, model, filter):
         if filter is None:
-            return self.load_policy(model)
+            return await self.load_policy(model)
 
         if not os.path.isfile(self._file_path):
             raise RuntimeError("invalid file path, file path cannot be empty")
@@ -74,7 +74,7 @@ class FilteredAdapter(FileAdapter, persist.FilteredAdapter):
     def is_filtered(self):
         return self.filtered
 
-    def save_policy(self, model):
+    async def save_policy(self, model):
         if self.filtered:
             raise RuntimeError("cannot save a filtered policy")
 

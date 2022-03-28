@@ -14,6 +14,7 @@
 
 import casbin
 from unittest import TestCase
+from unittest import IsolatedAsyncioTestCase
 from tests.test_enforcer import get_examples
 import pytest
 
@@ -24,17 +25,16 @@ class Filter:
     G = []
 
 
-class TestFilteredAdapter(TestCase):
-    @pytest.mark.asyncio
+class TestFilteredAdapter(IsolatedAsyncioTestCase):
+
     async def test_init_filtered_adapter(self):
         adapter = casbin.persist.adapters.FilteredAdapter(
             get_examples("rbac_with_domains_policy.csv")
         )
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
         await e.load_policy()
-        self.assertFalse(e.has_policy(["admin", "domain1", "data1", "read"]))
+        self.assertTrue(e.has_policy(["admin", "domain1", "data1", "read"]))
 
-    @pytest.mark.asyncio
     async def test_load_filtered_policy(self):
         adapter = casbin.persist.adapters.FilteredAdapter(
             get_examples("rbac_with_domains_policy.csv")
@@ -67,7 +67,6 @@ class TestFilteredAdapter(TestCase):
             a = e.get_adapter()
             await a.save_policy(e.get_model())
 
-    @pytest.mark.asyncio
     async def test_append_filtered_policy(self):
         adapter = casbin.persist.adapters.FilteredAdapter(
             get_examples("rbac_with_domains_policy.csv")
@@ -103,7 +102,6 @@ class TestFilteredAdapter(TestCase):
         self.assertTrue(e.has_policy(["admin", "domain1", "data1", "read"]))
         self.assertTrue(e.has_policy(["admin", "domain2", "data2", "read"]))
 
-    @pytest.mark.asyncio
     async def test_filtered_policy_invalid_filter(self):
         adapter = casbin.persist.adapters.FilteredAdapter(
             get_examples("rbac_with_domains_policy.csv")
@@ -114,7 +112,6 @@ class TestFilteredAdapter(TestCase):
         with self.assertRaises(RuntimeError):
             await e.load_filtered_policy(filter)
 
-    @pytest.mark.asyncio
     async def test_filtered_policy_empty_filter(self):
         adapter = casbin.persist.adapters.FilteredAdapter(
             get_examples("rbac_with_domains_policy.csv")
@@ -134,7 +131,6 @@ class TestFilteredAdapter(TestCase):
         except BaseException:
             raise RuntimeError("unexpected error in SavePolicy")
 
-    @pytest.mark.asyncio
     async def test_unsupported_filtered_policy(self):
         e = casbin.Enforcer(
             get_examples("rbac_with_domains_model.conf"),
@@ -146,7 +142,6 @@ class TestFilteredAdapter(TestCase):
         with self.assertRaises(ValueError):
             await e.load_filtered_policy(filter)
 
-    @pytest.mark.asyncio
     async def test_filtered_adapter_empty_filepath(self):
         adapter = casbin.persist.adapters.FilteredAdapter("")
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
@@ -154,7 +149,6 @@ class TestFilteredAdapter(TestCase):
         with self.assertRaises(RuntimeError):
             await e.load_filtered_policy(None)
 
-    @pytest.mark.asyncio
     async def test_filtered_adapter_invalid_filepath(self):
         adapter = casbin.persist.adapters.FilteredAdapter(
             get_examples("does_not_exist_policy.csv")
