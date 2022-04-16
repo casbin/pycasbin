@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.15.5](https://github.com/casbin/pycasbin/compare/v1.15.4...v1.15.5) (2022-04-16)
+
+
+### Bug Fixes
+
+* load policy override role manager ([#252](https://github.com/casbin/pycasbin/issues/252)) ([97280c5](https://github.com/casbin/pycasbin/commit/97280c549b7a151a60d15fea63f4e0b141eb2c24))
+
 ## [1.15.4](https://github.com/casbin/pycasbin/compare/v1.15.3...v1.15.4) (2022-01-13)
 
 
