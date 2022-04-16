@@ -207,7 +207,6 @@ class CoreEnforcer:
 
             new_model.sort_policies_by_priority()
 
-            self.init_rm_map()
             self.model.print_policy()
 
             if self.auto_build_role_links:
