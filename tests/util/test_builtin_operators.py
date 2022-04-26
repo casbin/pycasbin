@@ -200,17 +200,55 @@ class TestBuiltinOperators(TestCase):
 
     def test_glob_match2(self):
         # add missing tests from Go to Python
-        self.assertFalse(util.glob_match_func("/foo", "*/foo"))  # different from Go
-        self.assertFalse(util.glob_match_func("/foo", "*/foo*"))  # different from Go
+        self.assertTrue(util.glob_match_func("/foo", "*/foo"))
+        self.assertTrue(util.glob_match_func("/foo", "*/foo*"))
         self.assertFalse(util.glob_match_func("/foo", "*/foo/*"))
         self.assertFalse(util.glob_match_func("/foo/bar", "*/foo"))
         self.assertFalse(util.glob_match_func("/foo/bar", "*/foo*"))
-        self.assertFalse(
-            util.glob_match_func("/foo/bar", "*/foo/*")
-        )  # different from Go
+        self.assertTrue(util.glob_match_func("/foo/bar", "*/foo/*"))
         self.assertFalse(util.glob_match_func("/foobar", "*/foo"))
-        self.assertFalse(util.glob_match_func("/foobar", "*/foo*"))  # different from Go
+        self.assertTrue(util.glob_match_func("/foobar", "*/foo*"))
         self.assertFalse(util.glob_match_func("/foobar", "*/foo/*"))
+
+    def test_glob_match3(self):
+        # add more tests for glob_match
+        # test ?
+        self.assertTrue(util.glob_match_func("/f", "/?"))
+        self.assertTrue(util.glob_match_func("/foobar", "/foo?ar"))
+        self.assertFalse(util.glob_match_func("/fooar", "/foo?ar"))
+        self.assertTrue(util.glob_match_func("/foobbar", "/foo??ar"))
+        self.assertTrue(util.glob_match_func("/foobbbbar", "/foo????ar"))
+        # test []
+        self.assertTrue(util.glob_match_func("/foobar", "/foo[bc]ar"))
+        self.assertFalse(util.glob_match_func("/fooaar", "/foo[bc]ar"))
+        self.assertFalse(util.glob_match_func("/foodar", "/foo[bc]ar"))
+        self.assertTrue(util.glob_match_func("/foobar", "/foo[b-b]ar"))
+        self.assertFalse(util.glob_match_func("/fooaar", "/foo[b-c]ar"))
+        self.assertTrue(util.glob_match_func("/foobar", "/foo[b-c]ar"))
+        self.assertTrue(util.glob_match_func("/foocar", "/foo[b-c]ar"))
+        self.assertFalse(util.glob_match_func("/foodar", "/foo[b-c]ar"))
+        # test ^ and !
+        self.assertTrue(util.glob_match_func("/foo1ar", "/foo[!234]ar"))
+        self.assertFalse(util.glob_match_func("/foo3ar", "/foo[!234]ar"))
+        self.assertTrue(util.glob_match_func("/foo5ar", "/foo[!234]ar"))
+        self.assertTrue(util.glob_match_func("/foo1ar", "/foo[!2-5]ar"))
+        self.assertFalse(util.glob_match_func("/foo2ar", "/foo[!2-5]ar"))
+        self.assertTrue(util.glob_match_func("/foo1ar", "/foo[^234]ar"))
+        self.assertFalse(util.glob_match_func("/foo3ar", "/foo[^234]ar"))
+        self.assertTrue(util.glob_match_func("/foo5ar", "/foo[^234]ar"))
+        self.assertTrue(util.glob_match_func("/foo1ar", "/foo[^2-5]ar"))
+        self.assertFalse(util.glob_match_func("/foo2ar", "/foo[^2-5]ar"))
+        # test \\
+        self.assertTrue(util.glob_match_func("\\", "\\\\"))
+        self.assertTrue(util.glob_match_func("/a", "/\\a"))
+        self.assertTrue(util.glob_match_func("/*", "/\\*"))
+        self.assertFalse(util.glob_match_func("a", "\\?"))
+        self.assertTrue(util.glob_match_func("?", "\\?"))
+        self.assertTrue(util.glob_match_func("\n", "\n"))
+        self.assertFalse(util.glob_match_func("\n", "\\n"))
+        self.assertTrue(util.glob_match_func("[", "\\["))
+        self.assertTrue(util.glob_match_func("*", "\\*"))
+        self.assertTrue(util.glob_match_func("\\*", "\\\\\\*"))
 
     def test_ip_match(self):
         self.assertTrue(util.ip_match_func("192.168.2.123", "192.168.2.0/24"))

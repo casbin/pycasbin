@@ -15,8 +15,6 @@
 import ipaddress
 import re
 
-from wcmatch import pathlib
-
 KEY_MATCH2_PATTERN = re.compile(r"(.*?):[^\/]+(.*?)")
 KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+}(.*?)")
 KEY_MATCH4_PATTERN = re.compile(r"{([^/]+)}")
@@ -151,9 +149,119 @@ def regex_match_func(*args):
     return regex_match(name1, name2)
 
 
+def range_match(pattern, pattern_index, test):
+    """check the if char `test` in string is match with the scope of [...] in pattern"""
+
+    pattern_len = len(pattern)
+    if pattern_index == pattern_len:
+        return -1
+    negate = pattern[pattern_index] == "!" or pattern[pattern_index] == "^"
+    if negate:
+        pattern_index += 1
+    ok = 0
+    while True:
+        if pattern_index == pattern_len:
+            break
+        c = pattern[pattern_index]
+        pattern_index += 1
+        if c == "]":
+            break
+        if c == "\\":
+            if pattern_index == pattern_len:
+                return -1
+            c = pattern[pattern_index]
+            pattern_index += 1
+        if (
+            pattern_index != pattern_len
+            and pattern[pattern_index] == "-"
+            and pattern_index + 1 != pattern_len
+            and pattern[pattern_index + 1] != "]"
+        ):
+            c2 = pattern[pattern_index + 1]
+            pattern_index += 2
+            if c2 == "\\":
+                if pattern_index == pattern_len:
+                    return -1
+                c2 = pattern[pattern_index]
+                pattern_index += 1
+            if c <= test <= c2:
+                ok = 1
+        elif c == test:
+            ok = 1
+
+    if ok == negate:
+        return -1
+    else:
+        return pattern_index
+
+
 def glob_match(string, pattern):
     """determines whether string matches the pattern in glob expression."""
-    return pathlib.Path(string).globmatch(pattern)
+
+    pattern_len = len(pattern)
+    string_len = len(string)
+    if pattern_len == 0:
+        return string_len == 0
+    pattern_index = 0
+    string_index = 0
+    while True:
+        if pattern_index == pattern_len:
+            return string_len == string_index
+        c = pattern[pattern_index]
+        pattern_index += 1
+        if c == "?":
+            if string_index == string_len:
+                return False
+            if string[string_index] == "/":
+                return False
+            string_index += 1
+            continue
+        if c == "*":
+            while (pattern_index != pattern_len) and (c == "*"):
+                c = pattern[pattern_index]
+                pattern_index += 1
+            if pattern_index == pattern_len:
+                return string.find("/", string_index) == -1
+            else:
+                if c == "/":
+                    string_index = string.find("/", string_index)
+                    if string_index == -1:
+                        return False
+                    else:
+                        string_index += 1
+            # General case, use recursion.
+            while string_index != string_len:
+                if glob_match(string[string_index:], pattern[pattern_index:]):
+                    return True
+                if string[string_index] == "/":
+                    break
+                string_index += 1
+            continue
+        if c == "[":
+            if string_index == string_len:
+                return False
+            if string[string_index] == "/":
+                return False
+            pattern_index = range_match(pattern, pattern_index, string[string_index])
+            if pattern_index == -1:
+                return False
+            string_index += 1
+            continue
+        if c == "\\":
+            if pattern_index == pattern_len:
+                c = "\\"
+            else:
+                c = pattern[pattern_index]
+                pattern_index += 1
+            # fall through
+        # other cases and c == "\\"
+        if string_index == string_len:
+            return False
+        else:
+            if c == string[string_index]:
+                string_index += 1
+            else:
+                return False
 
 
 def glob_match_func(*args):
