@@ -151,6 +151,20 @@ class ManagementEnforcer(InternalEnforcer):
         """updates authorization rules from the current named policy."""
         return self._update_policies("p", ptype, old_rules, new_rules)
 
+    def update_filtered_policies(self, new_rules, field_index, *field_values):
+        """update_filtered_policies deletes old rules and adds new rules."""
+        return self.update_filtered_named_policies(
+            "p", new_rules, field_index, *field_values
+        )
+
+    def update_filtered_named_policies(
+        self, ptype, new_rules, field_index, *field_values
+    ):
+        """update_filtered_named_policies deletes old rules and adds new rules."""
+        return self._update_filtered_policies(
+            "p", ptype, new_rules, field_index, *field_values
+        )
+
     def remove_policy(self, *params):
         """removes an authorization rule from the current policy."""
         return self.remove_named_policy("p", *params)

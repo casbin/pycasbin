@@ -115,6 +115,23 @@ class TestManagementApi(TestCaseBase):
         self.assertTrue(e.has_grouping_policy(["alice", "data2_admin"]))
         self.assertFalse(e.has_grouping_policy(["bob", "data2_admin"]))
 
+    def test_update_filtered_policies(self):
+        e = casbin.Enforcer(
+            get_examples("rbac_model.conf"),
+            get_examples("rbac_policy.csv"),
+        )
+
+        e.update_filtered_policies(
+            [
+                ["data2_admin", "data3", "read"],
+                ["data2_admin", "data3", "write"],
+            ],
+            0,
+            "data2_admin",
+        )
+        self.assertTrue(e.enforce("data2_admin", "data3", "write"))
+        self.assertTrue(e.enforce("data2_admin", "data3", "read"))
+
     def test_get_policy_matching_function(self):
         e = self.get_enforcer(
             get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
