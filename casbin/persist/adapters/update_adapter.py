@@ -28,3 +28,11 @@ class UpdateAdapter:
         UpdatePolicies updates some policy rules to storage, like db, redis.
         """
         pass
+
+    def update_filtered_policies(
+        self, sec, ptype, new_rules, field_index, *field_values
+    ):
+        """
+        update_filtered_policies deletes old rules and adds new rules.
+        """
+        pass
