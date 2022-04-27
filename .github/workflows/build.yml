@@ -53,13 +53,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Super-Linter
-        uses: github/super-linter@v4.2.2
+        uses: github/super-linter@v4.9.2
         env:
+          VALIDATE_ALL_CODEBASE: false
           VALIDATE_PYTHON_BLACK: true
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: /
+          PYTHON_BLACK_CONFIG_FILE: pyproject.toml
 
   coveralls:
     name: Indicate completion to coveralls.io

@@ -77,11 +77,7 @@ class Config:
                 break
             line = line.strip()
 
-            if (
-                "" == line
-                or self.DEFAULT_COMMENT == line[0:1]
-                or self.DEFAULT_COMMENT_SEM == line[0:1]
-            ):
+            if "" == line or self.DEFAULT_COMMENT == line[0:1] or self.DEFAULT_COMMENT_SEM == line[0:1]:
                 can_write = True
                 continue
             elif "[" == line[0:1] and "]" == line[-1]:
@@ -107,11 +103,7 @@ class Config:
         option_val = buf.split("=", 1)
 
         if len(option_val) != 2:
-            raise RuntimeError(
-                "parse the content error : line {} , {} = ?".format(
-                    line_num, option_val[0]
-                )
-            )
+            raise RuntimeError("parse the content error : line {} , {} = ?".format(line_num, option_val[0]))
 
         option = option_val[0].strip()
         value = option_val[1].strip()

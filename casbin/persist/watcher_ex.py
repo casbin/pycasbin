@@ -35,9 +35,7 @@ class WatcherEx(Watcher):
         """
         pass
 
-    def update_for_remove_filtered_policy(
-        self, sec: str, ptype: str, field_index: int, *field_values: str
-    ):
+    def update_for_remove_filtered_policy(self, sec: str, ptype: str, field_index: int, *field_values: str):
         """
         update_for_remove_filtered_policy calls the update callback of other instances to synchronize their policy.
         It is called after Enforcer.RemoveFilteredNamedGroupingPolicy()

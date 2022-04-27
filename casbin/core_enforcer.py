@@ -79,11 +79,7 @@ class CoreEnforcer:
     def init_with_model_and_adapter(self, m, adapter=None):
         """initializes an enforcer with a model and a database adapter."""
 
-        if (
-            not isinstance(m, Model)
-            or adapter is not None
-            and not isinstance(adapter, Adapter)
-        ):
+        if not isinstance(m, Model) or adapter is not None and not isinstance(adapter, Adapter):
             raise RuntimeError("Invalid parameters for enforcer.")
 
         self.adapter = adapter
@@ -386,10 +382,7 @@ class CoreEnforcer:
 
                 if exp_has_eval:
                     rule_names = util.get_eval_value(exp_string)
-                    rules = [
-                        util.escape_assertion(p_parameters[rule_name])
-                        for rule_name in rule_names
-                    ]
+                    rules = [util.escape_assertion(p_parameters[rule_name]) for rule_name in rule_names]
                     exp_with_rule = util.replace_eval(exp_string, rules)
                     expression = self._get_expression(exp_with_rule, functions)
 
@@ -418,18 +411,13 @@ class CoreEnforcer:
                 else:
                     policy_effects.add(Effector.ALLOW)
 
-                if (
-                    self.eft.intermediate_effect(policy_effects)
-                    != Effector.INDETERMINATE
-                ):
+                if self.eft.intermediate_effect(policy_effects) != Effector.INDETERMINATE:
                     explain_index = i
                     break
 
         else:
             if exp_has_eval:
-                raise RuntimeError(
-                    "please make sure rule exists in policy when using eval() in matcher"
-                )
+                raise RuntimeError("please make sure rule exists in policy when using eval() in matcher")
 
             parameters = r_parameters.copy()
 

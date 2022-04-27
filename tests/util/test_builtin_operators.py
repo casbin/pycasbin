@@ -36,31 +36,23 @@ class TestBuiltinOperators(TestCase):
         self.assertTrue(util.key_match2_func("/foo", "/foo"))
         self.assertTrue(util.key_match2_func("/foo", "/foo*"))
         self.assertFalse(util.key_match2_func("/foo", "/foo/*"))
-        self.assertFalse(
-            util.key_match2_func("/foo/bar", "/foo")
-        )  # different with KeyMatch.
+        self.assertFalse(util.key_match2_func("/foo/bar", "/foo"))  # different with KeyMatch.
         self.assertFalse(util.key_match2_func("/foo/bar", "/foo*"))
         self.assertTrue(util.key_match2_func("/foo/bar", "/foo/*"))
-        self.assertFalse(
-            util.key_match2_func("/foobar", "/foo")
-        )  # different with KeyMatch.
+        self.assertFalse(util.key_match2_func("/foobar", "/foo"))  # different with KeyMatch.
         self.assertFalse(util.key_match2_func("/foobar", "/foo*"))
         self.assertFalse(util.key_match2_func("/foobar", "/foo/*"))
 
         self.assertFalse(util.key_match2_func("/", "/:resource"))
         self.assertTrue(util.key_match2_func("/resource1", "/:resource"))
         self.assertFalse(util.key_match2_func("/myid", "/:id/using/:resId"))
-        self.assertTrue(
-            util.key_match2_func("/myid/using/myresid", "/:id/using/:resId")
-        )
+        self.assertTrue(util.key_match2_func("/myid/using/myresid", "/:id/using/:resId"))
 
         self.assertFalse(util.key_match2_func("/proxy/myid", "/proxy/:id/*"))
         self.assertTrue(util.key_match2_func("/proxy/myid/", "/proxy/:id/*"))
         self.assertTrue(util.key_match2_func("/proxy/myid/res", "/proxy/:id/*"))
         self.assertTrue(util.key_match2_func("/proxy/myid/res/res2", "/proxy/:id/*"))
-        self.assertTrue(
-            util.key_match2_func("/proxy/myid/res/res2/res3", "/proxy/:id/*")
-        )
+        self.assertTrue(util.key_match2_func("/proxy/myid/res/res2/res3", "/proxy/:id/*"))
         self.assertFalse(util.key_match2_func("/proxy/", "/proxy/:id/*"))
 
         self.assertTrue(util.key_match2_func("/alice", "/:id"))
@@ -84,71 +76,31 @@ class TestBuiltinOperators(TestCase):
         self.assertFalse(util.key_match3_func("/", "/{resource}"))
         self.assertTrue(util.key_match3_func("/resource1", "/{resource}"))
         self.assertFalse(util.key_match3_func("/myid", "/{id}/using/{resId}"))
-        self.assertTrue(
-            util.key_match3_func("/myid/using/myresid", "/{id}/using/{resId}")
-        )
+        self.assertTrue(util.key_match3_func("/myid/using/myresid", "/{id}/using/{resId}"))
 
         self.assertFalse(util.key_match3_func("/proxy/myid", "/proxy/{id}/*"))
         self.assertTrue(util.key_match3_func("/proxy/myid/", "/proxy/{id}/*"))
         self.assertTrue(util.key_match3_func("/proxy/myid/res", "/proxy/{id}/*"))
         self.assertTrue(util.key_match3_func("/proxy/myid/res/res2", "/proxy/{id}/*"))
-        self.assertTrue(
-            util.key_match3_func("/proxy/myid/res/res2/res3", "/proxy/{id}/*")
-        )
+        self.assertTrue(util.key_match3_func("/proxy/myid/res/res2/res3", "/proxy/{id}/*"))
         self.assertFalse(util.key_match3_func("/proxy/", "/proxy/{id}/*"))
 
-        self.assertFalse(
-            util.key_match3_func("/myid/using/myresid", "/{id/using/{resId}")
-        )
+        self.assertFalse(util.key_match3_func("/myid/using/myresid", "/{id/using/{resId}"))
 
     def test_key_match4(self):
-        self.assertTrue(
-            util.key_match4_func("/parent/123/child/123", "/parent/{id}/child/{id}")
-        )
-        self.assertFalse(
-            util.key_match4_func("/parent/123/child/456", "/parent/{id}/child/{id}")
-        )
+        self.assertTrue(util.key_match4_func("/parent/123/child/123", "/parent/{id}/child/{id}"))
+        self.assertFalse(util.key_match4_func("/parent/123/child/456", "/parent/{id}/child/{id}"))
 
-        self.assertTrue(
-            util.key_match4_func(
-                "/parent/123/child/123", "/parent/{id}/child/{another_id}"
-            )
-        )
-        self.assertTrue(
-            util.key_match4_func(
-                "/parent/123/child/456", "/parent/{id}/child/{another_id}"
-            )
-        )
+        self.assertTrue(util.key_match4_func("/parent/123/child/123", "/parent/{id}/child/{another_id}"))
+        self.assertTrue(util.key_match4_func("/parent/123/child/456", "/parent/{id}/child/{another_id}"))
 
-        self.assertTrue(
-            util.key_match4_func(
-                "/parent/123/child/456", "/parent/{id}/child/{another_id}"
-            )
-        )
-        self.assertFalse(
-            util.key_match4_func(
-                "/parent/123/child/123/book/456", "/parent/{id}/child/{id}/book/{id}"
-            )
-        )
-        self.assertFalse(
-            util.key_match4_func(
-                "/parent/123/child/456/book/123", "/parent/{id}/child/{id}/book/{id}"
-            )
-        )
-        self.assertFalse(
-            util.key_match4_func(
-                "/parent/123/child/456/book/", "/parent/{id}/child/{id}/book/{id}"
-            )
-        )
-        self.assertFalse(
-            util.key_match4_func(
-                "/parent/123/child/456", "/parent/{id}/child/{id}/book/{id}"
-            )
-        )
+        self.assertTrue(util.key_match4_func("/parent/123/child/456", "/parent/{id}/child/{another_id}"))
+        self.assertFalse(util.key_match4_func("/parent/123/child/123/book/456", "/parent/{id}/child/{id}/book/{id}"))
+        self.assertFalse(util.key_match4_func("/parent/123/child/456/book/123", "/parent/{id}/child/{id}/book/{id}"))
+        self.assertFalse(util.key_match4_func("/parent/123/child/456/book/", "/parent/{id}/child/{id}/book/{id}"))
+        self.assertFalse(util.key_match4_func("/parent/123/child/456", "/parent/{id}/child/{id}/book/{id}"))
 
-        self.assertFalse(
-            util.key_match4_func("/parent/123/child/123", "/parent/{i/d}/child/{i/d}")
-        )
+        self.assertFalse(util.key_match4_func("/parent/123/child/123", "/parent/{i/d}/child/{i/d}"))
 
     def test_regex_match(self):
         self.assertTrue(util.regex_match_func("/topic/create", "/topic/create"))
@@ -157,15 +109,9 @@ class TestBuiltinOperators(TestCase):
         self.assertFalse(util.regex_match_func("/topic/edit", "/topic/edit/[0-9]+"))
         self.assertTrue(util.regex_match_func("/topic/edit/123", "/topic/edit/[0-9]+"))
         self.assertFalse(util.regex_match_func("/topic/edit/abc", "/topic/edit/[0-9]+"))
-        self.assertFalse(
-            util.regex_match_func("/foo/delete/123", "/topic/delete/[0-9]+")
-        )
-        self.assertTrue(
-            util.regex_match_func("/topic/delete/0", "/topic/delete/[0-9]+")
-        )
-        self.assertFalse(
-            util.regex_match_func("/topic/edit/123s", "/topic/delete/[0-9]+")
-        )
+        self.assertFalse(util.regex_match_func("/foo/delete/123", "/topic/delete/[0-9]+"))
+        self.assertTrue(util.regex_match_func("/topic/delete/0", "/topic/delete/[0-9]+"))
+        self.assertFalse(util.regex_match_func("/topic/edit/123s", "/topic/delete/[0-9]+"))
 
     def test_glob_match(self):
         self.assertTrue(util.glob_match_func("/foo", "/foo"))
@@ -205,9 +151,7 @@ class TestBuiltinOperators(TestCase):
         self.assertFalse(util.glob_match_func("/foo", "*/foo/*"))
         self.assertFalse(util.glob_match_func("/foo/bar", "*/foo"))
         self.assertFalse(util.glob_match_func("/foo/bar", "*/foo*"))
-        self.assertFalse(
-            util.glob_match_func("/foo/bar", "*/foo/*")
-        )  # different from Go
+        self.assertFalse(util.glob_match_func("/foo/bar", "*/foo/*"))  # different from Go
         self.assertFalse(util.glob_match_func("/foobar", "*/foo"))
         self.assertFalse(util.glob_match_func("/foobar", "*/foo*"))  # different from Go
         self.assertFalse(util.glob_match_func("/foobar", "*/foo/*"))
