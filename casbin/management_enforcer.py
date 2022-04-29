@@ -153,17 +153,11 @@ class ManagementEnforcer(InternalEnforcer):
 
     def update_filtered_policies(self, new_rules, field_index, *field_values):
         """update_filtered_policies deletes old rules and adds new rules."""
-        return self.update_filtered_named_policies(
-            "p", new_rules, field_index, *field_values
-        )
+        return self.update_filtered_named_policies("p", new_rules, field_index, *field_values)
 
-    def update_filtered_named_policies(
-        self, ptype, new_rules, field_index, *field_values
-    ):
+    def update_filtered_named_policies(self, ptype, new_rules, field_index, *field_values):
         """update_filtered_named_policies deletes old rules and adds new rules."""
-        return self._update_filtered_policies(
-            "p", ptype, new_rules, field_index, *field_values
-        )
+        return self._update_filtered_policies("p", ptype, new_rules, field_index, *field_values)
 
     def remove_policy(self, *params):
         """removes an authorization rule from the current policy."""
@@ -243,9 +237,7 @@ class ManagementEnforcer(InternalEnforcer):
             rules.append(list(params))
 
         if self.auto_build_role_links:
-            self.model.build_incremental_role_links(
-                self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules
-            )
+            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules)
         return rule_added
 
     def add_named_grouping_policies(self, ptype, rules):
@@ -255,9 +247,7 @@ class ManagementEnforcer(InternalEnforcer):
         Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
         rules_added = self._add_policies("g", ptype, rules)
         if self.auto_build_role_links:
-            self.model.build_incremental_role_links(
-                self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules
-            )
+            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules)
 
         return rules_added
 
@@ -271,9 +261,7 @@ class ManagementEnforcer(InternalEnforcer):
 
     def remove_filtered_grouping_policy(self, field_index, *field_values):
         """removes a role inheritance rule from the current policy, field filters can be specified."""
-        return self.remove_filtered_named_grouping_policy(
-            "g", field_index, *field_values
-        )
+        return self.remove_filtered_named_grouping_policy("g", field_index, *field_values)
 
     def remove_named_grouping_policy(self, ptype, *params):
         """removes a role inheritance rule from the current named policy."""
@@ -288,9 +276,7 @@ class ManagementEnforcer(InternalEnforcer):
             rules.append(list(params))
 
         if self.auto_build_role_links:
-            self.model.build_incremental_role_links(
-                self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules
-            )
+            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules)
         return rule_removed
 
     def remove_named_grouping_policies(self, ptype, rules):
@@ -298,17 +284,13 @@ class ManagementEnforcer(InternalEnforcer):
         rules_removed = self._remove_policies("g", ptype, rules)
 
         if self.auto_build_role_links:
-            self.model.build_incremental_role_links(
-                self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules
-            )
+            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules)
 
         return rules_removed
 
     def remove_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
         """removes a role inheritance rule from the current named policy, field filters can be specified."""
-        rule_removed = self._remove_filtered_policy_returns_effects(
-            "g", ptype, field_index, *field_values
-        )
+        rule_removed = self._remove_filtered_policy_returns_effects("g", ptype, field_index, *field_values)
 
         if self.auto_build_role_links:
             self.model.build_incremental_role_links(

@@ -29,9 +29,7 @@ class UpdateAdapter:
         """
         pass
 
-    def update_filtered_policies(
-        self, sec, ptype, new_rules, field_index, *field_values
-    ):
+    def update_filtered_policies(self, sec, ptype, new_rules, field_index, *field_values):
         """
         update_filtered_policies deletes old rules and adds new rules.
         """

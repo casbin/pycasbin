@@ -107,9 +107,7 @@ class Model(Policy):
             if assertion.priority_index == -1:
                 continue
 
-            assertion.policy = sorted(
-                assertion.policy, key=lambda x: x[assertion.priority_index]
-            )
+            assertion.policy = sorted(assertion.policy, key=lambda x: x[assertion.priority_index])
 
             for i, policy in enumerate(assertion.policy):
                 assertion.policy_map[",".join(policy)] = i
@@ -128,9 +126,7 @@ class Model(Policy):
                     domain_index = index
                     break
 
-            subject_hierarchy_map = self.get_subject_hierarchy_map(
-                self["g"]["g"].policy
-            )
+            subject_hierarchy_map = self.get_subject_hierarchy_map(self["g"]["g"].policy)
 
             def compare_policy(policy):
                 domain = DEFAULT_DOMAIN
@@ -139,9 +135,7 @@ class Model(Policy):
                 name = self.get_name_with_domain(domain, policy[sub_index])
                 return subject_hierarchy_map[name]
 
-            assertion.policy = sorted(
-                assertion.policy, key=compare_policy, reverse=True
-            )
+            assertion.policy = sorted(assertion.policy, key=compare_policy, reverse=True)
             for i, policy in enumerate(assertion.policy):
                 assertion.policy_map[",".join(policy)] = i
 
@@ -194,11 +188,7 @@ class Model(Policy):
         def write_string(sec):
             for p_type in self[sec]:
                 value = self[sec][p_type].value
-                s.append(
-                    "{} = {}\n".format(
-                        sec, value.replace("p_", "p.").replace("r_", "r.")
-                    )
-                )
+                s.append("{} = {}\n".format(sec, value.replace("p_", "p.").replace("r_", "r.")))
 
         s.append("[request_definition]\n")
         write_string("r")
