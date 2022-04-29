@@ -62,12 +62,8 @@ def test_benchmark_rbac_model(benchmark):
 def test_benchmark_rbac_model_small(benchmark):
     e = get_enforcer(get_examples("rbac_model.conf"))
 
-    e.add_policies(
-        {("group" + str(i), "data" + str(int(i / 10)), "read") for i in range(100)}
-    )
-    e.add_grouping_policies(
-        {("user" + str(i), "group" + str(int(i / 10))) for i in range(1000)}
-    )
+    e.add_policies({("group" + str(i), "data" + str(int(i / 10)), "read") for i in range(100)})
+    e.add_grouping_policies({("user" + str(i), "group" + str(int(i / 10))) for i in range(1000)})
 
     @benchmark
     def benchmark_rbac_model():
@@ -77,12 +73,8 @@ def test_benchmark_rbac_model_small(benchmark):
 def test_benchmark_rbac_model_medium(benchmark):
     e = get_enforcer(get_examples("rbac_model.conf"))
 
-    e.add_policies(
-        {("group" + str(i), "data" + str(int(i / 10)), "read") for i in range(1000)}
-    )
-    e.add_grouping_policies(
-        {("user" + str(i), "group" + str(int(i / 10))) for i in range(10000)}
-    )
+    e.add_policies({("group" + str(i), "data" + str(int(i / 10)), "read") for i in range(1000)})
+    e.add_grouping_policies({("user" + str(i), "group" + str(int(i / 10))) for i in range(10000)})
 
     @benchmark
     def benchmark_rbac_model():
@@ -92,12 +84,8 @@ def test_benchmark_rbac_model_medium(benchmark):
 def test_benchmark_rbac_model_large(benchmark):
     e = get_enforcer(get_examples("rbac_model.conf"))
 
-    e.add_policies(
-        {("group" + str(i), "data" + str(int(i / 10)), "read") for i in range(10000)}
-    )
-    e.add_grouping_policies(
-        {("user" + str(i), "group" + str(int(i / 10))) for i in range(100000)}
-    )
+    e.add_policies({("group" + str(i), "data" + str(int(i / 10)), "read") for i in range(10000)})
+    e.add_grouping_policies({("user" + str(i), "group" + str(int(i / 10))) for i in range(100000)})
 
     @benchmark
     def benchmark_rbac_model():
@@ -148,9 +136,7 @@ def test_benchmark_rbac_with_deny(benchmark):
 
 
 def test_benchmark_prioriry(benchmark):
-    e = get_enforcer(
-        get_examples("priority_model.conf"), get_examples("priority_policy.csv")
-    )
+    e = get_enforcer(get_examples("priority_model.conf"), get_examples("priority_policy.csv"))
 
     @benchmark
     def benchmark_rbac_with_deny():
@@ -158,9 +144,7 @@ def test_benchmark_prioriry(benchmark):
 
 
 def test_benchmark_keymatch(benchmark):
-    e = get_enforcer(
-        get_examples("keymatch_model.conf"), get_examples("keymatch_policy.csv")
-    )
+    e = get_enforcer(get_examples("keymatch_model.conf"), get_examples("keymatch_policy.csv"))
 
     @benchmark
     def benchmark_keymatch():

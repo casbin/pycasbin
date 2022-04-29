@@ -49,9 +49,7 @@ class DistributedEnforcer(SyncedEnforcer):
 
         if sec == "g":
             try:
-                self.build_incremental_role_links(
-                    PolicyOp.Policy_add, ptype, no_exists_policy
-                )
+                self.build_incremental_role_links(PolicyOp.Policy_add, ptype, no_exists_policy)
             except Exception as e:
                 self.logger.log("An exception occurred: " + e)
                 return no_exists_policy
@@ -81,9 +79,7 @@ class DistributedEnforcer(SyncedEnforcer):
 
         return effected
 
-    def remove_filtered_policy_self(
-        self, should_persist, sec, ptype, field_index, *field_values
-    ):
+    def remove_filtered_policy_self(self, should_persist, sec, ptype, field_index, *field_values):
         """
         remove_filtered_policy_self provides a method for dispatcher to remove an authorization
         rule from the current policy,field filters can be specified.
@@ -91,21 +87,15 @@ class DistributedEnforcer(SyncedEnforcer):
         """
         if should_persist:
             try:
-                self.adapter.remove_filtered_policy(
-                    sec, ptype, field_index, field_values
-                )
+                self.adapter.remove_filtered_policy(sec, ptype, field_index, field_values)
             except Exception as e:
                 self.logger.log("An exception occurred: " + e)
 
-        effects = self.get_model().remove_filtered_policy_returns_effects(
-            sec, ptype, field_index, *field_values
-        )
+        effects = self.get_model().remove_filtered_policy_returns_effects(sec, ptype, field_index, *field_values)
 
         if sec == "g":
             try:
-                self.build_incremental_role_links(
-                    PolicyOp.Policy_remove, ptype, effects
-                )
+                self.build_incremental_role_links(PolicyOp.Policy_remove, ptype, effects)
             except Exception as e:
                 self.logger.log("An exception occurred: " + e)
                 return effects
@@ -143,16 +133,12 @@ class DistributedEnforcer(SyncedEnforcer):
 
         if sec == "g":
             try:
-                self.build_incremental_role_links(
-                    PolicyOp.Policy_remove, ptype, [old_rule]
-                )
+                self.build_incremental_role_links(PolicyOp.Policy_remove, ptype, [old_rule])
             except Exception as e:
                 return False
 
             try:
-                self.build_incremental_role_links(
-                    PolicyOp.Policy_add, ptype, [new_rule]
-                )
+                self.build_incremental_role_links(PolicyOp.Policy_add, ptype, [new_rule])
             except Exception as e:
                 return False
 

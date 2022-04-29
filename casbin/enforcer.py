@@ -152,9 +152,7 @@ class Enforcer(ManagementEnforcer):
 
         return res
 
-    def get_implicit_permissions_for_user(
-        self, user, domain="", filter_policy_dom=True
-    ):
+    def get_implicit_permissions_for_user(self, user, domain="", filter_policy_dom=True):
         """
         gets implicit permissions for a user or role.
         Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.
@@ -184,9 +182,7 @@ class Enforcer(ManagementEnforcer):
             domain = partial(domain_matching_func, domain)
 
         for role in roles:
-            permissions = self.get_permissions_for_user_in_domain(
-                role, domain if filter_policy_dom else ""
-            )
+            permissions = self.get_permissions_for_user_in_domain(role, domain if filter_policy_dom else "")
             res.extend(permissions)
 
         return res

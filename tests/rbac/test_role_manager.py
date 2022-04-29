@@ -95,9 +95,7 @@ class TestRoleManager(TestCase):
 
         rm.clear()
 
-        match_fn = (
-            lambda name1, name2: True if re.match("^" + name2 + "$", name1) else False
-        )
+        match_fn = lambda name1, name2: True if re.match("^" + name2 + "$", name1) else False
 
         rm.add_matching_func(match_fn)
 
@@ -125,9 +123,7 @@ class TestRoleManager(TestCase):
         self.assertTrue(rm.has_link("g2", "any_group"))
 
         self.assertEqual(sorted(rm.get_roles("u1")), sorted(["g1", "any_user"]))
-        self.assertEqual(
-            sorted(rm.get_roles("u2")), sorted(["g2", "g1", r"g\d+", "any_user"])
-        )
+        self.assertEqual(sorted(rm.get_roles("u2")), sorted(["g2", "g1", r"g\d+", "any_user"]))
         self.assertEqual(rm.get_roles(r"u\d+"), ["any_user"])
         self.assertEqual(rm.get_roles("u3"), ["any_user"])
         self.assertEqual(rm.get_roles("g1"), ["any_group"])
@@ -307,9 +303,7 @@ class TestDomainManager(TestRoleManager):
         self.assertTrue(rm.has_link("u4", "admin", "domain2"))
 
         rm.clear()
-        match_fn = (
-            lambda name1, name2: True if re.match("^" + name2 + "$", name1) else False
-        )
+        match_fn = lambda name1, name2: True if re.match("^" + name2 + "$", name1) else False
 
         rm.add_domain_matching_func(match_fn)
         rm.add_link("alice", "user", ".*")

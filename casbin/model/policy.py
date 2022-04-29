@@ -83,8 +83,7 @@ class Policy:
             rule
             for rule in self[sec][ptype].policy
             if all(
-                (callable(value) and value(rule[field_index + i]))
-                or (value == "" or rule[field_index + i] == value)
+                (callable(value) and value(rule[field_index + i])) or (value == "" or rule[field_index + i] == value)
                 for i, value in enumerate(field_values)
             )
         ]
@@ -195,9 +194,7 @@ class Policy:
                 if old_rule[priority_index] == new_rule[priority_index]:
                     ast.policy[idx] = new_rule
                 else:
-                    raise Exception(
-                        "New rule should have the same priority with old rule."
-                    )
+                    raise Exception("New rule should have the same priority with old rule.")
         else:
             for idx, old_rule, new_rule in zip(old_rules_index, old_rules, new_rules):
                 ast.policy[idx] = new_rule
@@ -234,9 +231,7 @@ class Policy:
 
         return effected
 
-    def remove_filtered_policy_returns_effects(
-        self, sec, ptype, field_index, *field_values
-    ):
+    def remove_filtered_policy_returns_effects(self, sec, ptype, field_index, *field_values):
         """
         remove_filtered_policy_returns_effects removes policy rules based on field filters from the model.
         """
@@ -251,10 +246,7 @@ class Policy:
             return []
 
         for rule in self[sec][ptype].policy:
-            if all(
-                value == "" or rule[field_index + i] == value
-                for i, value in enumerate(field_values)
-            ):
+            if all(value == "" or rule[field_index + i] == value for i, value in enumerate(field_values)):
                 effects.append(rule)
             else:
                 tmp.append(rule)
@@ -274,10 +266,7 @@ class Policy:
             return res
 
         for rule in self[sec][ptype].policy:
-            if all(
-                value == "" or rule[field_index + i] == value
-                for i, value in enumerate(field_values)
-            ):
+            if all(value == "" or rule[field_index + i] == value for i, value in enumerate(field_values)):
                 res = True
             else:
                 tmp.append(rule)
