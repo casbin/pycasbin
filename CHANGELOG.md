@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.1](https://github.com/casbin/pycasbin/compare/v1.16.0...v1.16.1) (2022-04-29)
+
+
+### Bug Fixes
+
+* add lint config ([#255](https://github.com/casbin/pycasbin/issues/255)) ([4890433](https://github.com/casbin/pycasbin/commit/4890433f8d828ca94233b0fe005af56617409b64))
+
 # [1.16.0](https://github.com/casbin/pycasbin/compare/v1.15.5...v1.16.0) (2022-04-27)
 
 

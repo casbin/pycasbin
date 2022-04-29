@@ -18,9 +18,7 @@ from tests.test_enforcer import get_examples, TestCaseBase
 
 class TestRbacApi(TestCaseBase):
     def test_get_roles_for_user(self):
-        e = self.get_enforcer(
-            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
-        )
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
 
         self.assertEqual(e.get_roles_for_user("alice"), ["data2_admin"])
         self.assertEqual(e.get_roles_for_user("bob"), [])
@@ -28,24 +26,18 @@ class TestRbacApi(TestCaseBase):
         self.assertEqual(e.get_roles_for_user("non_exist"), [])
 
     def test_get_users_for_role(self):
-        e = self.get_enforcer(
-            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
-        )
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
 
         self.assertEqual(e.get_users_for_role("data2_admin"), ["alice"])
 
     def test_has_role_for_user(self):
-        e = self.get_enforcer(
-            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
-        )
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
 
         self.assertTrue(e.has_role_for_user("alice", "data2_admin"))
         self.assertFalse(e.has_role_for_user("alice", "data1_admin"))
 
     def test_add_role_for_user(self):
-        e = self.get_enforcer(
-            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
-        )
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
         e.add_role_for_user("alice", "data1_admin")
         self.assertEqual(
             sorted(e.get_roles_for_user("alice")),
@@ -53,9 +45,7 @@ class TestRbacApi(TestCaseBase):
         )
 
     def test_delete_role_for_user(self):
-        e = self.get_enforcer(
-            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
-        )
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
         e.add_role_for_user("alice", "data1_admin")
         self.assertEqual(
             sorted(e.get_roles_for_user("alice")),
@@ -66,23 +56,17 @@ class TestRbacApi(TestCaseBase):
         self.assertEqual(e.get_roles_for_user("alice"), ["data2_admin"])
 
     def test_delete_roles_for_user(self):
-        e = self.get_enforcer(
-            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
-        )
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
         e.delete_roles_for_user("alice")
         self.assertEqual(e.get_roles_for_user("alice"), [])
 
     def test_delete_user(self):
-        e = self.get_enforcer(
-            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
-        )
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
         e.delete_user("alice")
         self.assertEqual(e.get_roles_for_user("alice"), [])
 
     def test_delete_role(self):
-        e = self.get_enforcer(
-            get_examples("rbac_model.conf"), get_examples("rbac_policy.csv")
-        )
+        e = self.get_enforcer(get_examples("rbac_model.conf"), get_examples("rbac_policy.csv"))
         e.delete_role("data2_admin")
         self.assertTrue(e.enforce("alice", "data1", "read"))
         self.assertFalse(e.enforce("alice", "data1", "write"))
@@ -183,9 +167,7 @@ class TestRbacApi(TestCaseBase):
             get_examples("rbac_with_hierarchy_with_domains_policy.csv"),
         )
 
-        self.assertEqual(
-            e.get_roles_for_user_in_domain("alice", "domain1"), ["role:global_admin"]
-        )
+        self.assertEqual(e.get_roles_for_user_in_domain("alice", "domain1"), ["role:global_admin"])
         self.assertEqual(
             sorted(e.get_implicit_roles_for_user("alice", "domain1")),
             sorted(["role:global_admin", "role:reader", "role:writer"]),
@@ -253,9 +235,7 @@ class TestRbacApi(TestCaseBase):
             get_examples("rbac_with_hierarchy_with_domains_policy.csv"),
         )
 
-        self.assertEqual(
-            e.get_roles_for_user_in_domain("alice", "domain1"), ["role:global_admin"]
-        )
+        self.assertEqual(e.get_roles_for_user_in_domain("alice", "domain1"), ["role:global_admin"])
         self.assertEqual(
             sorted(e.get_implicit_roles_for_user("alice", "domain1")),
             sorted(["role:global_admin", "role:reader", "role:writer"]),
@@ -305,9 +285,7 @@ class TestRbacApi(TestCaseBase):
             [],
         )
 
-        self.assertEqual(
-            sorted(e.get_implicit_permissions_for_user("bob", "domain.1")), []
-        )
+        self.assertEqual(sorted(e.get_implicit_permissions_for_user("bob", "domain.1")), [])
 
     def test_enforce_implicit_permissions_api_with_domain_ignore_domain_policies_filter(
         self,
@@ -317,19 +295,13 @@ class TestRbacApi(TestCaseBase):
             get_examples("rbac_with_hierarchy_without_policy_domains.csv"),
         )
 
-        self.assertEqual(
-            e.get_roles_for_user_in_domain("alice", "domain1"), ["role:global_admin"]
-        )
+        self.assertEqual(e.get_roles_for_user_in_domain("alice", "domain1"), ["role:global_admin"])
         self.assertEqual(
             sorted(e.get_implicit_roles_for_user("alice", "domain1")),
             sorted(["role:global_admin", "role:reader", "role:writer"]),
         )
         self.assertEqual(
-            sorted(
-                e.get_implicit_permissions_for_user(
-                    "alice", "domain1", filter_policy_dom=False
-                )
-            ),
+            sorted(e.get_implicit_permissions_for_user("alice", "domain1", filter_policy_dom=False)),
             sorted(
                 [
                     ["alice", "data2", "read"],
@@ -409,18 +381,10 @@ class TestRbacApi(TestCaseBase):
             get_examples("rbac_with_hierarchy_policy.csv"),
         )
 
-        self.assertEqual(
-            ["alice"], e.get_implicit_users_for_permission("data1", "read")
-        )
-        self.assertEqual(
-            ["alice"], e.get_implicit_users_for_permission("data1", "write")
-        )
-        self.assertEqual(
-            ["alice"], e.get_implicit_users_for_permission("data2", "read")
-        )
-        self.assertEqual(
-            ["alice", "bob"], e.get_implicit_users_for_permission("data2", "write")
-        )
+        self.assertEqual(["alice"], e.get_implicit_users_for_permission("data1", "read"))
+        self.assertEqual(["alice"], e.get_implicit_users_for_permission("data1", "write"))
+        self.assertEqual(["alice"], e.get_implicit_users_for_permission("data2", "read"))
+        self.assertEqual(["alice", "bob"], e.get_implicit_users_for_permission("data2", "write"))
 
     def test_domain_match_model(self):
         e = self.get_enforcer(

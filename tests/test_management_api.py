@@ -52,17 +52,13 @@ class TestManagementApi(TestCaseBase):
             ],
         )
 
-        self.assertEqual(
-            e.get_filtered_policy(0, "alice"), [["alice", "data1", "read"]]
-        )
+        self.assertEqual(e.get_filtered_policy(0, "alice"), [["alice", "data1", "read"]])
         self.assertEqual(e.get_filtered_policy(0, "bob"), [["bob", "data2", "write"]])
         self.assertEqual(
             e.get_filtered_policy(0, "data2_admin"),
             [["data2_admin", "data2", "read"], ["data2_admin", "data2", "write"]],
         )
-        self.assertEqual(
-            e.get_filtered_policy(1, "data1"), [["alice", "data1", "read"]]
-        )
+        self.assertEqual(e.get_filtered_policy(1, "data1"), [["alice", "data1", "read"]])
         self.assertEqual(
             e.get_filtered_policy(1, "data2"),
             [
@@ -99,14 +95,10 @@ class TestManagementApi(TestCaseBase):
         self.assertFalse(e.has_policy(["alice", "data2", "read"]))
         self.assertFalse(e.has_policy(["bob", "data3", "write"]))
         self.assertEqual(e.get_grouping_policy(), [["alice", "data2_admin"]])
-        self.assertEqual(
-            e.get_filtered_grouping_policy(0, "alice"), [["alice", "data2_admin"]]
-        )
+        self.assertEqual(e.get_filtered_grouping_policy(0, "alice"), [["alice", "data2_admin"]])
         self.assertEqual(e.get_filtered_grouping_policy(0, "bob"), [])
         self.assertEqual(e.get_filtered_grouping_policy(1, "data1_admin"), [])
-        self.assertEqual(
-            e.get_filtered_grouping_policy(1, "data2_admin"), [["alice", "data2_admin"]]
-        )
+        self.assertEqual(e.get_filtered_grouping_policy(1, "data2_admin"), [["alice", "data2_admin"]])
         # Note: "" (empty string) in fieldValues means matching all values.
         self.assertEqual(
             e.get_filtered_grouping_policy(0, "", "data2_admin"),
@@ -198,11 +190,7 @@ class TestManagementApi(TestCaseBase):
         km2_fn = casbin.util.key_match2_func
 
         self.assertEqual(
-            sorted(
-                e.get_filtered_policy(
-                    1, partial(km2_fn, "domain.2"), lambda a: "data" in a
-                )
-            ),
+            sorted(e.get_filtered_policy(1, partial(km2_fn, "domain.2"), lambda a: "data" in a)),
             sorted(
                 [
                     ["admin", "domain.*", "data1", "read"],
@@ -212,11 +200,7 @@ class TestManagementApi(TestCaseBase):
         )
 
         self.assertEqual(
-            sorted(
-                e.get_filtered_policy(
-                    1, partial(km2_fn, "domain.1"), lambda a: "data" in a, "read"
-                )
-            ),
+            sorted(e.get_filtered_policy(1, partial(km2_fn, "domain.1"), lambda a: "data" in a, "read")),
             sorted(
                 [
                     ["admin", "domain.*", "data1", "read"],
@@ -227,11 +211,7 @@ class TestManagementApi(TestCaseBase):
         )
 
         self.assertEqual(
-            sorted(
-                e.get_filtered_policy(
-                    1, partial(km2_fn, "domain.1"), "", "reading".startswith
-                )
-            ),
+            sorted(e.get_filtered_policy(1, partial(km2_fn, "domain.1"), "", "reading".startswith)),
             sorted(
                 [
                     ["admin", "domain.*", "data1", "read"],

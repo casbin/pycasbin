@@ -62,9 +62,7 @@ class SyncedEnforcer:
         if self.is_auto_loading_running():
             return
         self._auto_loading.value = True
-        self._auto_loading_thread = threading.Thread(
-            target=self._auto_load_policy, args=[interval], daemon=True
-        )
+        self._auto_loading_thread = threading.Thread(target=self._auto_load_policy, args=[interval], daemon=True)
         self._auto_loading_thread.start()
 
     def stop_auto_load_policy(self):
@@ -235,9 +233,7 @@ class SyncedEnforcer:
     def get_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
         """gets all the role inheritance rules in the policy, field filters can be specified."""
         with self._rl:
-            return self._e.get_filtered_named_grouping_policy(
-                ptype, field_index, *field_values
-            )
+            return self._e.get_filtered_named_grouping_policy(ptype, field_index, *field_values)
 
     def has_policy(self, *params):
         """determines whether an authorization rule exists."""
@@ -283,9 +279,7 @@ class SyncedEnforcer:
     def remove_filtered_named_policy(self, ptype, field_index, *field_values):
         """removes an authorization rule from the current named policy, field filters can be specified."""
         with self._wl:
-            return self._e.remove_filtered_named_policy(
-                ptype, field_index, *field_values
-            )
+            return self._e.remove_filtered_named_policy(ptype, field_index, *field_values)
 
     def has_grouping_policy(self, *params):
         """determines whether a role inheritance rule exists."""
@@ -331,9 +325,7 @@ class SyncedEnforcer:
     def remove_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
         """removes a role inheritance rule from the current named policy, field filters can be specified."""
         with self._wl:
-            return self._e.remove_filtered_named_grouping_policy(
-                ptype, field_index, *field_values
-            )
+            return self._e.remove_filtered_named_grouping_policy(ptype, field_index, *field_values)
 
     def add_function(self, name, func):
         """adds a customized function."""
@@ -470,9 +462,7 @@ class SyncedEnforcer:
         But get_implicit_permissions_for_user("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
         """
         with self._rl:
-            return self._e.get_implicit_permissions_for_user(
-                user, *domain, filter_policy_dom=filter_policy_dom
-            )
+            return self._e.get_implicit_permissions_for_user(user, *domain, filter_policy_dom=filter_policy_dom)
 
     def get_implicit_permissions_for_user_by_named_policy(
         self, ptype, user, *domain, filter_policy_dom=True
@@ -628,9 +618,7 @@ class SyncedEnforcer:
             return self._e.remove_named_grouping_policies(ptype, rules)
 
     def build_incremental_role_links(self, op, ptype, rules):
-        self.get_model().build_incremental_role_links(
-            self.get_role_manager(), op, "g", ptype, rules
-        )
+        self.get_model().build_incremental_role_links(self.get_role_manager(), op, "g", ptype, rules)
 
     def new_enforce_context(self, suffix: str) -> "EnforceContext":
         return self._e.new_enforce_context(suffix)

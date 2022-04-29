@@ -31,15 +31,11 @@ class Assertion:
         self.rm = rm
         count = self.value.count("_")
         if count < 2:
-            raise RuntimeError(
-                'the number of "_" in role definition should be at least 2'
-            )
+            raise RuntimeError('the number of "_" in role definition should be at least 2')
 
         for rule in self.policy:
             if len(rule) < count:
-                raise RuntimeError(
-                    "grouping policy elements do not meet role definition"
-                )
+                raise RuntimeError("grouping policy elements do not meet role definition")
             if len(rule) > count:
                 rule = rule[:count]
 
@@ -52,9 +48,7 @@ class Assertion:
         self.rm = rm
         count = self.value.count("_")
         if count < 2:
-            raise RuntimeError(
-                'the number of "_" in role definition should be at least 2'
-            )
+            raise RuntimeError('the number of "_" in role definition should be at least 2')
         for rule in rules:
             if len(rule) < count:
                 raise TypeError("grouping policy elements do not meet role definition")
