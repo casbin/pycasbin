@@ -88,20 +88,14 @@ class InternalEnforcer(CoreEnforcer):
 
         return rules_updated
 
-    def _update_filtered_policies(
-        self, sec, ptype, new_rules, field_index, *field_values
-    ):
+    def _update_filtered_policies(self, sec, ptype, new_rules, field_index, *field_values):
         """_update_filtered_policies deletes old rules and adds new rules."""
 
-        old_rules = self.model.get_filtered_policy(
-            sec, ptype, field_index, *field_values
-        )
+        old_rules = self.model.get_filtered_policy(sec, ptype, field_index, *field_values)
 
         if self.adapter and self.auto_save:
             try:
-                old_rules = self.adapter.update_filtered_policies(
-                    sec, ptype, new_rules, field_index, *field_values
-                )
+                old_rules = self.adapter.update_filtered_policies(sec, ptype, new_rules, field_index, *field_values)
             except:
                 pass
 
@@ -154,19 +148,12 @@ class InternalEnforcer(CoreEnforcer):
 
     def _remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes rules based on field filters from the current policy."""
-        rule_removed = self.model.remove_filtered_policy(
-            sec, ptype, field_index, *field_values
-        )
+        rule_removed = self.model.remove_filtered_policy(sec, ptype, field_index, *field_values)
         if not rule_removed:
             return rule_removed
 
         if self.adapter and self.auto_save:
-            if (
-                self.adapter.remove_filtered_policy(
-                    sec, ptype, field_index, *field_values
-                )
-                is False
-            ):
+            if self.adapter.remove_filtered_policy(sec, ptype, field_index, *field_values) is False:
                 return False
 
             if self.watcher:
@@ -174,23 +161,14 @@ class InternalEnforcer(CoreEnforcer):
 
         return rule_removed
 
-    def _remove_filtered_policy_returns_effects(
-        self, sec, ptype, field_index, *field_values
-    ):
+    def _remove_filtered_policy_returns_effects(self, sec, ptype, field_index, *field_values):
         """removes rules based on field filters from the current policy."""
-        rule_removed = self.model.remove_filtered_policy_returns_effects(
-            sec, ptype, field_index, *field_values
-        )
+        rule_removed = self.model.remove_filtered_policy_returns_effects(sec, ptype, field_index, *field_values)
         if len(rule_removed) == 0:
             return rule_removed
 
         if self.adapter and self.auto_save:
-            if (
-                self.adapter.remove_filtered_policy(
-                    sec, ptype, field_index, *field_values
-                )
-                is False
-            ):
+            if self.adapter.remove_filtered_policy(sec, ptype, field_index, *field_values) is False:
                 return False
 
             if self.watcher:

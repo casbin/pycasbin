@@ -97,9 +97,9 @@ class RoleManager(RM):
         if match_order == MatchOrder.PATTERN_STR:
             return match_error_handler(self.matching_func, str2, str1)
         elif match_order == MatchOrder.PATTERN_PATTERN:
-            return match_error_handler(
-                self.matching_func, str1, str2
-            ) or match_error_handler(self.matching_func, str2, str1)
+            return match_error_handler(self.matching_func, str1, str2) or match_error_handler(
+                self.matching_func, str2, str1
+            )
         else:  # match_order == MatchOrder.STR_PATTERN
             return match_error_handler(self.matching_func, str1, str2)
 
@@ -142,20 +142,14 @@ class RoleManager(RM):
 
         if self.matching_func != None:
             for r in self.all_roles.values():
-                if r.name != user.name and self._matching_fn(
-                    user.name, r.name, MatchOrder.PATTERN_STR
-                ):
+                if r.name != user.name and self._matching_fn(user.name, r.name, MatchOrder.PATTERN_STR):
                     r.add_role(role)
-                if r.name != role.name and self._matching_fn(
-                    role.name, r.name, MatchOrder.PATTERN_STR
-                ):
+                if r.name != role.name and self._matching_fn(role.name, r.name, MatchOrder.PATTERN_STR):
                     role.add_role(r)
 
     def delete_link(self, name1, name2, *domain):
         if Link(name1, name2) not in self.all_links:
-            raise RuntimeError(
-                f"error: link between {name1} and {name2} does not exist"
-            )
+            raise RuntimeError(f"error: link between {name1} and {name2} does not exist")
         self.all_links.remove(Link(name1, name2))
 
         user = self._get_role(name1)
@@ -163,13 +157,9 @@ class RoleManager(RM):
         user.remove_role(role)
 
         for r in self.all_roles.values():
-            if r.name != user.name and self._matching_fn(
-                user.name, r.name, MatchOrder.PATTERN_STR
-            ):
+            if r.name != user.name and self._matching_fn(user.name, r.name, MatchOrder.PATTERN_STR):
                 r.remove_role(role)
-            if r.name != role.name and self._matching_fn(
-                role.name, r.name, MatchOrder.PATTERN_STR
-            ):
+            if r.name != role.name and self._matching_fn(role.name, r.name, MatchOrder.PATTERN_STR):
                 role.remove_role(r)
 
     def has_link(self, name1, name2, *domain):
@@ -249,9 +239,7 @@ class DomainManagerBase(RM):
 
         if self.domain_matching_func != None:
             for domain2, links in self.all_links.items():
-                if domain1 != domain2 and match_error_handler(
-                    self.domain_matching_func, domain1, domain2
-                ):
+                if domain1 != domain2 and match_error_handler(self.domain_matching_func, domain1, domain2):
                     domain_links = domain_links + links
 
         rm = RoleManager(max_hierarchy_level=self.max_hierarchy_level)
@@ -270,9 +258,7 @@ class DomainManagerBase(RM):
     def delete_link(self, name1, name2, *domain):
         links = self._get_links(*domain)
         if Link(name1, name2) not in links:
-            raise RuntimeError(
-                f"error: link between {name1} and {name2} does not exist"
-            )
+            raise RuntimeError(f"error: link between {name1} and {name2} does not exist")
         links.remove(Link(name1, name2))
 
     def has_link(self, name1, name2, *domain):
@@ -313,14 +299,10 @@ class DomainManager(DomainManagerBase):
             return [
                 self.rm_map[domain_str]
                 for domain_str in self.rm_map.keys()
-                if match_error_handler(
-                    self.domain_matching_func, domain_str, domain_pattern
-                )
+                if match_error_handler(self.domain_matching_func, domain_str, domain_pattern)
             ]
         else:
-            return (
-                [self.rm_map[domain_pattern]] if domain_pattern in self.rm_map else []
-            )
+            return [self.rm_map[domain_pattern]] if domain_pattern in self.rm_map else []
 
     def add_matching_func(self, fn):
         super().add_matching_func(fn)
