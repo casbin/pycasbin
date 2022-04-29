@@ -170,26 +170,9 @@ class Enforcer(ManagementEnforcer):
 
         filter_policy_dom: bool - For given *domain*, policies will be filtered by domain as well. Default = True
         """
-        roles = self.get_implicit_roles_for_user(user, domain)
+        return self.get_named_implicit_permissions_for_user("p", user, domain, filter_policy_dom)
 
-        roles.insert(0, user)
-
-        res = []
-
-        # policy domain should be matched by domain_match_fn of DomainManager
-        domain_matching_func = self.get_role_manager().domain_matching_func
-        if domain and domain_matching_func != None:
-            domain = partial(domain_matching_func, domain)
-
-        for role in roles:
-            permissions = self.get_permissions_for_user_in_domain(role, domain if filter_policy_dom else "")
-            res.extend(permissions)
-
-        return res
-
-    def get_implicit_permissions_for_user_by_named_policy(
-        self, ptype, user, domain="", filter_policy_dom=True
-    ):
+    def get_named_implicit_permissions_for_user(self, ptype, user, domain="", filter_policy_dom=True):
         """
         gets implicit permissions for a user or role by named policy.
         Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.
@@ -219,7 +202,7 @@ class Enforcer(ManagementEnforcer):
             domain = partial(domain_matching_func, domain)
 
         for role in roles:
-            permissions = self.get_permissions_for_user_by_named_policy_in_domain(
+            permissions = self.get_named_permissions_for_user_in_domain(
                 ptype, role, domain if filter_policy_dom else ""
             )
             res.extend(permissions)
@@ -274,8 +257,8 @@ class Enforcer(ManagementEnforcer):
 
     def get_permissions_for_user_in_domain(self, user, domain):
         """gets permissions for a user or role inside domain."""
-        return self.get_filtered_policy(0, user, domain)
+        return self.get_named_permissions_for_user_in_domain("p", user, domain)
 
-    def get_permissions_for_user_by_named_policy_in_domain(self, ptype, user, domain):
+    def get_named_permissions_for_user_in_domain(self, ptype, user, domain):
         """gets permissions for a user or role with named policy inside domain."""
         return self.get_filtered_named_policy(ptype, 0, user, domain)

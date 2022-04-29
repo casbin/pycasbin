@@ -211,7 +211,7 @@ class TestRbacApi(TestCaseBase):
         )
 
         self.assertEqual(
-            sorted(e.get_implicit_permissions_for_user_by_named_policy("p", "alice")),
+            sorted(e.get_named_implicit_permissions_for_user("p", "alice")),
             sorted(
                 [
                     ["user", "/data", "GET"],
@@ -220,7 +220,7 @@ class TestRbacApi(TestCaseBase):
             ),
         )
         self.assertEqual(
-            sorted(e.get_implicit_permissions_for_user_by_named_policy("p2", "alice")),
+            sorted(e.get_named_implicit_permissions_for_user("p2", "alice")),
             sorted(
                 [
                     ["user", "view"],
