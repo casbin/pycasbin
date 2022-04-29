@@ -222,6 +222,31 @@ class TestRbacApi(TestCaseBase):
             sorted([["bob", "data2", "write"]]),
         )
 
+    def test_enforce_implicit_permissions_api_with_multiple_policy(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_multiple_policy_model.conf"),
+            get_examples("rbac_with_multiple_policy_policy.csv"),
+        )
+
+        self.assertEqual(
+            sorted(e.get_implicit_permissions_for_user_by_named_policy("p", "alice")),
+            sorted(
+                [
+                    ["user", "/data", "GET"],
+                    ["admin", "/data", "POST"],
+                ]
+            ),
+        )
+        self.assertEqual(
+            sorted(e.get_implicit_permissions_for_user_by_named_policy("p2", "alice")),
+            sorted(
+                [
+                    ["user", "view"],
+                    ["admin", "create"],
+                ]
+            ),
+        )
+
     def test_enforce_implicit_permissions_api_with_domain(self):
         e = self.get_enforcer(
             get_examples("rbac_with_domains_model.conf"),
