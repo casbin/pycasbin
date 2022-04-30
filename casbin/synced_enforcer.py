@@ -464,6 +464,23 @@ class SyncedEnforcer:
         with self._rl:
             return self._e.get_implicit_permissions_for_user(user, *domain, filter_policy_dom=filter_policy_dom)
 
+    def get_named_implicit_permissions_for_user(self, ptype, user, *domain, filter_policy_dom=True):
+        """
+        gets implicit permissions for a user or role by named policy.
+        Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.
+        For example:
+        p, admin, data1, read
+        p, alice, data2, read
+        g, alice, admin
+
+        get_permissions_for_user("alice") can only get: [["alice", "data2", "read"]].
+        But get_implicit_permissions_for_user("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
+        """
+        with self._rl:
+            return self._e.get_named_implicit_permissions_for_user(
+                ptype, user, *domain, filter_policy_dom=filter_policy_dom
+            )
+
     def get_implicit_users_for_permission(self, *permission):
         """
         gets implicit users for a permission.
@@ -504,6 +521,11 @@ class SyncedEnforcer:
         """gets permissions for a user or role inside domain."""
         with self._rl:
             return self._e.get_permissions_for_user_in_domain(user, domain)
+
+    def get_named_permissions_for_user_in_domain(self, ptype, user, domain):
+        """gets permissions for a user or role by named policy inside domain."""
+        with self._rl:
+            return self._e.get_named_permissions_for_user_in_domain(ptype, user, domain)
 
     def enable_auto_build_role_links(self, auto_build_role_links):
         """controls whether to rebuild the role inheritance relations when a role is added or deleted."""
