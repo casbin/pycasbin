@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.3](https://github.com/casbin/pycasbin/compare/v1.16.2...v1.16.3) (2022-04-30)
+
+
+### Bug Fixes
+
+* different behavior of glob_match from other casbin ([#254](https://github.com/casbin/pycasbin/issues/254)) ([49b6a04](https://github.com/casbin/pycasbin/commit/49b6a0467ff4e84838a4b61ee79fe66af0e9de25))
+
 ## [1.16.2](https://github.com/casbin/pycasbin/compare/v1.16.1...v1.16.2) (2022-04-30)
 
 
