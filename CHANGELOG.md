@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.2](https://github.com/casbin/pycasbin/compare/v1.16.1...v1.16.2) (2022-04-30)
+
+
+### Bug Fixes
+
+* allow permissions management to use additional p-types ([#256](https://github.com/casbin/pycasbin/issues/256)) ([37892e1](https://github.com/casbin/pycasbin/commit/37892e1b1578db42543ec81e0120ebda3492afc7))
+
 ## [1.16.1](https://github.com/casbin/pycasbin/compare/v1.16.0...v1.16.1) (2022-04-29)
 
 
