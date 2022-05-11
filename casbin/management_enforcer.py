@@ -275,7 +275,7 @@ class ManagementEnforcer(InternalEnforcer):
             rule_removed = self._remove_policy("g", ptype, list(params))
             rules.append(list(params))
 
-        if self.auto_build_role_links:
+        if self.auto_build_role_links and rule_removed:
             self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules)
         return rule_removed
 
