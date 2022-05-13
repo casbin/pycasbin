@@ -275,7 +275,7 @@ class ManagementEnforcer(InternalEnforcer):
             rule_removed = self._remove_policy("g", ptype, list(params))
             rules.append(list(params))
 
-        if self.auto_build_role_links:
+        if self.auto_build_role_links and rule_removed:
             self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules)
         return rule_removed
 
@@ -283,7 +283,7 @@ class ManagementEnforcer(InternalEnforcer):
         """removes role inheritance rules from the current named policy."""
         rules_removed = self._remove_policies("g", ptype, rules)
 
-        if self.auto_build_role_links:
+        if self.auto_build_role_links and rules_removed:
             self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules)
 
         return rules_removed
@@ -292,7 +292,7 @@ class ManagementEnforcer(InternalEnforcer):
         """removes a role inheritance rule from the current named policy, field filters can be specified."""
         rule_removed = self._remove_filtered_policy_returns_effects("g", ptype, field_index, *field_values)
 
-        if self.auto_build_role_links:
+        if self.auto_build_role_links and rule_removed:
             self.model.build_incremental_role_links(
                 self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rule_removed
             )
