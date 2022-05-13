@@ -149,7 +149,7 @@ class RoleManager(RM):
 
     def delete_link(self, name1, name2, *domain):
         if Link(name1, name2) not in self.all_links:
-            raise RuntimeError(f"error: link between {name1} and {name2} does not exist")
+            return
         self.all_links.remove(Link(name1, name2))
 
         user = self._get_role(name1)
