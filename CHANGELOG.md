@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.4](https://github.com/casbin/pycasbin/compare/v1.16.3...v1.16.4) (2022-05-13)
+
+
+### Bug Fixes
+
+* avoid raising exception in remove_grouping_policy ([#257](https://github.com/casbin/pycasbin/issues/257)) ([39e17b4](https://github.com/casbin/pycasbin/commit/39e17b45cf8880a0db9e30f84def55801bf199d7)), closes [#250](https://github.com/casbin/pycasbin/issues/250) [#250](https://github.com/casbin/pycasbin/issues/250)
+
 ## [1.16.3](https://github.com/casbin/pycasbin/compare/v1.16.2...v1.16.3) (2022-04-30)
 
 
