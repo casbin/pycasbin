@@ -32,9 +32,6 @@ def load_policy_line(line, model):
     if key not in model.model[sec].keys():
         return
 
-    if model.has_policy(sec, key, tokens[1:]):
-        return
-
     model.add_policy(sec, key, tokens[1:])
 
 
