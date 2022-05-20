@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.5](https://github.com/casbin/pycasbin/compare/v1.16.4...v1.16.5) (2022-05-20)
+
+
+### Bug Fixes
+
+* avoid duplicate adapter entries ([#259](https://github.com/casbin/pycasbin/issues/259)) ([8d74386](https://github.com/casbin/pycasbin/commit/8d7438687518f58ba945c822b36d1c9e5188316e))
+
 ## [1.16.4](https://github.com/casbin/pycasbin/compare/v1.16.3...v1.16.4) (2022-05-13)
 
 
