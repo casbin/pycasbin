@@ -441,7 +441,8 @@ class CoreEnforcer:
 
         req_str = req_str + " ---> %s" % result
         if result:
-            self.logger.info(req_str)
+            #self.logger.info(req_str)
+            pass
         else:
             # leaving this in error for now, if it's very noise this can be changed to info or debug
             self.logger.error(req_str)
