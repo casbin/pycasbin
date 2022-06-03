@@ -440,10 +440,7 @@ class CoreEnforcer:
         req_str = req_str + ", ".join([str(v) for v in rvals])
 
         req_str = req_str + " ---> %s" % result
-        if result:
-            #self.logger.info(req_str)
-            pass
-        else:
+        if not result:
             # leaving this in error for now, if it's very noise this can be changed to info or debug
             self.logger.error(req_str)
 
