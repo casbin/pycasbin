@@ -445,7 +445,8 @@ class CoreEnforcer:
         if result:
             self.logger.info(req_str)
         else:
-            # if it is to noise, change the logger level
+            # leaving this in error for now, if it's very noise this can be changed to info or debug,
+            # or change the log level
             self.logger.error(req_str)
 
         explain_rule = []
