@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.6](https://github.com/casbin/pycasbin/compare/v1.16.5...v1.16.6) (2022-06-22)
+
+
+### Bug Fixes
+
+* Set the default log level to warning ([#261](https://github.com/casbin/pycasbin/issues/261)) ([9a48e5d](https://github.com/casbin/pycasbin/commit/9a48e5d89a49c09fcd6bde445a1f11aaca1da5b9))
+
 ## [1.16.5](https://github.com/casbin/pycasbin/compare/v1.16.4...v1.16.5) (2022-05-20)
 
 
