@@ -52,6 +52,8 @@ class CoreEnforcer:
 
     def __init__(self, model=None, adapter=None):
         self.logger = logging.getLogger(__name__)
+        # if want to see more detail logs, change log level to info or debug
+        self.logger.setLevel(logging.WARNING)
         if isinstance(model, str):
             if isinstance(adapter, str):
                 self.init_with_file(model, adapter)
@@ -443,7 +445,8 @@ class CoreEnforcer:
         if result:
             self.logger.info(req_str)
         else:
-            # leaving this in error for now, if it's very noise this can be changed to info or debug
+            # leaving this in error for now, if it's very noise this can be changed to info or debug,
+            # or change the log level
             self.logger.error(req_str)
 
         explain_rule = []
