@@ -1,0 +1,5 @@
+p, alice, /alice_data/*, GET
+p, alice, /alice_data/???, POST
+
+p, bob, /alice_data/[1-9], GET
+p, bob, /bob_data/[!1-9], POST
