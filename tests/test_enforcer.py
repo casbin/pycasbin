@@ -147,6 +147,19 @@ class TestConfig(TestCaseBase):
         self.assertFalse(e.enforce("alice", "/alice_data2/myid", "GET"))
         self.assertTrue(e.enforce("alice", "/alice_data2/myid/using/res_id", "GET"))
 
+    def test_enforce_glob_match(self):
+        e = self.get_enforcer(
+            get_examples("globmatch_model.conf"),
+            get_examples("globmatch_policy.csv"),
+        )
+
+        self.assertTrue(e.enforce("alice", "/alice_data/test_all", "GET"))
+        self.assertTrue(e.enforce("alice", "/alice_data/123", "POST"))
+        self.assertTrue(e.enforce("bob", "/alice_data/1", "GET"))
+        self.assertFalse(e.enforce("bob", "/alice_data/0", "GET"))
+        self.assertTrue(e.enforce("bob", "/bob_data/0", "POST"))
+        self.assertFalse(e.enforce("bob", "/bob_data/1", "POST"))
+
     def test_enforce_priority(self):
         e = self.get_enforcer(get_examples("priority_model.conf"), get_examples("priority_policy.csv"))
         self.assertTrue(e.enforce("alice", "data1", "read"))
