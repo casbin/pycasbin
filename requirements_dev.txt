@@ -1,2 +1,4 @@
 -r requirements.txt
 black==21.6b0
+pytest==7.0.1
+pytest-benchmark==3.4.1
