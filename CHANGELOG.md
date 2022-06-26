@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [1.16.8](https://github.com/casbin/pycasbin/compare/v1.16.7...v1.16.8) (2022-06-26)
+
+
+### Bug Fixes
+
+* add dependency for benchmark ([#262](https://github.com/casbin/pycasbin/issues/262)) ([4f3e71f](https://github.com/casbin/pycasbin/commit/4f3e71fadb17cf41381e3315b795a23e007bf23b))
+* add more example of globmatch and add unit test for it ([#263](https://github.com/casbin/pycasbin/issues/263)) ([42d65d2](https://github.com/casbin/pycasbin/commit/42d65d2b74b22cc1b10b9dc96a8fc960e8af3f72))
+
 ## [1.16.7](https://github.com/casbin/pycasbin/compare/v1.16.6...v1.16.7) (2022-06-26)
 
 
