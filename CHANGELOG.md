@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.7](https://github.com/casbin/pycasbin/compare/v1.16.6...v1.16.7) (2022-06-26)
+
+
+### Bug Fixes
+
+* add import statement in tests module ([#264](https://github.com/casbin/pycasbin/issues/264)) ([8d83b84](https://github.com/casbin/pycasbin/commit/8d83b8461af74b9dd39e2e9652921d969d735c7c))
+
 ## [1.16.6](https://github.com/casbin/pycasbin/compare/v1.16.5...v1.16.6) (2022-06-22)
 
 
