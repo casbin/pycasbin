@@ -149,3 +149,11 @@ def test_benchmark_keymatch(benchmark):
     @benchmark
     def benchmark_keymatch():
         e.enforce("alice", "/alice_data/resource1", "GET")
+
+
+def test_benchmark_globmatch(benchmark):
+    e = get_enforcer(get_examples("globmatch_model.conf"), get_examples("globmatch_policy.csv"))
+
+    @benchmark
+    def benchmark_globmatch():
+        e.enforce("alice", "/alice_data/resource1", "GET")
