@@ -14,6 +14,7 @@
 
 import os
 import casbin
+from casbin import util
 
 
 def raw_enforce(sub, obj, act):
@@ -57,6 +58,52 @@ def test_benchmark_rbac_model(benchmark):
     @benchmark
     def benchmark_rbac_model():
         e.enforce("alice", "data1", "read")
+
+
+def _benchmark_rbac_model_sizes(benchmark, roles, resources, users):
+    e = get_enforcer(get_examples("rbac_model.conf"))
+
+    e.add_policies(
+        {
+            ("group-has-a-very-long-name-" + str(i), "data-has-a-very-long-name-" + str(i % resources), "read")
+            for i in range(roles)
+        }
+    )
+    e.add_grouping_policies(
+        {
+            ("user-has-a-very-long-name-" + str(i), "group-has-a-very-long-name-" + str(i % roles), "read")
+            for i in range(users)
+        }
+    )
+
+    requests_num = 17
+    enforce_requests = []
+    for i in range(requests_num):
+        user_num = users // requests_num * i
+        role_num = user_num % roles
+        resource_num = role_num % resources
+        if i % 2 == 0:
+            resource_num = (resource_num + 1) % resources
+        enforce_requests.append(
+            (f"user-has-a-very-long-name-{user_num}", f"data-has-a-very-long-name-{resource_num}", "read")
+        )
+
+    @benchmark
+    def run_benchmark():
+        for request in enforce_requests:
+            _ = e.enforce(*request)
+
+
+def test_benchmark_rbac_model_sizes_small(benchmark):
+    _benchmark_rbac_model_sizes(benchmark, 100, 10, 1000)
+
+
+def test_benchmark_rbac_model_sizes_medium(benchmark):
+    _benchmark_rbac_model_sizes(benchmark, 1000, 100, 10000)
+
+
+def test_benchmark_rbac_model_sizes_large(benchmark):
+    _benchmark_rbac_model_sizes(benchmark, 10000, 1000, 100000)
 
 
 def test_benchmark_rbac_model_small(benchmark):
@@ -124,6 +171,27 @@ def test_benchmark_abac_model(benchmark):
         e.enforce(sub, obj, "read")
 
 
+def test_benchmark_abac_rule_model(benchmark):
+    e = get_enforcer(get_examples("abac_rule_model.conf"))
+    sub = {"Name": "alice", "Age": 18}
+    obj = {"Owner": "alice", "id": "data1"}
+
+    e.add_policies({("r.sub.Age > 20", f"data{i}", "read") for i in range(1000)})
+
+    @benchmark
+    def benchmark_abac_rule_model():
+        ok = e.enforce(sub, obj, "read")
+        assert not ok
+
+
+def test_benchmark_key_match_model(benchmark):
+    e = get_enforcer(get_examples("keymatch_model.conf"), get_examples("keymatch_policy.csv"))
+
+    @benchmark
+    def benchmark_keymatch():
+        e.enforce("alice", "/alice_data/resource1", "GET")
+
+
 def test_benchmark_rbac_with_deny(benchmark):
     e = get_enforcer(
         get_examples("rbac_with_deny_model.conf"),
@@ -135,7 +203,7 @@ def test_benchmark_rbac_with_deny(benchmark):
         e.enforce("alice", "data1", "read")
 
 
-def test_benchmark_prioriry(benchmark):
+def test_benchmark_priority_model(benchmark):
     e = get_enforcer(get_examples("priority_model.conf"), get_examples("priority_policy.csv"))
 
     @benchmark
@@ -143,12 +211,18 @@ def test_benchmark_prioriry(benchmark):
         e.enforce("alice", "data1", "read")
 
 
-def test_benchmark_keymatch(benchmark):
-    e = get_enforcer(get_examples("keymatch_model.conf"), get_examples("keymatch_policy.csv"))
+def test_benchmark_rbac_model_with_domains_pattern_large(benchmark):
+    e = get_enforcer(
+        get_examples("performance/rbac_with_pattern_large_scale_model.conf"),
+        get_examples("performance/rbac_with_pattern_large_scale_policy.csv"),
+    )
+
+    e.add_named_matching_func("g", util.key_match4_func)
+    e.build_role_links()
 
     @benchmark
-    def benchmark_keymatch():
-        e.enforce("alice", "/alice_data/resource1", "GET")
+    def run_benchmark():
+        _ = e.enforce("staffUser1001", "/orgs/1/sites/site001", "App001.Module001.Action1001")
 
 
 def test_benchmark_globmatch(benchmark):
