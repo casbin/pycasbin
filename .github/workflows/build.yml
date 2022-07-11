@@ -34,11 +34,13 @@ jobs:
     - name: Run tests
       run: coverage run -m unittest discover -s tests -t tests
 
-    - name: Run benchmark 
+    - name: Run benchmark
       run: python3 -m pytest 
             --benchmark-verbose 
             --benchmark-columns=mean,stddev,iqr,ops,rounds 
             tests/benchmarks/benchmark_model.py
+            tests/benchmarks/benchmark_management_api.py
+            tests/benchmarks/benchmark_role_manager.py
 
     - name: Upload coverage data to coveralls.io
       run: coveralls --service=github
