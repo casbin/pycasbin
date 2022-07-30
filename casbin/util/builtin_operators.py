@@ -16,7 +16,7 @@ import ipaddress
 import re
 
 KEY_MATCH2_PATTERN = re.compile(r"(.*?):[^\/]+(.*?)")
-KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+}(.*?)")
+KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+?}(.*?)")
 KEY_MATCH4_PATTERN = re.compile(r"{([^/]+)}")
 
 
@@ -42,6 +42,22 @@ def key_match_func(*args):
     return key_match(name1, name2)
 
 
+def key_get(key1, key2):
+    """
+    key_get returns the matched part
+    For example, "/foo/bar/foo" matches "/foo/*"
+    "bar/foo" will been returned
+    """
+    i = key2.find("*")
+    if i == -1:
+        return ""
+
+    if len(key1) > i:
+        if key1[:i] == key2[:i]:
+            return key1[i:]
+    return ""
+
+
 def key_match2(key1, key2):
     """determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
     For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/:resource"
@@ -63,6 +79,30 @@ def key_match2_func(*args):
     return key_match2(name1, name2)
 
 
+def key_get2(key1, key2, path_var):
+    """
+    key_get2 returns value matched pattern
+    For example, "/resource1" matches "/:resource"
+    if the pathVar == "resource", then "resource1" will be returned
+    """
+    key2 = key2.replace("/*", "/.*")
+
+    keys = re.findall(":[^/]+", key2)
+    key2 = KEY_MATCH2_PATTERN.sub(r"\g<1>([^\/]+)\g<2>", key2, 0)
+
+    if key2 == "*":
+        key2 = "(.*)"
+
+    key2 = "^" + key2 + "$"
+    values = re.match(key2, key1)
+    if values is None:
+        return ""
+    for i, key in enumerate(keys):
+        if path_var == key[1:]:
+            return values.groups()[i]
+    return ""
+
+
 def key_match3(key1, key2):
     """determines determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *.
     For example, "/foo/bar" matches "/foo/*", "/resource1" matches "/{resource}"
@@ -79,6 +119,30 @@ def key_match3_func(*args):
     name2 = args[1]
 
     return key_match3(name1, name2)
+
+
+def key_get3(key1, key2, path_var):
+    """
+    key_get3 returns value matched pattern
+    For example, "project/proj_project1_admin/" matches "project/proj_{project}_admin/"
+    if the pathVar == "project", then "project1" will be returned
+    """
+    key2 = key2.replace("/*", "/.*")
+
+    keys = re.findall(r"{[^/]+?}", key2)
+    key2 = KEY_MATCH3_PATTERN.sub(r"\g<1>([^/]+?)\g<2>", key2, 0)
+
+    if key2 == "*":
+        key2 = "(.*)"
+
+    key2 = "^" + key2 + "$"
+    values = re.match(key2, key1)
+    if values is None:
+        return ""
+    for i, key in enumerate(keys):
+        if path_var == key[1 : len(key) - 1]:
+            return values.groups()[i]
+    return ""
 
 
 def key_match4(key1: str, key2: str) -> bool:

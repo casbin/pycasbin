@@ -31,6 +31,17 @@ class TestBuiltinOperators(TestCase):
 
         self.assertFalse(util.key_match2_func("/alice/all", "/:/all"))
 
+    def test_key_get(self):
+        self.assertEqual(util.key_get("/foo", "/foo"), "")
+        self.assertEqual(util.key_get("/foo", "/foo*"), "")
+        self.assertEqual(util.key_get("/foo", "/foo/*"), "")
+        self.assertEqual(util.key_get("/foo/bar", "/foo"), "")
+        self.assertEqual(util.key_get("/foo/bar", "/foo*"), "/bar")
+        self.assertEqual(util.key_get("/foo/bar", "/foo/*"), "bar")
+        self.assertEqual(util.key_get("/foobar", "/foo"), "")
+        self.assertEqual(util.key_get("/foobar", "/foo*"), "bar")
+        self.assertEqual(util.key_get("/foobar", "/foo/*"), "")
+
     def test_key_match2(self):
         self.assertFalse(util.key_match2_func("/foo", "/"))
         self.assertTrue(util.key_match2_func("/foo", "/foo"))
@@ -62,6 +73,38 @@ class TestBuiltinOperators(TestCase):
 
         self.assertFalse(util.key_match2_func("/alice/all", "/:/all"))
 
+    def test_key_get2(self):
+        self.assertEqual(util.key_get2("/foo", "/foo", "id"), "")
+        self.assertEqual(util.key_get2("/foo", "/foo*", "id"), "")
+        self.assertEqual(util.key_get2("/foo", "/foo/*", "id"), "")
+        self.assertEqual(util.key_get2("/foo/bar", "/foo", "id"), "")
+        self.assertEqual(util.key_get2("/foo/bar", "/foo*", "id"), "")
+        self.assertEqual(util.key_get2("/foo/bar", "/foo/*", "id"), "")
+        self.assertEqual(util.key_get2("/foobar", "/foo", "id"), "")
+        self.assertEqual(util.key_get2("/foobar", "/foo*", "id"), "")
+        self.assertEqual(util.key_get2("/foobar", "/foo/*", "id"), "")
+
+        self.assertEqual(util.key_get2("/", "/:resource", "resource"), "")
+        self.assertEqual(util.key_get2("/resource1", "/:resource", "resource"), "resource1")
+        self.assertEqual(util.key_get2("/myid", "/:id/using/:resId", "id"), "")
+        self.assertEqual(util.key_get2("/myid/using/myresid", "/:id/using/:resId", "id"), "myid")
+        self.assertEqual(util.key_get2("/myid/using/myresid", "/:id/using/:resId", "resId"), "myresid")
+
+        self.assertEqual(util.key_get2("/proxy/myid", "/proxy/:id/*", "id"), "")
+        self.assertEqual(util.key_get2("/proxy/myid/", "/proxy/:id/*", "id"), "myid")
+        self.assertEqual(util.key_get2("/proxy/myid/res", "/proxy/:id/*", "id"), "myid")
+        self.assertEqual(util.key_get2("/proxy/myid/res/res2", "/proxy/:id/*", "id"), "myid")
+        self.assertEqual(util.key_get2("/proxy/myid/res/res2/res3", "/proxy/:id/*", "id"), "myid")
+        self.assertEqual(util.key_get2("/proxy/myid/res/res2/res3", "/proxy/:id/res/*", "id"), "myid")
+        self.assertEqual(util.key_get2("/proxy/", "/proxy/:id/*", "id"), "")
+
+        self.assertEqual(util.key_get2("/alice", "/:id", "id"), "alice")
+        self.assertEqual(util.key_get2("/alice/all", "/:id/all", "id"), "alice")
+        self.assertEqual(util.key_get2("/alice", "/:id/all", "id"), "")
+        self.assertEqual(util.key_get2("/alice/all", "/:id", "id"), "")
+
+        self.assertEqual(util.key_get2("/alice/all", "/:/all", ""), "")
+
     def test_key_match3(self):
         self.assertTrue(util.key_match3_func("/foo", "/foo"))
         self.assertTrue(util.key_match3_func("/foo", "/foo*"))
@@ -86,6 +129,51 @@ class TestBuiltinOperators(TestCase):
         self.assertFalse(util.key_match3_func("/proxy/", "/proxy/{id}/*"))
 
         self.assertFalse(util.key_match3_func("/myid/using/myresid", "/{id/using/{resId}"))
+
+    def test_key_get3(self):
+        self.assertEqual(util.key_get3("/foo", "/foo", "id"), "")
+        self.assertEqual(util.key_get3("/foo", "/foo*", "id"), "")
+        self.assertEqual(util.key_get3("/foo", "/foo/*", "id"), "")
+        self.assertEqual(util.key_get3("/foo/bar", "/foo", "id"), "")
+        self.assertEqual(util.key_get3("/foo/bar", "/foo*", "id"), "")
+        self.assertEqual(util.key_get3("/foo/bar", "/foo/*", "id"), "")
+        self.assertEqual(util.key_get3("/foobar", "/foo", "id"), "")
+        self.assertEqual(util.key_get3("/foobar", "/foo*", "id"), "")
+        self.assertEqual(util.key_get3("/foobar", "/foo/*", "id"), "")
+
+        self.assertEqual(util.key_get3("/", "/{resource}", "resource"), "")
+        self.assertEqual(util.key_get3("/resource1", "/{resource}", "resource"), "resource1")
+        self.assertEqual(util.key_get3("/myid", "/{id}/using/{resId}", "id"), "")
+        self.assertEqual(util.key_get3("/myid/using/myresid", "/{id}/using/{resId}", "id"), "myid")
+        self.assertEqual(util.key_get3("/myid/using/myresid", "/{id}/using/{resId}", "resId"), "myresid")
+
+        self.assertEqual(util.key_get3("/proxy/myid", "/proxy/{id}/*", "id"), "")
+        self.assertEqual(util.key_get3("/proxy/myid/", "/proxy/{id}/*", "id"), "myid")
+        self.assertEqual(util.key_get3("/proxy/myid/res", "/proxy/{id}/*", "id"), "myid")
+        self.assertEqual(util.key_get3("/proxy/myid/res/res2", "/proxy/{id}/*", "id"), "myid")
+        self.assertEqual(util.key_get3("/proxy/myid/res/res2/res3", "/proxy/{id}/*", "id"), "myid")
+        self.assertEqual(util.key_get3("/proxy/", "/proxy/{id}/*", "id"), "")
+
+        self.assertEqual(
+            util.key_get3("/api/group1_group_name/project1_admin/info", "/api/{proj}_admin/info", "proj"), ""
+        )
+        self.assertEqual(util.key_get3("/{id/using/myresid", "/{id/using/{resId}", "resId"), "myresid")
+        self.assertEqual(util.key_get3("/{id/using/myresid/status}", "/{id/using/{resId}/status}", "resId"), "myresid")
+
+        self.assertEqual(util.key_get3("/proxy/myid/res/res2/res3", "/proxy/{id}/*/{res}", "res"), "res3")
+        self.assertEqual(util.key_get3("/api/project1_admin/info", "/api/{proj}_admin/info", "proj"), "project1")
+        self.assertEqual(
+            util.key_get3("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info", "g"),
+            "group1",
+        )
+        self.assertEqual(
+            util.key_get3("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info", "gn"),
+            "group_name",
+        )
+        self.assertEqual(
+            util.key_get3("/api/group1_group_name/project1_admin/info", "/api/{g}_{gn}/{proj}_admin/info", "proj"),
+            "project1",
+        )
 
     def test_key_match4(self):
         self.assertTrue(util.key_match4_func("/parent/123/child/123", "/parent/{id}/child/{id}"))
