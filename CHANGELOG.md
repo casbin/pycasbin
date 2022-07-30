@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.11](https://github.com/casbin/pycasbin/compare/v1.16.10...v1.16.11) (2022-07-30)
+
+
+### Bug Fixes
+
+* update support python version ([#268](https://github.com/casbin/pycasbin/issues/268)) ([b4ddcbb](https://github.com/casbin/pycasbin/commit/b4ddcbb7a36896b231f589ea04271e52630e7bb2))
+
 ## [1.16.10](https://github.com/casbin/pycasbin/compare/v1.16.9...v1.16.10) (2022-07-30)
 
 
