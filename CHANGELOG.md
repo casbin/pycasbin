@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.16.10](https://github.com/casbin/pycasbin/compare/v1.16.9...v1.16.10) (2022-07-30)
+
+
+### Bug Fixes
+
+* add key_get() for builtin_operators ([#267](https://github.com/casbin/pycasbin/issues/267)) ([29d3e39](https://github.com/casbin/pycasbin/commit/29d3e3944953590eaea59a9a0ab042d097d09d97))
+
 ## [1.16.9](https://github.com/casbin/pycasbin/compare/v1.16.8...v1.16.9) (2022-07-10)
 
 
