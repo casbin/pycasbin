@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.17.0](https://github.com/casbin/pycasbin/compare/v1.16.11...v1.17.0) (2022-08-08)
+
+
+### Features
+
+* add watcher-ex call ([#269](https://github.com/casbin/pycasbin/issues/269)) ([f4bc0c0](https://github.com/casbin/pycasbin/commit/f4bc0c05b6578c6d08410410d7bc54dfd690e6e5))
+
 ## [1.16.11](https://github.com/casbin/pycasbin/compare/v1.16.10...v1.16.11) (2022-07-30)
 
 
