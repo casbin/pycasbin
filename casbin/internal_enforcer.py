@@ -32,7 +32,10 @@ class InternalEnforcer(CoreEnforcer):
                 return False
 
             if self.watcher:
-                self.watcher.update()
+                if callable(getattr(self.watcher, "update_for_add_policy", None)):
+                    self.watcher.update_for_add_policy(sec, ptype, rule)
+                else:
+                    self.watcher.update()
 
         return rule_added
 
@@ -50,7 +53,10 @@ class InternalEnforcer(CoreEnforcer):
                 return False
 
             if self.watcher:
-                self.watcher.update()
+                if callable(getattr(self.watcher, "update_for_add_policies", None)):
+                    self.watcher.update_for_add_policies(sec, ptype, rules)
+                else:
+                    self.watcher.update()
 
         return rules_added
 
@@ -124,7 +130,10 @@ class InternalEnforcer(CoreEnforcer):
                 return False
 
             if self.watcher:
-                self.watcher.update()
+                if callable(getattr(self.watcher, "update_for_remove_policy", None)):
+                    self.watcher.update_for_remove_policy(sec, ptype, rule)
+                else:
+                    self.watcher.update()
 
         return rule_removed
 
@@ -142,7 +151,10 @@ class InternalEnforcer(CoreEnforcer):
                 return False
 
             if self.watcher:
-                self.watcher.update()
+                if callable(getattr(self.watcher, "update_for_remove_policies", None)):
+                    self.watcher.update_for_remove_policies(sec, ptype, rules)
+                else:
+                    self.watcher.update()
 
         return rules_removed
 
@@ -157,7 +169,10 @@ class InternalEnforcer(CoreEnforcer):
                 return False
 
             if self.watcher:
-                self.watcher.update()
+                if callable(getattr(self.watcher, "update_for_remove_filtered_policy", None)):
+                    self.watcher.update_for_remove_filtered_policy(sec, ptype, field_index, *field_values)
+                else:
+                    self.watcher.update()
 
         return rule_removed
 
