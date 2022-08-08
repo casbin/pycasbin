@@ -263,7 +263,10 @@ class CoreEnforcer:
         self.adapter.save_policy(self.model)
 
         if self.watcher:
-            self.watcher.update()
+            if callable(getattr(self.watcher, "update_for_save_policy", None)):
+                self.watcher.update_for_save_policy(self.model)
+            else:
+                self.watcher.update()
 
     def enable_enforce(self, enabled=True):
         """changes the enforcing state of Casbin,
