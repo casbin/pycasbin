@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.17.1](https://github.com/casbin/pycasbin/compare/v1.17.0...v1.17.1) (2022-08-28)
+
+
+### Bug Fixes
+
+* some typos ([#270](https://github.com/casbin/pycasbin/issues/270)) ([7705e25](https://github.com/casbin/pycasbin/commit/7705e25fe33d59877d54116ad9855795ebaeaf51))
+
 # [1.17.0](https://github.com/casbin/pycasbin/compare/v1.16.11...v1.17.0) (2022-08-08)
 
 
