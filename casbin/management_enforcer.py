@@ -213,7 +213,7 @@ class ManagementEnforcer(InternalEnforcer):
         return self.add_named_grouping_policy("g", *params)
 
     def add_grouping_policies(self, rules):
-        """adds role inheritance rulea to the current policy.
+        """adds role inheritance rules to the current policy.
 
         If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
         Otherwise the function returns true for the corresponding policy rule by adding the new rule.
@@ -241,7 +241,7 @@ class ManagementEnforcer(InternalEnforcer):
         return rule_added
 
     def add_named_grouping_policies(self, ptype, rules):
-        """ "adds named role inheritance rules to the current policy.
+        """adds named role inheritance rules to the current policy.
 
         If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
         Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
@@ -256,7 +256,7 @@ class ManagementEnforcer(InternalEnforcer):
         return self.remove_named_grouping_policy("g", *params)
 
     def remove_grouping_policies(self, rules):
-        """removes role inheritance rulea from the current policy."""
+        """removes role inheritance rules from the current policy."""
         return self.remove_named_grouping_policies("g", rules)
 
     def remove_filtered_grouping_policy(self, field_index, *field_values):
