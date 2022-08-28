@@ -587,7 +587,7 @@ class SyncedEnforcer:
             return self._e.remove_named_policies(ptype, rules)
 
     def add_grouping_policies(self, rules):
-        """adds role inheritance rulea to the current policy.
+        """adds role inheritance rules to the current policy.
 
         If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
         Otherwise the function returns true for the corresponding policy rule by adding the new rule.
@@ -604,7 +604,7 @@ class SyncedEnforcer:
             return self._e.add_named_grouping_policies(ptype, rules)
 
     def remove_grouping_policies(self, rules):
-        """removes role inheritance rulea from the current policy."""
+        """removes role inheritance rules from the current policy."""
         with self._wl:
             return self._e.addremove_grouping_policies_policies(rules)
 
