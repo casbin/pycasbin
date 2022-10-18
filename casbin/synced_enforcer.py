@@ -55,7 +55,10 @@ class SyncedEnforcer:
     def _auto_load_policy(self, interval):
         while self.is_auto_loading_running():
             time.sleep(interval)
-            self.load_policy()
+            try:
+                self.load_policy()
+            except Exception as e:
+                self.logger.error(str(e))
 
     def start_auto_load_policy(self, interval):
         """starts a thread that will call load_policy every interval seconds"""
