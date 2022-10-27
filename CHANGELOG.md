@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.17.2](https://github.com/casbin/pycasbin/compare/v1.17.1...v1.17.2) (2022-10-20)
+
+
+### Bug Fixes
+
+* catch exceptions in synced enforcer thread ([#272](https://github.com/casbin/pycasbin/issues/272)) ([ff35627](https://github.com/casbin/pycasbin/commit/ff3562764343f08030fe13fcd884bbe169945b87))
+
 ## [1.17.1](https://github.com/casbin/pycasbin/compare/v1.17.0...v1.17.1) (2022-08-28)
 
 
