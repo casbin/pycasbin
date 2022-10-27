@@ -194,7 +194,7 @@ class CoreEnforcer:
     def load_policy(self):
         """reloads the policy from file/database."""
         need_to_rebuild = False
-        new_model = copy.copy(self.model)
+        new_model = copy.deepcopy(self.model)
         new_model.clear_policy()
 
         try:
@@ -214,7 +214,6 @@ class CoreEnforcer:
                     rm.clear()
 
                 new_model.build_role_links(self.rm_map)
-                self.build_role_links()
 
             self.model = new_model
 
