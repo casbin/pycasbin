@@ -58,7 +58,7 @@ class SyncedEnforcer:
             try:
                 self.load_policy()
             except Exception as e:
-                self.logger.error(str(e))
+                self._e.logger.error(repr(e))
 
     def start_auto_load_policy(self, interval):
         """starts a thread that will call load_policy every interval seconds"""
