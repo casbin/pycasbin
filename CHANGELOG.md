@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.17.3](https://github.com/casbin/pycasbin/compare/v1.17.2...v1.17.3) (2022-11-01)
+
+
+### Bug Fixes
+
+* load_policy changed the old model ([#277](https://github.com/casbin/pycasbin/issues/277)) ([f247231](https://github.com/casbin/pycasbin/commit/f247231f1f18aae87773c02739d0b15fb9164c0a))
+
 ## [1.17.2](https://github.com/casbin/pycasbin/compare/v1.17.1...v1.17.2) (2022-10-20)
 
 
