@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.17.4](https://github.com/casbin/pycasbin/compare/v1.17.3...v1.17.4) (2022-11-01)
+
+
+### Bug Fixes
+
+* fix bug in autoloader error handling ([#275](https://github.com/casbin/pycasbin/issues/275)) ([e6f03ce](https://github.com/casbin/pycasbin/commit/e6f03ce165d447534dcd2149928115eb5afed51e))
+
 ## [1.17.3](https://github.com/casbin/pycasbin/compare/v1.17.2...v1.17.3) (2022-11-01)
 
 
