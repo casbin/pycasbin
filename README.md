@@ -163,7 +163,7 @@ import casbin
 e = casbin.Enforcer("path/to/model.conf", "path/to/policy.csv")
 ```
 
-Note: you can also initialize an enforcer with policy in DB instead of file, see [Persistence](#persistence) section for details.
+Note: you can also initialize an enforcer with policy in DB instead of file, see [Policy persistence](#policy-persistence) section for details.
 
 2. Add an enforcement hook into your code right before the access happens:
 
