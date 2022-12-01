@@ -144,7 +144,7 @@ pip install casbin
 
 ## Documentation
 
-https://casbin.org/docs/en/overview
+https://casbin.org/docs/overview
 
 ## Online editor
 
@@ -152,7 +152,7 @@ You can also use the online editor (http://casbin.org/editor/) to write your Cas
 
 ## Tutorials
 
-https://casbin.org/docs/en/tutorials
+https://casbin.org/docs/tutorials
 
 ## Get started
 
@@ -205,15 +205,15 @@ We also provide a web-based UI for model management and policy management:
 
 ## Policy persistence
 
-https://casbin.org/docs/en/adapters
+https://casbin.org/docs/adapters
 
 ## Role manager
 
-https://casbin.org/docs/en/role-managers
+https://casbin.org/docs/role-managers
 
 ## Benchmarks
 
-https://casbin.org/docs/en/benchmark
+https://casbin.org/docs/benchmark
 
 ## Examples
 
@@ -233,11 +233,11 @@ Priority | [priority_model.conf](https://github.com/casbin/casbin/blob/master/ex
 
 ## Middlewares
 
-Authz middlewares for web frameworks: https://casbin.org/docs/en/middlewares
+Authz middlewares for web frameworks: https://casbin.org/docs/middlewares
 
 ## Our adopters
 
-https://casbin.org/docs/en/adopters
+https://casbin.org/docs/adopters
 
 ## Contributors
 
