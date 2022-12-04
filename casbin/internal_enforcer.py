@@ -14,6 +14,7 @@
 
 from casbin.core_enforcer import CoreEnforcer
 
+
 class InternalEnforcer(CoreEnforcer):
     """
     InternalEnforcer = CoreEnforcer + Internal API.
