@@ -16,7 +16,6 @@ import os
 import random
 
 import casbin
-from casbin import util
 
 
 def get_examples(path):

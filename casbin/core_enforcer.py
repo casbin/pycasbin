@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging, copy
+import logging
+import copy
 
 from casbin.effect import Effector, get_effector, effect_to_bool
 from casbin.model import Model, FunctionMap

@@ -13,8 +13,6 @@
 # limitations under the License.
 
 from casbin.core_enforcer import CoreEnforcer
-from casbin.model.policy_op import PolicyOp
-
 
 class InternalEnforcer(CoreEnforcer):
     """
