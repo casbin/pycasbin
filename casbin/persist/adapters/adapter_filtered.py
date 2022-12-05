@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from casbin import persist
-from casbin import model
 from .file_adapter import FileAdapter
 import os
 
