@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.17.5](https://github.com/casbin/pycasbin/compare/v1.17.4...v1.17.5) (2022-12-05)
+
+
+### Bug Fixes
+
+* polish import grammar and remove some useless package ([#282](https://github.com/casbin/pycasbin/issues/282)) ([be53e0b](https://github.com/casbin/pycasbin/commit/be53e0b9e0d8863919de4cdd5f0185f5eea0779d))
+
 ## [1.17.4](https://github.com/casbin/pycasbin/compare/v1.17.3...v1.17.4) (2022-11-01)
 
 
