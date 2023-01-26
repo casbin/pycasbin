@@ -14,7 +14,8 @@
 
 from . import Assertion
 from casbin import util, config
-from .policy import Policy
+from .policy import Policy, FilterablePolicy
+from typing import Any, Sequence
 
 DEFAULT_DOMAIN = ""
 DEFAULT_SEPARATOR = "::"
@@ -207,3 +208,21 @@ class Model(Policy):
         s[-1] = s[-1].strip()
 
         return "".join(s)
+
+
+class FastModel(Model):
+    _cache_key_order: Sequence[int]
+
+    def __init__(self, cache_key_order: Sequence[int]) -> None:
+        super().__init__()
+        self._cache_key_order = cache_key_order
+
+    def add_def(self, sec: str, key: str, value: Any) -> None:
+        super().add_def(sec, key, value)
+        if sec == "p" and key == "p":
+            self.model[sec][key].policy = FilterablePolicy(self._cache_key_order)
+
+    def clear_policy(self) -> None:
+        """clears all current policy."""
+        super().clear_policy()
+        self.model["p"]["p"].policy = FilterablePolicy(self._cache_key_order)
