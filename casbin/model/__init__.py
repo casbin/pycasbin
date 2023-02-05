@@ -13,6 +13,8 @@
 # limitations under the License.
 
 from .assertion import Assertion
-from .model import Model, FastModel
-from .policy import Policy, FilterablePolicy, filter_policy
+from .model import Model
+from .model_fast import FastModel
+from .policy import Policy
+from .policy_fast import FastPolicy, fast_policy_filter
 from .function import FunctionMap

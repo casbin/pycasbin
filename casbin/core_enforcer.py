@@ -17,7 +17,7 @@ import copy
 from typing import Sequence
 
 from casbin.effect import Effector, get_effector, effect_to_bool
-from casbin.model import Model, FastModel, FunctionMap, filter_policy
+from casbin.model import Model, FastModel, FunctionMap, fast_policy_filter
 from casbin.persist import Adapter
 from casbin.persist.adapters import FileAdapter
 from casbin.rbac import default_role_manager
@@ -333,7 +333,7 @@ class CoreEnforcer:
             result, _ = self.enforce_ex(*rvals)
         else:
             keys = [rvals[x] for x in self._cache_key_order]
-            with filter_policy(self.model.model["p"]["p"].policy, *keys):
+            with fast_policy_filter(self.model.model["p"]["p"].policy, *keys):
                 result, _ = self.enforce_ex(*rvals)
 
         return result

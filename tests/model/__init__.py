@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .test_policy import TestPolicy
+from .test_policy_fast import TestContextManager, TestFastPolicy

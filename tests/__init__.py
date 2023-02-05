@@ -18,6 +18,7 @@ from .test_filter import TestFilteredAdapter
 from .test_frontend import TestFrontend
 from .test_management_api import TestManagementApi, TestManagementApiSynced
 from .test_rbac_api import TestRbacApi, TestRbacApiSynced
+from .test_enforcer_fast import TestFastEnforcer
 from . import benchmarks
 from . import config
 from . import model
