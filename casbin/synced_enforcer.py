@@ -609,7 +609,7 @@ class SyncedEnforcer:
     def remove_grouping_policies(self, rules):
         """removes role inheritance rules from the current policy."""
         with self._wl:
-            return self._e.addremove_grouping_policies_policies(rules)
+            return self._e.remove_grouping_policies(rules)
 
     def remove_named_grouping_policies(self, ptype, rules):
         """removes role inheritance rules from the current named policy."""
