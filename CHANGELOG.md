@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.17.6](https://github.com/casbin/pycasbin/compare/v1.17.5...v1.17.6) (2023-02-09)
+
+
+### Bug Fixes
+
+* fix typo in remove_grouping_policies() API ([#287](https://github.com/casbin/pycasbin/issues/287)) ([747f71d](https://github.com/casbin/pycasbin/commit/747f71d2f629affa4aa0d15115e5cb61b4f4b732))
+
 ## [1.17.5](https://github.com/casbin/pycasbin/compare/v1.17.4...v1.17.5) (2022-12-05)
 
 
