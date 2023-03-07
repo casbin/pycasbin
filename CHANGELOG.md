@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.18.0](https://github.com/casbin/pycasbin/compare/v1.17.6...v1.18.0) (2023-03-07)
+
+
+### Features
+
+* revert "fix: avoid duplicate adapter entries ([#259](https://github.com/casbin/pycasbin/issues/259))" ([#290](https://github.com/casbin/pycasbin/issues/290)) ([b573041](https://github.com/casbin/pycasbin/commit/b573041270acbc9e217ee673792b31e74239b7c7))
+
 ## [1.17.6](https://github.com/casbin/pycasbin/compare/v1.17.5...v1.17.6) (2023-02-09)
 
 
