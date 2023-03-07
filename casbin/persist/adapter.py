@@ -32,7 +32,7 @@ def load_policy_line(line, model):
     if key not in model.model[sec].keys():
         return
 
-    model.add_policy(sec, key, tokens[1:])
+    model.model[sec][key].policy.append(tokens[1:])
 
 
 class Adapter:
