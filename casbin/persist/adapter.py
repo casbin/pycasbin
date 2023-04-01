@@ -22,7 +22,25 @@ def load_policy_line(line, model):
     if line[:1] == "#":
         return
 
-    tokens = [token.strip() for token in line.split(",")]
+    stack = []
+    tokens = []
+    for c in line:
+        if c == "[":
+            stack.append(c)
+            tokens[-1] += "["
+        elif c == "]":
+            stack.pop()
+            tokens[-1] += "]"
+        elif c == "," and len(stack) == 0:
+            tokens.append("")
+        else:
+            if len(tokens) == 0:
+                tokens.append(c)
+            else:
+                tokens[-1] += c
+
+    tokens = [x.strip() for x in tokens]
+
     key = tokens[0]
     sec = key[0]
 
