@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.18.1](https://github.com/casbin/pycasbin/compare/v1.18.0...v1.18.1) (2023-04-01)
+
+
+### Bug Fixes
+
+* support escaping comma inside quote in load_policy_line()'s CSV parsing ([#292](https://github.com/casbin/pycasbin/issues/292)) ([51e6e7c](https://github.com/casbin/pycasbin/commit/51e6e7c34d8ebcef666d34a6f10f457bfc0c31d0))
+
 # [1.18.0](https://github.com/casbin/pycasbin/compare/v1.17.6...v1.18.0) (2023-03-07)
 
 
