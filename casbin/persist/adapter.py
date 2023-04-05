@@ -30,7 +30,7 @@ def load_policy_line(line, model):
             tokens[-1] += c
         elif c == "]" or c == ")":
             stack.pop()
-            tokens[-1] += c 
+            tokens[-1] += c
         elif c == "," and len(stack) == 0:
             tokens.append("")
         else:
