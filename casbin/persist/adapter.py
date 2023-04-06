@@ -25,12 +25,12 @@ def load_policy_line(line, model):
     stack = []
     tokens = []
     for c in line:
-        if c == "[":
+        if c == "[" or c == "(":
             stack.append(c)
-            tokens[-1] += "["
-        elif c == "]":
+            tokens[-1] += c
+        elif c == "]" or c == ")":
             stack.pop()
-            tokens[-1] += "]"
+            tokens[-1] += c
         elif c == "," and len(stack) == 0:
             tokens.append("")
         else:
