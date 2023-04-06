@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.18.2](https://github.com/casbin/pycasbin/compare/v1.18.1...v1.18.2) (2023-04-06)
+
+
+### Bug Fixes
+
+* load policy rule without splitting custom functions ([#293](https://github.com/casbin/pycasbin/issues/293)) ([fbc4261](https://github.com/casbin/pycasbin/commit/fbc42616620fcbe089cfcf459ec9eaa441fc33e1))
+
 ## [1.18.1](https://github.com/casbin/pycasbin/compare/v1.18.0...v1.18.1) (2023-04-01)
 
 
