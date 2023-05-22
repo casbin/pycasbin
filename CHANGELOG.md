@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [1.18.3](https://github.com/casbin/pycasbin/compare/v1.18.2...v1.18.3) (2023-05-22)
+
+
+### Bug Fixes
+
+* Exclude tests from package ([#297](https://github.com/casbin/pycasbin/issues/297)) ([9b014a2](https://github.com/casbin/pycasbin/commit/9b014a226058947424f87408ea14176f20183031))
+* Stop including README as top-level data file in package ([#296](https://github.com/casbin/pycasbin/issues/296)) ([e85e9b9](https://github.com/casbin/pycasbin/commit/e85e9b91aca3007fc4aab292689302eaae27cf02))
+
 ## [1.18.2](https://github.com/casbin/pycasbin/compare/v1.18.1...v1.18.2) (2023-04-06)
 
 
