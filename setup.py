@@ -60,5 +60,4 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    data_files=[desc_file],
 )
