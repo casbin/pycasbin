@@ -47,7 +47,7 @@ setuptools.setup(
         "access control",
         "permission",
     ],
-    packages=setuptools.find_packages(exclude=("tests",)),
+    packages=setuptools.find_packages(exclude=("tests", "tests.*")),
     install_requires=install_requires,
     python_requires=">=3.3",
     license="Apache 2.0",
