@@ -458,6 +458,15 @@ class CoreEnforcer:
 
         return result, explain_rule
 
+    def batch_enforce(self, rvals):
+        """batch_enforce enforce in batches
+        """
+        results = []
+        for request in rvals:
+            result = self.enforce(*request)
+            results.append(result)
+        return results
+
     @staticmethod
     def _get_expression(expr, functions=None):
         expr = expr.replace("&&", "and")
