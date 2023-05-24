@@ -66,12 +66,17 @@ class TestConfig(TestCaseBase):
             get_examples("basic_policy.csv"),
         )
         results = [True, False, True, False]
-        self.assertEqual(e.batch_enforce([
-            ("alice", "data1", "read"),
-            ("alice", "data2", "read"),
-            ("bob", "data2", "write"),
-            ("bob", "data1", "write")]),
-            results)
+        self.assertEqual(
+            e.batch_enforce(
+                [
+                    ("alice", "data1", "read"),
+                    ("alice", "data2", "read"),
+                    ("bob", "data2", "write"),
+                    ("bob", "data1", "write"),
+                ]
+            ),
+            results,
+        )
 
     def test_model_set_load(self):
         e = self.get_enforcer(
