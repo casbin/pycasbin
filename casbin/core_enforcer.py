@@ -459,8 +459,7 @@ class CoreEnforcer:
         return result, explain_rule
 
     def batch_enforce(self, rvals):
-        """batch_enforce enforce in batches
-        """
+        """batch_enforce enforce in batches"""
         results = []
         for request in rvals:
             result = self.enforce(*request)
