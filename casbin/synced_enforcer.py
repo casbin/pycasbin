@@ -158,6 +158,13 @@ class SyncedEnforcer:
         with self._rl:
             return self._e.enforce_ex(*rvals)
 
+    def batch_enforce(self, rvals):
+        """batch_enforce enforce in batches,
+        input parameters are usually: [(sub, obj, act), (sub, obj, act), ...].
+        """
+        with self._rl:
+            return self._e.batch_enforce(rvals)
+
     def get_all_subjects(self):
         """gets the list of subjects that show up in the current policy."""
         with self._rl:
