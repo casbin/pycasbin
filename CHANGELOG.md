@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.19.0](https://github.com/casbin/pycasbin/compare/v1.18.3...v1.19.0) (2023-05-24)
+
+
+### Features
+
+* Add batch_enforce() API ([#298](https://github.com/casbin/pycasbin/issues/298)) ([361af9b](https://github.com/casbin/pycasbin/commit/361af9bc76492b975d454d9f479b3703248fc509))
+
 ## [1.18.3](https://github.com/casbin/pycasbin/compare/v1.18.2...v1.18.3) (2023-05-22)
 
 
