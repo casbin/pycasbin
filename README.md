@@ -7,7 +7,7 @@ PyCasbin
 [![PyPI - Wheel](https://img.shields.io/pypi/wheel/casbin.svg)](https://pypi.org/project/casbin/)
 [![Pyversions](https://img.shields.io/pypi/pyversions/casbin.svg)](https://pypi.org/project/casbin/)
 [![Download](https://img.shields.io/pypi/dm/casbin.svg)](https://pypi.org/project/casbin/)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
+[![Discord](https://img.shields.io/discord/1022748306096537660?logo=discord&label=discord&color=5865F2)](https://discord.gg/S5UjpzGZjN)
 
 💖 [**Looking for an open-source identity and access management solution like Okta, Auth0, Keycloak ? Learn more about: Casdoor**](https://casdoor.org/)
 
