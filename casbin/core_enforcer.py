@@ -50,6 +50,7 @@ class CoreEnforcer:
     enabled = False
     auto_save = False
     auto_build_role_links = False
+    auto_notify_watcher = False
 
     def __init__(self, model=None, adapter=None):
         self.logger = logging.getLogger(__name__)
@@ -106,6 +107,7 @@ class CoreEnforcer:
         self.enabled = True
         self.auto_save = True
         self.auto_build_role_links = True
+        self.auto_notify_watcher = True
 
         self.init_rm_map()
 
@@ -282,6 +284,10 @@ class CoreEnforcer:
     def enable_auto_build_role_links(self, auto_build_role_links):
         """controls whether to rebuild the role inheritance relations when a role is added or deleted."""
         self.auto_build_role_links = auto_build_role_links
+
+    def enable_auto_notify_watcher(self, auto_notify_watcher):
+        """controls whether to save a policy rule automatically notify the watcher when it is added or removed."""
+        self.auto_notify_watcher = auto_notify_watcher
 
     def build_role_links(self):
         """manually rebuild the role inheritance relations."""
