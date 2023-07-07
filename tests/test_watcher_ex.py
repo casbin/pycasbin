@@ -187,4 +187,3 @@ class TestWatcherEx(TestCaseBase):
 
         e.remove_policies(rules)
         self.assertEqual(w.notify_message, None)
-
