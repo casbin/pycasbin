@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.20.0](https://github.com/casbin/pycasbin/compare/v1.19.0...v1.20.0) (2023-07-07)
+
+
+### Features
+
+* add auto_notify_watcher to core enforcer ([#303](https://github.com/casbin/pycasbin/issues/303)) ([15de222](https://github.com/casbin/pycasbin/commit/15de2223d08e4d53555e747a4e549c327344412c))
+
 # [1.19.0](https://github.com/casbin/pycasbin/compare/v1.18.3...v1.19.0) (2023-05-24)
 
 
