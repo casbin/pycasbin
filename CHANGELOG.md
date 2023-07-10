@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.21.0](https://github.com/casbin/pycasbin/compare/v1.20.0...v1.21.0) (2023-07-10)
+
+
+### Features
+
+* add string adapter ([#304](https://github.com/casbin/pycasbin/issues/304)) ([784a46f](https://github.com/casbin/pycasbin/commit/784a46f8f403cf18572c22c8779dc1e3dca315ca))
+
 # [1.20.0](https://github.com/casbin/pycasbin/compare/v1.19.0...v1.20.0) (2023-07-07)
 
 
