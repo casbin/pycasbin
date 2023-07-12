@@ -20,3 +20,6 @@ from .persist import *
 from .effect import *
 from .model import *
 from .frontend import *
+from .util.log import configure_logging
+
+# configure_logging()

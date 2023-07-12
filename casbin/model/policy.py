@@ -19,7 +19,7 @@ DEFAULT_SEP = ","
 
 class Policy:
     def __init__(self):
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("casbin.policy")
         self.model = {}
 
     def __getitem__(self, item):

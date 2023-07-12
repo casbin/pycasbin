@@ -53,9 +53,7 @@ class CoreEnforcer:
     auto_notify_watcher = False
 
     def __init__(self, model=None, adapter=None):
-        self.logger = logging.getLogger(__name__)
-        # if want to see more detail logs, change log level to info or debug
-        self.logger.setLevel(logging.WARNING)
+        self.logger = logging.getLogger("casbin.enforcer")
         if isinstance(model, str):
             if isinstance(adapter, str):
                 self.init_with_file(model, adapter)
@@ -89,7 +87,6 @@ class CoreEnforcer:
         self.adapter = adapter
 
         self.model = m
-        m.logger = self.logger
         self.model.print_model()
         self.fm = FunctionMap.load_function_map()
 

@@ -79,7 +79,7 @@ class RoleManager(RM):
     """provides a default implementation for the RoleManager interface"""
 
     def __init__(self, max_hierarchy_level=10):
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("casbin.role")
         self.max_hierarchy_level = max_hierarchy_level
         self.matching_func = None
         self.domain_matching_func = None
@@ -202,7 +202,7 @@ class RoleManager(RM):
 
 class DomainManagerBase(RM):
     def __init__(self, max_hierarchy_level=10):
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("casbin.role")
         self.all_links = dict()
         self.max_hierarchy_level = max_hierarchy_level
         self.matching_func = None
