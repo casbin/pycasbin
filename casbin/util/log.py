@@ -38,7 +38,7 @@ DEFAULT_LOGGING = {
             "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
-        }
+        },
     },
 }
 
