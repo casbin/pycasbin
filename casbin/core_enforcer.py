@@ -21,6 +21,7 @@ from casbin.persist import Adapter
 from casbin.persist.adapters import FileAdapter
 from casbin.rbac import default_role_manager
 from casbin.util import generate_g_function, SimpleEval, util
+from casbin.util.log import configure_logging
 
 
 class EnforceContext:
@@ -52,7 +53,7 @@ class CoreEnforcer:
     auto_build_role_links = False
     auto_notify_watcher = False
 
-    def __init__(self, model=None, adapter=None):
+    def __init__(self, model=None, adapter=None, enable_log=False):
         self.logger = logging.getLogger("casbin.enforcer")
         if isinstance(model, str):
             if isinstance(adapter, str):
@@ -65,6 +66,9 @@ class CoreEnforcer:
                 raise RuntimeError("Invalid parameters for enforcer.")
             else:
                 self.init_with_model_and_adapter(model, adapter)
+
+        if enable_log:
+            configure_logging()
 
     def init_with_file(self, model_path, policy_path):
         """initializes an enforcer with a model file and a policy file."""
@@ -468,6 +472,11 @@ class CoreEnforcer:
             result = self.enforce(*request)
             results.append(result)
         return results
+
+    @staticmethod
+    def configure_logging(logging_config=None):
+        """configure_logging configure the default logger for casbin"""
+        configure_logging(logging_config)
 
     @staticmethod
     def _get_expression(expr, functions=None):
