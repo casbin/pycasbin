@@ -18,7 +18,7 @@ from casbin.model.policy_op import PolicyOp
 
 class Assertion:
     def __init__(self):
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("casbin.policy")
         self.key = ""
         self.value = ""
         self.tokens = []
