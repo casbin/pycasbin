@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.22.0](https://github.com/casbin/pycasbin/compare/v1.21.0...v1.22.0) (2023-07-14)
+
+
+### Features
+
+* update logger for more precise log level and format control ([#306](https://github.com/casbin/pycasbin/issues/306)) ([5c688d7](https://github.com/casbin/pycasbin/commit/5c688d7db2c7f5139e2192a0a21d3b2ba3f0807b))
+
 # [1.21.0](https://github.com/casbin/pycasbin/compare/v1.20.0...v1.21.0) (2023-07-10)
 
 
