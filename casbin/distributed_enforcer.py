@@ -24,7 +24,6 @@ class DistributedEnforcer(SyncedEnforcer):
     """DistributedEnforcer wraps SyncedEnforcer for dispatcher."""
 
     def __init__(self, model=None, adapter=None):
-        self.logger = logging.getLogger(__name__)
         SyncedEnforcer.__init__(self, model, adapter)
 
     def add_policy_self(self, should_persist, sec, ptype, rules):
@@ -43,7 +42,7 @@ class DistributedEnforcer(SyncedEnforcer):
                 if isinstance(self.adapter, batch_adapter):
                     self.adapter.add_policies(sec, ptype, rules)
             except Exception as e:
-                self.logger.log("An error occurred: " + e)
+                self._e.logger.error("An error occurred: " + e)
 
         self.get_model().add_policies(sec, ptype, no_exists_policy)
 
@@ -51,7 +50,7 @@ class DistributedEnforcer(SyncedEnforcer):
             try:
                 self.build_incremental_role_links(PolicyOp.Policy_add, ptype, no_exists_policy)
             except Exception as e:
-                self.logger.log("An exception occurred: " + e)
+                self._e.logger.error("An exception occurred: " + e)
                 return no_exists_policy
 
         return no_exists_policy
@@ -66,7 +65,7 @@ class DistributedEnforcer(SyncedEnforcer):
                 if isinstance(self.adapter, batch_adapter):
                     self.adapter.remove_policy(sec, ptype, rules)
             except Exception as e:
-                self.logger.log("An exception occurred: " + e)
+                self._e.logger.error("An exception occurred: " + e)
 
         effected = self.get_model().remove_policies_with_effected(sec, ptype, rules)
 
@@ -74,7 +73,7 @@ class DistributedEnforcer(SyncedEnforcer):
             try:
                 self.build_incremental_role_links(PolicyOp.Policy_remove, ptype, rules)
             except Exception as e:
-                self.logger.log("An exception occurred: " + e)
+                self._e.logger.error("An exception occurred: " + e)
                 return effected
 
         return effected
@@ -89,7 +88,7 @@ class DistributedEnforcer(SyncedEnforcer):
             try:
                 self.adapter.remove_filtered_policy(sec, ptype, field_index, field_values)
             except Exception as e:
-                self.logger.log("An exception occurred: " + e)
+                self._e.logger.error("An exception occurred: " + e)
 
         effects = self.get_model().remove_filtered_policy_returns_effects(sec, ptype, field_index, *field_values)
 
@@ -97,7 +96,7 @@ class DistributedEnforcer(SyncedEnforcer):
             try:
                 self.build_incremental_role_links(PolicyOp.Policy_remove, ptype, effects)
             except Exception as e:
-                self.logger.log("An exception occurred: " + e)
+                self._e.logger.error("An exception occurred: " + e)
                 return effects
 
         return effects
@@ -110,7 +109,7 @@ class DistributedEnforcer(SyncedEnforcer):
             try:
                 self.adapter.save_policy(None)
             except Exception as e:
-                self.logger.log("An exception occurred: " + e)
+                self._e.logger.error("An exception occurred: " + e)
 
         self.get_model().clear_policy()
 
@@ -123,7 +122,7 @@ class DistributedEnforcer(SyncedEnforcer):
                 if isinstance(self.adapter, update_adapter):
                     self.adapter.update_policy(sec, ptype, old_rule, new_rule)
             except Exception as e:
-                self.logger.log("An exception occurred: " + e)
+                self._e.logger.error("An exception occurred: " + e)
                 return False
 
         rule_updated = self.get_model().update_policy(sec, ptype, old_rule, new_rule)
