@@ -268,9 +268,7 @@ class AsyncInternalEnforcer(CoreEnforcer):
 
             if self.watcher and self.auto_notify_watcher:
                 if callable(getattr(self.watcher, "update_for_remove_filtered_policy", None)):
-                    self.watcher.update_for_remove_filtered_policy(
-                        sec, ptype, field_index, *field_values
-                    )
+                    self.watcher.update_for_remove_filtered_policy(sec, ptype, field_index, *field_values)
                 else:
                     self.watcher.update()
 
