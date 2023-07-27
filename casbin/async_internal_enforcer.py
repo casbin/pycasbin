@@ -16,12 +16,18 @@ import copy
 from casbin.model import Model, FunctionMap
 from casbin.persist import Adapter
 from casbin.core_enforcer import CoreEnforcer
+from casbin.persist.adapters.async_file_adapter import AsyncFileAdapter
 
 
 class AsyncInternalEnforcer(CoreEnforcer):
     """
     AsyncInternalEnforcer = CoreEnforcer + Async Internal API.
     """
+
+    def init_with_file(self, model_path, policy_path):
+        """initializes an enforcer with a model file and a policy file."""
+        a = AsyncFileAdapter(policy_path)
+        self.init_with_adapter(model_path, a)
 
     def init_with_model_and_adapter(self, m, adapter=None):
         """initializes an enforcer with a model and a database adapter."""
