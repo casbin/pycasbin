@@ -13,6 +13,8 @@
 # limitations under the License.
 import copy
 
+from casbin.model import Model, FunctionMap
+from casbin.persist import Adapter
 from casbin.core_enforcer import CoreEnforcer
 
 
@@ -20,6 +22,20 @@ class AsyncInternalEnforcer(CoreEnforcer):
     """
     AsyncInternalEnforcer = CoreEnforcer + Async Internal API.
     """
+
+    def init_with_model_and_adapter(self, m, adapter=None):
+        """initializes an enforcer with a model and a database adapter."""
+
+        if not isinstance(m, Model) or adapter is not None and not isinstance(adapter, Adapter):
+            raise RuntimeError("Invalid parameters for enforcer.")
+
+        self.adapter = adapter
+
+        self.model = m
+        self.model.print_model()
+        self.fm = FunctionMap.load_function_map()
+
+        self._initialize()
 
     async def load_policy(self):
         """async reloads the policy from file/database."""
@@ -176,14 +192,15 @@ class AsyncInternalEnforcer(CoreEnforcer):
 
         if self.adapter and self.auto_save:
             try:
-                old_rules = await self.adapter.update_filtered_policies(sec, ptype, new_rules, field_index, *field_values)
+                old_rules = await self.adapter.update_filtered_policies(sec, ptype, new_rules, field_index,
+                                                                        *field_values)
             except:
                 pass
 
         if not old_rules:
             return False
 
-        is_rule_changed = await self.model.remove_policies(sec, ptype, old_rules)
+        is_rule_changed = self.model.remove_policies(sec, ptype, old_rules)
         self.model.add_policies(sec, ptype, new_rules)
         is_rule_changed = is_rule_changed and len(new_rules) != 0
         if not is_rule_changed:
@@ -223,7 +240,7 @@ class AsyncInternalEnforcer(CoreEnforcer):
             if hasattr(self.adapter, "remove_policies") is False:
                 return False
 
-            result = self.adapter.remove_policies(sec, ptype, rules)
+            result = await self.adapter.remove_policies(sec, ptype, rules)
             if result is False:
                 return False
 
