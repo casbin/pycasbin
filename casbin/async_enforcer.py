@@ -143,7 +143,9 @@ class AsyncEnforcer(AsyncManagementEnforcer):
 
         return res
 
-    async def get_implicit_permissions_for_user(self, user, domain="", filter_policy_dom=True):
+    async def get_implicit_permissions_for_user(
+        self, user, domain="", filter_policy_dom=True
+    ):
         """
         gets implicit permissions for a user or role.
         Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.
@@ -161,9 +163,13 @@ class AsyncEnforcer(AsyncManagementEnforcer):
 
         filter_policy_dom: bool - For given *domain*, policies will be filtered by domain as well. Default = True
         """
-        return await self.get_named_implicit_permissions_for_user("p", user, domain, filter_policy_dom)
+        return await self.get_named_implicit_permissions_for_user(
+            "p", user, domain, filter_policy_dom
+        )
 
-    async def get_named_implicit_permissions_for_user(self, ptype, user, domain="", filter_policy_dom=True):
+    async def get_named_implicit_permissions_for_user(
+        self, ptype, user, domain="", filter_policy_dom=True
+    ):
         """
         gets implicit permissions for a user or role by named policy.
         Compared to get_permissions_for_user(), this function retrieves permissions for inherited roles.

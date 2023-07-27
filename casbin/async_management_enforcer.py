@@ -131,7 +131,8 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
         """async adds authorization rules to the current named policy.
 
         If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
-        Otherwise, the function returns true for the corresponding by adding the new rule."""
+        Otherwise, the function returns true for the corresponding by adding the new rule.
+        """
         return await self._add_policies("p", ptype, rules)
 
     async def update_policy(self, old_rule, new_rule):
@@ -152,11 +153,17 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
 
     async def update_filtered_policies(self, new_rules, field_index, *field_values):
         """async update_filtered_policies deletes old rules and adds new rules."""
-        return await self.update_filtered_named_policies("p", new_rules, field_index, *field_values)
+        return await self.update_filtered_named_policies(
+            "p", new_rules, field_index, *field_values
+        )
 
-    async def update_filtered_named_policies(self, ptype, new_rules, field_index, *field_values):
+    async def update_filtered_named_policies(
+        self, ptype, new_rules, field_index, *field_values
+    ):
         """async update_filtered_named_policies deletes old rules and adds new rules."""
-        return await self._update_filtered_policies("p", ptype, new_rules, field_index, *field_values)
+        return await self._update_filtered_policies(
+            "p", ptype, new_rules, field_index, *field_values
+        )
 
     async def remove_policy(self, *params):
         """async removes an authorization rule from the current policy."""
@@ -187,7 +194,9 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
 
     async def remove_filtered_named_policy(self, ptype, field_index, *field_values):
         """async removes an authorization rule from the current named policy, field filters can be specified."""
-        return await self._remove_filtered_policy("p", ptype, field_index, *field_values)
+        return await self._remove_filtered_policy(
+            "p", ptype, field_index, *field_values
+        )
 
     def has_grouping_policy(self, *params):
         """determines whether a role inheritance rule exists."""
@@ -236,17 +245,22 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
             rules.append(list(params))
 
         if self.auto_build_role_links:
-            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules)
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules
+            )
         return rule_added
 
     async def add_named_grouping_policies(self, ptype, rules):
         """async adds named role inheritance rules to the current policy.
 
         If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
-        Otherwise, the function returns true for the corresponding policy rule by adding the new rule."""
+        Otherwise, the function returns true for the corresponding policy rule by adding the new rule.
+        """
         rules_added = await self._add_policies("g", ptype, rules)
         if self.auto_build_role_links:
-            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules)
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules
+            )
 
         return rules_added
 
@@ -260,7 +274,9 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
 
     async def remove_filtered_grouping_policy(self, field_index, *field_values):
         """async removes a role inheritance rule from the current policy, field filters can be specified."""
-        return await self.remove_filtered_named_grouping_policy("g", field_index, *field_values)
+        return await self.remove_filtered_named_grouping_policy(
+            "g", field_index, *field_values
+        )
 
     async def remove_named_grouping_policy(self, ptype, *params):
         """async removes a role inheritance rule from the current named policy."""
@@ -275,7 +291,9 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
             rules.append(list(params))
 
         if self.auto_build_role_links and rule_removed:
-            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules)
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules
+            )
         return rule_removed
 
     async def remove_named_grouping_policies(self, ptype, rules):
@@ -283,13 +301,19 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
         rules_removed = await self._remove_policies("g", ptype, rules)
 
         if self.auto_build_role_links and rules_removed:
-            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules)
+            self.model.build_incremental_role_links(
+                self.rm_map[ptype], PolicyOp.Policy_remove, "g", ptype, rules
+            )
 
         return rules_removed
 
-    async def remove_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
+    async def remove_filtered_named_grouping_policy(
+        self, ptype, field_index, *field_values
+    ):
         """async removes a role inheritance rule from the current named policy, field filters can be specified."""
-        rule_removed = await self._remove_filtered_policy_returns_effects("g", ptype, field_index, *field_values)
+        rule_removed = await self._remove_filtered_policy_returns_effects(
+            "g", ptype, field_index, *field_values
+        )
 
         if self.auto_build_role_links and rule_removed:
             self.model.build_incremental_role_links(

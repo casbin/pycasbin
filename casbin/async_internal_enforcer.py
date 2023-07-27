@@ -32,7 +32,11 @@ class AsyncInternalEnforcer(CoreEnforcer):
     def init_with_model_and_adapter(self, m, adapter=None):
         """initializes an enforcer with a model and a database adapter."""
 
-        if not isinstance(m, Model) or adapter is not None and not isinstance(adapter, Adapter):
+        if (
+            not isinstance(m, Model)
+            or adapter is not None
+            and not isinstance(adapter, Adapter)
+        ):
             raise RuntimeError("Invalid parameters for enforcer.")
 
         self.adapter = adapter
@@ -50,7 +54,6 @@ class AsyncInternalEnforcer(CoreEnforcer):
         new_model.clear_policy()
 
         try:
-
             await self.adapter.load_policy(new_model)
 
             new_model.sort_policies_by_subject_hierarchy()
@@ -60,7 +63,6 @@ class AsyncInternalEnforcer(CoreEnforcer):
             new_model.print_policy()
 
             if self.auto_build_role_links:
-
                 need_to_rebuild = True
                 for rm in self.rm_map.values():
                     rm.clear()
@@ -70,7 +72,6 @@ class AsyncInternalEnforcer(CoreEnforcer):
             self.model = new_model
 
         except Exception as e:
-
             if self.auto_build_role_links and need_to_rebuild:
                 self.build_role_links()
 
@@ -181,8 +182,9 @@ class AsyncInternalEnforcer(CoreEnforcer):
             return rules_updated
 
         if self.adapter and self.auto_save:
-
-            result = await self.adapter.update_policies(sec, ptype, old_rules, new_rules)
+            result = await self.adapter.update_policies(
+                sec, ptype, old_rules, new_rules
+            )
             if result is False:
                 return False
 
@@ -191,15 +193,20 @@ class AsyncInternalEnforcer(CoreEnforcer):
 
         return rules_updated
 
-    async def _update_filtered_policies(self, sec, ptype, new_rules, field_index, *field_values):
+    async def _update_filtered_policies(
+        self, sec, ptype, new_rules, field_index, *field_values
+    ):
         """async deletes old rules and adds new rules."""
 
-        old_rules = self.model.get_filtered_policy(sec, ptype, field_index, *field_values)
+        old_rules = self.model.get_filtered_policy(
+            sec, ptype, field_index, *field_values
+        )
 
         if self.adapter and self.auto_save:
             try:
-                old_rules = await self.adapter.update_filtered_policies(sec, ptype, new_rules, field_index,
-                                                                        *field_values)
+                old_rules = await self.adapter.update_filtered_policies(
+                    sec, ptype, new_rules, field_index, *field_values
+                )
             except:
                 pass
 
@@ -260,31 +267,45 @@ class AsyncInternalEnforcer(CoreEnforcer):
 
     async def _remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """async removes rules based on field filters from the current policy."""
-        rule_removed = self.model.remove_filtered_policy(sec, ptype, field_index, *field_values)
+        rule_removed = self.model.remove_filtered_policy(
+            sec, ptype, field_index, *field_values
+        )
         if not rule_removed:
             return rule_removed
 
         if self.adapter and self.auto_save:
-            result = await self.adapter.remove_filtered_policy(sec, ptype, field_index, *field_values)
+            result = await self.adapter.remove_filtered_policy(
+                sec, ptype, field_index, *field_values
+            )
             if result is False:
                 return False
 
             if self.watcher and self.auto_notify_watcher:
-                if callable(getattr(self.watcher, "update_for_remove_filtered_policy", None)):
-                    self.watcher.update_for_remove_filtered_policy(sec, ptype, field_index, *field_values)
+                if callable(
+                        getattr(self.watcher, "update_for_remove_filtered_policy", None)
+                ):
+                    self.watcher.update_for_remove_filtered_policy(
+                        sec, ptype, field_index, *field_values
+                    )
                 else:
                     self.watcher.update()
 
         return rule_removed
 
-    async def _remove_filtered_policy_returns_effects(self, sec, ptype, field_index, *field_values):
+    async def _remove_filtered_policy_returns_effects(
+        self, sec, ptype, field_index, *field_values
+    ):
         """async removes rules based on field filters from the current policy."""
-        rule_removed = self.model.remove_filtered_policy_returns_effects(sec, ptype, field_index, *field_values)
+        rule_removed = self.model.remove_filtered_policy_returns_effects(
+            sec, ptype, field_index, *field_values
+        )
         if len(rule_removed) == 0:
             return rule_removed
 
         if self.adapter and self.auto_save:
-            result = await self.adapter.remove_filtered_policy(sec, ptype, field_index, *field_values)
+            result = await self.adapter.remove_filtered_policy(
+                sec, ptype, field_index, *field_values
+            )
             if result is False:
                 return False
 
