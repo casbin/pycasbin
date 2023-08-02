@@ -133,7 +133,7 @@ class Model(Policy):
                 if domain_index != -1:
                     domain = policy[domain_index]
                 name = self.get_name_with_domain(domain, policy[sub_index])
-                return subject_hierarchy_map[name]
+                return subject_hierarchy_map.get(name, 0)
 
             assertion.policy = sorted(assertion.policy, key=compare_policy, reverse=True)
             for i, policy in enumerate(assertion.policy):
