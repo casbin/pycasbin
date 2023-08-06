@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.23.0](https://github.com/casbin/pycasbin/compare/v1.22.0...v1.23.0) (2023-08-06)
+
+
+### Features
+
+* add AsyncEnforcer to pycasbin ([#307](https://github.com/casbin/pycasbin/issues/307)) ([4192dc2](https://github.com/casbin/pycasbin/commit/4192dc22dab3673b44c87d7dee059bd790c12c60))
+
 # [1.22.0](https://github.com/casbin/pycasbin/compare/v1.21.0...v1.22.0) (2023-07-14)
 
 
