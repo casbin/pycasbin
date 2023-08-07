@@ -13,7 +13,7 @@ PyCasbin
 
 <a href="https://casdoor.org/"><img src="https://user-images.githubusercontent.com/3787410/147868267-6ac74908-5654-4f9c-ac79-8852af9ff925.png" alt="casdoor" style="width: 50%; height: 50%"/></a>
 
-**News**: Async version PyCasbin can be found at: https://pypi.org/project/asynccasbin/
+**News**: Async is now supported by Pycasbin >= 1.23.0!
 
 **News**: still worry about how to write the correct Casbin policy? ``Casbin online editor`` is coming to help! Try it at: http://casbin.org/editor/
 
@@ -44,6 +44,7 @@ production-ready | production-ready | beta-test | production-ready
 - [Policy management](#policy-management)
 - [Policy persistence](#policy-persistence)
 - [Role manager](#role-manager)
+- [Async Enforcer](#async-enforcer)
 - [Benchmarks](#benchmarks)
 - [Examples](#examples)
 - [Middlewares](#middlewares)
@@ -210,6 +211,63 @@ https://casbin.org/docs/adapters
 ## Role manager
 
 https://casbin.org/docs/role-managers
+
+## Async Enforcer
+
+If your code use `async` / `await` and is heavily dependent on I/O operations, you can adopt Async Enforcer!
+
+1. Create an async engine and new a Casbin AsyncEnforcer with a model file and an async Pycasbin adapter:
+
+```python
+import asyncio
+import os
+
+import casbin
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+
+from casbin_async_sqlalchemy_adapter import Adapter, CasbinRule
+
+
+async def get_enforcer():
+    engine = create_async_engine("sqlite+aiosqlite://", future=True)
+    adapter = Adapter(engine)
+    await adapter.create_table()
+
+    async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+    async with async_session() as s:
+        s.add(CasbinRule(ptype="p", v0="alice", v1="data1", v2="read"))
+        s.add(CasbinRule(ptype="p", v0="bob", v1="data2", v2="write"))
+        s.add(CasbinRule(ptype="p", v0="data2_admin", v1="data2", v2="read"))
+        s.add(CasbinRule(ptype="p", v0="data2_admin", v1="data2", v2="write"))
+        s.add(CasbinRule(ptype="g", v0="alice", v1="data2_admin"))
+        await s.commit()
+
+    e = casbin.AsyncEnforcer("path/to/model.conf", adapter)
+    await e.load_policy()
+    return e
+```
+
+Note: you can see all supported adapters in [Adapters | Casbin](https://casbin.org/docs/adapters).
+
+2. Add an enforcement hook into your code right before the access happens:
+
+```python
+async def main():
+    e = await get_enforcer()
+    if e.enforce("alice", "data1", "read"):
+        print("alice can read data1")
+    else:
+        print("alice can not read data1")
+```
+
+3. Run the code:
+
+```python
+asyncio.run(main())
+```
+
+4. Please refer to the ``tests`` files for more usage.
 
 ## Benchmarks
 
