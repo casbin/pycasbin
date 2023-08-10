@@ -118,11 +118,12 @@ class Policy:
                         print(e)
 
                     if idx > idx_insert:
+                        tmp = assertion.policy[i]
                         assertion.policy[i] = assertion.policy[i - 1]
+                        assertion.policy[i - 1] = tmp
                     else:
                         break
 
-                assertion.policy[i] = rule
                 assertion.policy_map[DEFAULT_SEP.join(rule)] = i
 
             except Exception as e:
