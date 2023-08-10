@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.23.1](https://github.com/casbin/pycasbin/compare/v1.23.0...v1.23.1) (2023-08-10)
+
+
+### Bug Fixes
+
+* fix bug in add policy for priority effectors ([#313](https://github.com/casbin/pycasbin/issues/313)) ([8d30537](https://github.com/casbin/pycasbin/commit/8d30537149eeea433441ca62802f3bf06e1fd42c))
+
 # [1.23.0](https://github.com/casbin/pycasbin/compare/v1.22.0...v1.23.0) (2023-08-06)
 
 
