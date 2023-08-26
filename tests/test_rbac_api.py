@@ -14,6 +14,7 @@
 from unittest import IsolatedAsyncioTestCase
 
 import casbin
+from casbin.constant.constants import DOMAIN_INDEX
 from tests.test_enforcer import get_examples, TestCaseBase
 
 
@@ -254,7 +255,6 @@ class TestRbacApi(TestCaseBase):
         self.assertEqual(e.get_implicit_permissions_for_user("bob", "domain1"), [])
 
     def test_enforce_implicit_permissions_api_with_domain_matching_function(self):
-
         e = self.get_enforcer(
             get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
             get_examples("rbac_with_domain_and_policy_pattern_policy.csv"),
@@ -404,6 +404,15 @@ class TestRbacApi(TestCaseBase):
         self.assertFalse(e.enforce("bob", "domain2", "data1", "write"))
         self.assertTrue(e.enforce("bob", "domain2", "data2", "read"))
         self.assertTrue(e.enforce("bob", "domain2", "data2", "write"))
+
+    def test_set_field_index(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy.csv"),
+        )
+        self.assertEqual(e.get_field_index("p", DOMAIN_INDEX), 1)
+        e.set_field_index("p", DOMAIN_INDEX, 2)
+        self.assertEqual(e.get_field_index("p", DOMAIN_INDEX), 2)
 
 
 class TestRbacApiSynced(TestRbacApi):
@@ -686,7 +695,6 @@ class TestRbacApiAsync(IsolatedAsyncioTestCase):
         self.assertEqual(await e.get_implicit_permissions_for_user("bob", "domain1"), [])
 
     async def test_enforce_implicit_permissions_api_with_domain_matching_function(self):
-
         e = self.get_enforcer(
             get_examples("rbac_with_domain_and_policy_pattern_model.conf"),
             get_examples("rbac_with_domain_and_policy_pattern_policy.csv"),
@@ -847,3 +855,12 @@ class TestRbacApiAsync(IsolatedAsyncioTestCase):
         self.assertFalse(e.enforce("bob", "domain2", "data1", "write"))
         self.assertTrue(e.enforce("bob", "domain2", "data2", "read"))
         self.assertTrue(e.enforce("bob", "domain2", "data2", "write"))
+
+    async def test_set_field_index(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy.csv"),
+        )
+        self.assertEqual(await e.get_field_index("p", DOMAIN_INDEX), 1)
+        await e.set_field_index("p", DOMAIN_INDEX, 2)
+        self.assertEqual(await e.get_field_index("p", DOMAIN_INDEX), 2)
