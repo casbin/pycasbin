@@ -628,3 +628,12 @@ class SyncedEnforcer:
 
     def new_enforce_context(self, suffix: str) -> "EnforceContext":
         return self._e.new_enforce_context(suffix)
+
+    def get_field_index(self, ptype, field):
+        """gets the index of the field name."""
+        return self._e.model.get_field_index(ptype, field)
+
+    def set_field_index(self, ptype, field, index):
+        """sets the index of the field name."""
+        assertion = self._e.model["p"][ptype]
+        assertion.field_index_map[field] = index

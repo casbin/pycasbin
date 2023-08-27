@@ -19,18 +19,25 @@ from .default_effectors import (
     PriorityEffector,
 )
 from .effector import Effector
+from ..constant.constants import (
+    ALLOW_OVERRIDE_EFFECT,
+    SUBJECT_PRIORITY_EFFECT,
+    PRIORITY_EFFECT,
+    DENY_OVERRIDE_EFFECT,
+    ALLOW_AND_DENY_EFFECT,
+)
 
 
 def get_effector(expr):
     """creates an effector based on the current policy effect expression"""
 
-    if expr == "some(where (p_eft == allow))":
+    if expr == ALLOW_OVERRIDE_EFFECT:
         return AllowOverrideEffector()
-    elif expr == "!some(where (p_eft == deny))":
+    elif expr == DENY_OVERRIDE_EFFECT:
         return DenyOverrideEffector()
-    elif expr == "some(where (p_eft == allow)) && !some(where (p_eft == deny))":
+    elif expr == ALLOW_AND_DENY_EFFECT:
         return AllowAndDenyEffector()
-    elif expr == "priority(p_eft) || deny" or expr == "subjectPriority(p_eft) || deny":
+    elif expr == PRIORITY_EFFECT or expr == SUBJECT_PRIORITY_EFFECT:
         return PriorityEffector()
     else:
         raise RuntimeError("unsupported effect")

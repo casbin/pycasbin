@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import logging
+
 from casbin.model.policy_op import PolicyOp
 
 
@@ -26,6 +27,7 @@ class Assertion:
         self.rm = None
         self.priority_index: int = -1
         self.policy_map: dict = {}
+        self.field_index_map: dict = {}
 
     def build_role_links(self, rm):
         self.rm = rm
