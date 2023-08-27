@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.24.0](https://github.com/casbin/pycasbin/compare/v1.23.1...v1.24.0) (2023-08-27)
+
+
+### Features
+
+* add field_index_map and constant ([#314](https://github.com/casbin/pycasbin/issues/314)) ([e42f3da](https://github.com/casbin/pycasbin/commit/e42f3da582f6d864c1c70b00679af9da560fe0f4))
+
 ## [1.23.1](https://github.com/casbin/pycasbin/compare/v1.23.0...v1.23.1) (2023-08-10)
 
 
