@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import Assertion
 from casbin import util, config
+from . import Assertion
 from .policy import Policy
 
 DEFAULT_DOMAIN = ""
@@ -21,7 +21,6 @@ DEFAULT_SEPARATOR = "::"
 
 
 class Model(Policy):
-
     section_name_map = {
         "r": "request_definition",
         "p": "policy_definition",
@@ -207,3 +206,23 @@ class Model(Policy):
         s[-1] = s[-1].strip()
 
         return "".join(s)
+
+    def get_field_index(self, ptype, field):
+        """get_field_index gets the index of the field for a ptype in a policy,
+        return -1 if the field does not exist."""
+        assertion = self["p"][ptype]
+        if field in assertion.field_index_map:
+            return assertion.field_index_map[field]
+
+        pattern = f"{ptype}_{field}"
+        index = -1
+        for i, token in enumerate(assertion.tokens):
+            if token == pattern:
+                index = i
+                break
+
+        if index == -1:
+            return index
+
+        assertion.field_index_map[field] = index
+        return index

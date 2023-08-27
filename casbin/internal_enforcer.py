@@ -67,7 +67,6 @@ class InternalEnforcer(CoreEnforcer):
             return rule_updated
 
         if self.adapter and self.auto_save:
-
             if self.adapter.update_policy(sec, ptype, old_rule, new_rule) is False:
                 return False
 
@@ -84,7 +83,6 @@ class InternalEnforcer(CoreEnforcer):
             return rules_updated
 
         if self.adapter and self.auto_save:
-
             if self.adapter.update_policies(sec, ptype, old_rules, new_rules) is False:
                 return False
 
@@ -189,3 +187,12 @@ class InternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rule_removed
+
+    def get_field_index(self, ptype, field):
+        """gets the index of the field name."""
+        return self.model.get_field_index(ptype, field)
+
+    def set_field_index(self, ptype, field, index):
+        """sets the index of the field name."""
+        assertion = self.model["p"][ptype]
+        assertion.field_index_map[field] = index
