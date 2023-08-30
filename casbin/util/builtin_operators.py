@@ -18,6 +18,7 @@ import re
 KEY_MATCH2_PATTERN = re.compile(r"(.*?):[^\/]+(.*?)")
 KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+?}(.*?)")
 KEY_MATCH4_PATTERN = re.compile(r"{([^/]+)}")
+KEY_MATCH5_PATTERN = re.compile(r"{[^/]+}")
 
 
 def key_match(key1, key2):
@@ -208,8 +209,7 @@ def key_match5(key1: str, key2: str) -> bool:
 
     key2 = key2.replace("/*", "/.*")
 
-    re_pattern = r"{[^/]+}"
-    key2 = re.sub(re_pattern, r"[^/]+", key2)
+    key2 = KEY_MATCH5_PATTERN.sub(r"[^/]+", key2, 0)
 
     return regex_match(key1, "^" + key2 + "$")
 
