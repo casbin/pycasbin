@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from unittest import TestCase
+
 from casbin import util
 
 
@@ -189,6 +190,43 @@ class TestBuiltinOperators(TestCase):
         self.assertFalse(util.key_match4_func("/parent/123/child/456", "/parent/{id}/child/{id}/book/{id}"))
 
         self.assertFalse(util.key_match4_func("/parent/123/child/123", "/parent/{i/d}/child/{i/d}"))
+
+    def test_key_match5_func(self):
+        self.assertTrue(util.key_match5_func("/parent/child?status=1&type=2", "/parent/child"))
+        self.assertFalse(util.key_match5_func("/parent?status=1&type=2", "/parent/child"))
+
+        self.assertTrue(util.key_match5_func("/parent/child/?status=1&type=2", "/parent/child/"))
+        self.assertFalse(util.key_match5_func("/parent/child/?status=1&type=2", "/parent/child"))
+        self.assertFalse(util.key_match5_func("/parent/child?status=1&type=2", "/parent/child/"))
+
+        self.assertTrue(util.key_match5_func("/foo", "/foo"))
+        self.assertTrue(util.key_match5_func("/foo", "/foo*"))
+        self.assertFalse(util.key_match5_func("/foo", "/foo/*"))
+        self.assertFalse(util.key_match5_func("/foo/bar", "/foo"))
+        self.assertFalse(util.key_match5_func("/foo/bar", "/foo*"))
+        self.assertTrue(util.key_match5_func("/foo/bar", "/foo/*"))
+        self.assertFalse(util.key_match5_func("/foobar", "/foo"))
+        self.assertFalse(util.key_match5_func("/foobar", "/foo*"))
+        self.assertFalse(util.key_match5_func("/foobar", "/foo/*"))
+
+        self.assertFalse(util.key_match5_func("/", "/{resource}"))
+        self.assertTrue(util.key_match5_func("/resource1", "/{resource}"))
+        self.assertFalse(util.key_match5_func("/myid", "/{id}/using/{resId}"))
+        self.assertTrue(util.key_match5_func("/myid/using/myresid", "/{id}/using/{resId}"))
+
+        self.assertFalse(util.key_match5_func("/proxy/myid", "/proxy/{id}/*"))
+        self.assertTrue(util.key_match5_func("/proxy/myid/", "/proxy/{id}/*"))
+        self.assertTrue(util.key_match5_func("/proxy/myid/res", "/proxy/{id}/*"))
+        self.assertTrue(util.key_match5_func("/proxy/myid/res/res2", "/proxy/{id}/*"))
+        self.assertTrue(util.key_match5_func("/proxy/myid/res/res2/res3", "/proxy/{id}/*"))
+        self.assertFalse(util.key_match5_func("/proxy/", "/proxy/{id}/*"))
+
+        self.assertFalse(util.key_match5_func("/proxy/myid?status=1&type=2", "/proxy/{id}/*"))
+        self.assertTrue(util.key_match5_func("/proxy/myid/", "/proxy/{id}/*"))
+        self.assertTrue(util.key_match5_func("/proxy/myid/res?status=1&type=2", "/proxy/{id}/*"))
+        self.assertTrue(util.key_match5_func("/proxy/myid/res/res2?status=1&type=2", "/proxy/{id}/*"))
+        self.assertTrue(util.key_match5_func("/proxy/myid/res/res2/res3?status=1&type=2", "/proxy/{id}/*"))
+        self.assertFalse(util.key_match5_func("/proxy/", "/proxy/{id}/*"))
 
     def test_regex_match(self):
         self.assertTrue(util.regex_match_func("/topic/create", "/topic/create"))

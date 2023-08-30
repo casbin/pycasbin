@@ -18,6 +18,7 @@ import re
 KEY_MATCH2_PATTERN = re.compile(r"(.*?):[^\/]+(.*?)")
 KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+?}(.*?)")
 KEY_MATCH4_PATTERN = re.compile(r"{([^/]+)}")
+KEY_MATCH5_PATTERN = re.compile(r"{[^/]+}")
 
 
 def key_match(key1, key2):
@@ -192,6 +193,32 @@ def key_match4_func(*args) -> bool:
     name2 = args[1]
 
     return key_match4(name1, name2)
+
+
+def key_match5(key1: str, key2: str) -> bool:
+    """
+    key_match5 determines whether key1 matches the pattern of key2 (similar to RESTful path), key2 can contain a *
+    For example,
+    - "/foo/bar?status=1&type=2" matches "/foo/bar"
+    - "/parent/child1" and "/parent/child1" matches "/parent/*"
+    - "/parent/child1?status=1" matches "/parent/*"
+    """
+    i = key1.find("?")
+    if i != -1:
+        key1 = key1[:i]
+
+    key2 = key2.replace("/*", "/.*")
+
+    key2 = KEY_MATCH5_PATTERN.sub(r"[^/]+", key2, 0)
+
+    return regex_match(key1, "^" + key2 + "$")
+
+
+def key_match5_func(*args) -> bool:
+    name1 = args[0]
+    name2 = args[1]
+
+    return key_match5(name1, name2)
 
 
 def regex_match(key1, key2):
