@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.25.0](https://github.com/casbin/pycasbin/compare/v1.24.0...v1.25.0) (2023-08-30)
+
+
+### Features
+
+* add key_match5 function for matcher ([#315](https://github.com/casbin/pycasbin/issues/315)) ([7d29109](https://github.com/casbin/pycasbin/commit/7d29109d67d8f60c6be9fca6b4aaff523a8c156e))
+
 # [1.24.0](https://github.com/casbin/pycasbin/compare/v1.23.1...v1.24.0) (2023-08-27)
 
 
