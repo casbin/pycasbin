@@ -253,3 +253,17 @@ class AsyncEnforcer(AsyncManagementEnforcer):
     async def get_named_permissions_for_user_in_domain(self, ptype, user, domain):
         """gets permissions for a user or role with named policy inside domain."""
         return self.get_filtered_named_policy(ptype, 0, user, domain)
+
+    async def get_all_roles_by_domain(self, domain):
+        """gets all roles associated with the domain.
+        note: Not applicable to Domains with inheritance relationship  (implicit roles)"""
+        g = self.model.model["g"]["g"]
+        policies = g.policy
+        roles = []
+        for policy in policies:
+            if policy[len(policy) - 1] == domain:
+                role = policy[len(policy) - 2]
+                if role not in roles:
+                    roles.append(role)
+
+        return roles
