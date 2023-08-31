@@ -637,3 +637,9 @@ class SyncedEnforcer:
         """sets the index of the field name."""
         assertion = self._e.model["p"][ptype]
         assertion.field_index_map[field] = index
+
+    def get_all_roles_by_domain(self, domain):
+        """gets all roles associated with the domain.
+        note: Not applicable to Domains with inheritance relationship  (implicit roles)"""
+        with self._rl:
+            return self._e.get_all_roles_by_domain(domain)

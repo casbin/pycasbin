@@ -376,6 +376,22 @@ class TestRbacApi(TestCaseBase):
         self.assertEqual(e.get_roles_for_user_in_domain("admin", "domain2"), [])
         self.assertEqual(e.get_roles_for_user_in_domain("non_exist", "domain2"), [])
 
+    def test_get_all_roles_by_domain(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy.csv"),
+        )
+        self.assertEqual(e.get_all_roles_by_domain("domain1"), ["admin"])
+        self.assertEqual(e.get_all_roles_by_domain("domain2"), ["admin"])
+
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy2.csv"),
+        )
+        self.assertEqual(e.get_all_roles_by_domain("domain1"), ["admin"])
+        self.assertEqual(e.get_all_roles_by_domain("domain2"), ["admin"])
+        self.assertEqual(e.get_all_roles_by_domain("domain3"), ["user"])
+
     def test_implicit_user_api(self):
         e = self.get_enforcer(
             get_examples("rbac_model.conf"),
@@ -823,6 +839,26 @@ class TestRbacApiAsync(IsolatedAsyncioTestCase):
         self.assertEqual(await e.get_roles_for_user_in_domain("bob", "domain2"), ["admin"])
         self.assertEqual(await e.get_roles_for_user_in_domain("admin", "domain2"), [])
         self.assertEqual(await e.get_roles_for_user_in_domain("non_exist", "domain2"), [])
+
+    async def test_get_all_roles_by_domain(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy.csv"),
+        )
+        await e.load_policy()
+
+        self.assertEqual(await e.get_all_roles_by_domain("domain1"), ["admin"])
+        self.assertEqual(await e.get_all_roles_by_domain("domain2"), ["admin"])
+
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy2.csv"),
+        )
+        await e.load_policy()
+
+        self.assertEqual(await e.get_all_roles_by_domain("domain1"), ["admin"])
+        self.assertEqual(await e.get_all_roles_by_domain("domain2"), ["admin"])
+        self.assertEqual(await e.get_all_roles_by_domain("domain3"), ["user"])
 
     async def test_implicit_user_api(self):
         e = self.get_enforcer(
