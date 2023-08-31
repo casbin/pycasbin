@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.26.0](https://github.com/casbin/pycasbin/compare/v1.25.0...v1.26.0) (2023-08-31)
+
+
+### Features
+
+* add get_all_roles_by_domain api ([#316](https://github.com/casbin/pycasbin/issues/316)) ([22507ca](https://github.com/casbin/pycasbin/commit/22507ca7cc47746a03a97b1d051e209ea4ef96d1))
+
 # [1.25.0](https://github.com/casbin/pycasbin/compare/v1.24.0...v1.25.0) (2023-08-30)
 
 
