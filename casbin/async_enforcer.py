@@ -259,11 +259,11 @@ class AsyncEnforcer(AsyncManagementEnforcer):
         note: Not applicable to Domains with inheritance relationship  (implicit roles)"""
         g = self.model.model["g"]["g"]
         policies = g.policy
-        roles = []
+        roles = set()
         for policy in policies:
             if policy[len(policy) - 1] == domain:
                 role = policy[len(policy) - 2]
                 if role not in roles:
-                    roles.append(role)
+                    roles.add(role)
 
-        return roles
+        return list(roles)
