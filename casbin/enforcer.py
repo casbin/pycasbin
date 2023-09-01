@@ -276,3 +276,35 @@ class Enforcer(ManagementEnforcer):
                     roles.add(role)
 
         return list(roles)
+
+    def get_implicit_users_for_resource(self, resource):
+        """gets implicit user based on resource.
+        for example:
+            p, alice, data1, read
+            p, bob, data2, write
+            p, data2_admin, data2, read
+            p, data2_admin, data2, write
+            g, alice, data2_admin
+        get_implicit_users_for_resource("data2") will return [[bob data2 write] [alice data2 read] [alice data2 write]]
+        get_implicit_users_for_resource("data1") will return [[alice data1 read]]
+        Note: only users will be returned, roles (2nd arg in "g") will be excluded."""
+        permissions = []
+        subject_index = self.get_field_index("p", "sub")
+        object_index = self.get_field_index("p", "obj")
+        rm = self.get_role_manager()
+        roles = self.get_all_roles()
+
+        for rule in self.get_policy():
+            if rule[object_index] == resource:
+                sub = rule[subject_index]
+                if sub not in roles:
+                    permissions.append(rule)
+                else:
+                    users = rm.get_users(sub)
+                    for user in users:
+                        implicit_rule = rule
+                        implicit_rule[subject_index] = user
+                        permissions.append(implicit_rule)
+
+        permissions = [list(t) for t in set(tuple(_) for _ in permissions)]
+        return permissions
