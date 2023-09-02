@@ -643,3 +643,17 @@ class SyncedEnforcer:
         note: Not applicable to Domains with inheritance relationship  (implicit roles)"""
         with self._rl:
             return self._e.get_all_roles_by_domain(domain)
+
+    def get_implicit_users_for_resource(self, resource):
+        """gets implicit user based on resource.
+        for example:
+            p, alice, data1, read
+            p, bob, data2, write
+            p, data2_admin, data2, read
+            p, data2_admin, data2, write
+            g, alice, data2_admin
+        get_implicit_users_for_resource("data2") will return [[bob data2 write] [alice data2 read] [alice data2 write]]
+        get_implicit_users_for_resource("data1") will return [[alice data1 read]]
+        Note: only users will be returned, roles (2nd arg in "g") will be excluded."""
+        with self._rl:
+            return self._e.get_implicit_users_for_resource(resource)
