@@ -111,7 +111,6 @@ class Policy:
 
                 i = len(assertion.policy) - 1
                 for i in range(i, 0, -1):
-
                     try:
                         idx = int(assertion.policy[i - 1][assertion.priority_index])
                     except Exception as e:
