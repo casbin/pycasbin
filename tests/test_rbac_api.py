@@ -403,6 +403,53 @@ class TestRbacApi(TestCaseBase):
         self.assertEqual(["alice"], e.get_implicit_users_for_permission("data2", "read"))
         self.assertEqual(["alice", "bob"], e.get_implicit_users_for_permission("data2", "write"))
 
+    def test_get_implicit_users_for_resource(self):
+        e = self.get_enforcer(
+            get_examples("rbac_model.conf"),
+            get_examples("rbac_policy.csv"),
+        )
+
+        self.assertEqual([["alice", "data1", "read"]], e.get_implicit_users_for_resource("data1"))
+        self.assertEqual(
+            [
+                ["bob", "data2", "write"],
+                ["alice", "data2", "read"],
+                ["alice", "data2", "write"],
+            ],
+            e.get_implicit_users_for_resource("data2"),
+        )
+
+        # test duplicate permissions
+        e.add_grouping_policy("alice", "data2_admin_2")
+        e.add_policies([["data2_admin_2", "data2", "read"], ["data2_admin_2", "data2", "write"]])
+        self.assertEqual(
+            [
+                ["bob", "data2", "write"],
+                ["alice", "data2", "read"],
+                ["alice", "data2", "write"],
+            ],
+            e.get_implicit_users_for_resource("data2"),
+        )
+
+    def test_get_implicit_users_for_resource_by_domain(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy.csv"),
+        )
+
+        self.assertEqual(
+            [["alice", "domain1", "data1", "read"], ["alice", "domain1", "data1", "write"]],
+            e.get_implicit_users_for_resource_by_domain("data1", "domain1"),
+        )
+        self.assertEqual(
+            [],
+            e.get_implicit_users_for_resource_by_domain("data2", "domain1"),
+        )
+        self.assertEqual(
+            [["bob", "domain2", "data2", "read"], ["bob", "domain2", "data2", "write"]],
+            e.get_implicit_users_for_resource_by_domain("data2", "domain2"),
+        )
+
     def test_domain_match_model(self):
         e = self.get_enforcer(
             get_examples("rbac_with_domain_pattern_model.conf"),
@@ -778,7 +825,6 @@ class TestRbacApiAsync(IsolatedAsyncioTestCase):
         )
         await e.load_policy()
 
-        print(e.get_users_for_role_in_domain("admin", "domain1"))
         self.assertTrue(await e.get_users_for_role_in_domain("admin", "domain1") == ["alice"])
         self.assertTrue(await e.get_users_for_role_in_domain("non_exist", "domain1") == [])
         self.assertTrue(await e.get_users_for_role_in_domain("admin", "domain2") == ["bob"])
@@ -871,6 +917,57 @@ class TestRbacApiAsync(IsolatedAsyncioTestCase):
         self.assertEqual(["alice"], await e.get_implicit_users_for_permission("data1", "write"))
         self.assertEqual(["alice"], await e.get_implicit_users_for_permission("data2", "read"))
         self.assertEqual(["alice", "bob"], await e.get_implicit_users_for_permission("data2", "write"))
+
+    async def test_get_implicit_users_for_resource(self):
+        e = self.get_enforcer(
+            get_examples("rbac_model.conf"),
+            get_examples("rbac_policy.csv"),
+        )
+        await e.load_policy()
+
+        self.assertEqual([["alice", "data1", "read"]], await e.get_implicit_users_for_resource("data1"))
+        result = await e.get_implicit_users_for_resource("data2")
+        self.assertEqual(
+            [
+                ["bob", "data2", "write"],
+                ["alice", "data2", "read"],
+                ["alice", "data2", "write"],
+            ],
+            result,
+        )
+
+        # test duplicate permissions
+        await e.add_grouping_policy("alice", "data2_admin_2")
+        await e.add_policies([["data2_admin_2", "data2", "read"], ["data2_admin_2", "data2", "write"]])
+        result = await e.get_implicit_users_for_resource("data2")
+        self.assertEqual(
+            [
+                ["bob", "data2", "write"],
+                ["alice", "data2", "read"],
+                ["alice", "data2", "write"],
+            ],
+            result,
+        )
+
+    async def test_get_implicit_users_for_resource_by_domain(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy.csv"),
+        )
+        await e.load_policy()
+
+        self.assertEqual(
+            [["alice", "domain1", "data1", "read"], ["alice", "domain1", "data1", "write"]],
+            await e.get_implicit_users_for_resource_by_domain("data1", "domain1"),
+        )
+        self.assertEqual(
+            [],
+            await e.get_implicit_users_for_resource_by_domain("data2", "domain1"),
+        )
+        self.assertEqual(
+            [["bob", "domain2", "data2", "read"], ["bob", "domain2", "data2", "write"]],
+            await e.get_implicit_users_for_resource_by_domain("data2", "domain2"),
+        )
 
     async def test_domain_match_model(self):
         e = self.get_enforcer(
