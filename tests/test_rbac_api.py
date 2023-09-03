@@ -806,7 +806,6 @@ class TestRbacApiAsync(IsolatedAsyncioTestCase):
         )
         await e.load_policy()
 
-        print(e.get_users_for_role_in_domain("admin", "domain1"))
         self.assertTrue(await e.get_users_for_role_in_domain("admin", "domain1") == ["alice"])
         self.assertTrue(await e.get_users_for_role_in_domain("non_exist", "domain1") == [])
         self.assertTrue(await e.get_users_for_role_in_domain("admin", "domain2") == ["bob"])
@@ -911,11 +910,11 @@ class TestRbacApiAsync(IsolatedAsyncioTestCase):
         result = await e.get_implicit_users_for_resource("data2")
         self.assertEqual(
             [
+                ["bob", "data2", "write"],
                 ["alice", "data2", "read"],
                 ["alice", "data2", "write"],
-                ["bob", "data2", "write"],
-            ].sort(),
-            result.sort(),
+            ],
+            result,
         )
 
         # test duplicate permissions
@@ -924,11 +923,11 @@ class TestRbacApiAsync(IsolatedAsyncioTestCase):
         result = await e.get_implicit_users_for_resource("data2")
         self.assertEqual(
             [
+                ["bob", "data2", "write"],
                 ["alice", "data2", "read"],
                 ["alice", "data2", "write"],
-                ["bob", "data2", "write"],
-            ].sort(),
-            result.sort(),
+            ],
+            result,
         )
 
     async def test_domain_match_model(self):
