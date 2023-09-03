@@ -657,3 +657,9 @@ class SyncedEnforcer:
         Note: only users will be returned, roles (2nd arg in "g") will be excluded."""
         with self._rl:
             return self._e.get_implicit_users_for_resource(resource)
+
+    def get_implicit_users_for_resource_by_domain(self, resource, domain):
+        """get implicit user based on resource and domain.
+        Compared to GetImplicitUsersForResource, domain is supported"""
+        with self._rl:
+            return self._e.get_implicit_users_for_resource_by_domain(resource, domain)
