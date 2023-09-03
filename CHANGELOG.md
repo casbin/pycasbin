@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.27.0](https://github.com/casbin/pycasbin/compare/v1.26.0...v1.27.0) (2023-09-03)
+
+
+### Features
+
+* add get_implicit_users_for_resource api ([#317](https://github.com/casbin/pycasbin/issues/317)) ([8172097](https://github.com/casbin/pycasbin/commit/817209768528f249644bbe7ac30f1d235bd192da))
+
 # [1.26.0](https://github.com/casbin/pycasbin/compare/v1.25.0...v1.26.0) (2023-08-31)
 
 
