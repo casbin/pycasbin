@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import copy
+import logging
+from typing import Sequence
 
 from casbin.effect import Effector, get_effector, effect_to_bool
+from casbin.model import FastModel, fast_policy_filter
 from casbin.model import Model, FunctionMap
 from casbin.persist import Adapter
 from casbin.persist.adapters import FileAdapter
@@ -53,8 +55,11 @@ class CoreEnforcer:
     auto_build_role_links = False
     auto_notify_watcher = False
 
-    def __init__(self, model=None, adapter=None, enable_log=False):
+    _cache_key_order: Sequence[int] = None
+
+    def __init__(self, model=None, adapter=None, enable_log=False, cache_key_order: Sequence[int] = None):
         self.logger = logging.getLogger("casbin.enforcer")
+        CoreEnforcer._cache_key_order = cache_key_order
         if isinstance(model, str):
             if isinstance(adapter, str):
                 self.init_with_file(model, adapter)
@@ -116,7 +121,11 @@ class CoreEnforcer:
     def new_model(path="", text=""):
         """creates a model."""
 
-        m = Model()
+        if CoreEnforcer._cache_key_order is None:
+            m = Model()
+        else:
+            m = FastModel(CoreEnforcer._cache_key_order)
+
         if len(path) > 0:
             m.load_model(path)
         else:
@@ -202,7 +211,6 @@ class CoreEnforcer:
         new_model.clear_policy()
 
         try:
-
             self.adapter.load_policy(new_model)
 
             new_model.sort_policies_by_subject_hierarchy()
@@ -212,7 +220,6 @@ class CoreEnforcer:
             new_model.print_policy()
 
             if self.auto_build_role_links:
-
                 need_to_rebuild = True
                 for rm in self.rm_map.values():
                     rm.clear()
@@ -222,7 +229,6 @@ class CoreEnforcer:
             self.model = new_model
 
         except Exception as e:
-
             if self.auto_build_role_links and need_to_rebuild:
                 self.build_role_links()
 
@@ -315,7 +321,6 @@ class CoreEnforcer:
         return False
 
     def new_enforce_context(self, suffix: str) -> EnforceContext:
-
         return EnforceContext(
             rtype="r" + suffix,
             ptype="p" + suffix,
@@ -327,7 +332,13 @@ class CoreEnforcer:
         """decides whether a "subject" can access a "object" with the operation "action",
         input parameters are usually: (sub, obj, act).
         """
-        result, _ = self.enforce_ex(*rvals)
+        if CoreEnforcer._cache_key_order is None:
+            result, _ = self.enforce_ex(*rvals)
+        else:
+            keys = [rvals[x] for x in self._cache_key_order]
+            with fast_policy_filter(self.model.model["p"]["p"].policy, *keys):
+                result, _ = self.enforce_ex(*rvals)
+
         return result
 
     def enforce_ex(self, *rvals):
