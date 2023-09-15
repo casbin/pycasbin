@@ -14,10 +14,8 @@
 
 import copy
 import logging
-from typing import Sequence
 
 from casbin.effect import Effector, get_effector, effect_to_bool
-from casbin.model import FastModel, fast_policy_filter
 from casbin.model import Model, FunctionMap
 from casbin.persist import Adapter
 from casbin.persist.adapters import FileAdapter
@@ -55,11 +53,8 @@ class CoreEnforcer:
     auto_build_role_links = False
     auto_notify_watcher = False
 
-    _cache_key_order: Sequence[int] = None
-
-    def __init__(self, model=None, adapter=None, enable_log=False, cache_key_order: Sequence[int] = None):
+    def __init__(self, model=None, adapter=None, enable_log=False):
         self.logger = logging.getLogger("casbin.enforcer")
-        CoreEnforcer._cache_key_order = cache_key_order
         if isinstance(model, str):
             if isinstance(adapter, str):
                 self.init_with_file(model, adapter)
@@ -121,11 +116,7 @@ class CoreEnforcer:
     def new_model(path="", text=""):
         """creates a model."""
 
-        if CoreEnforcer._cache_key_order is None:
-            m = Model()
-        else:
-            m = FastModel(CoreEnforcer._cache_key_order)
-
+        m = Model()
         if len(path) > 0:
             m.load_model(path)
         else:
@@ -332,13 +323,7 @@ class CoreEnforcer:
         """decides whether a "subject" can access a "object" with the operation "action",
         input parameters are usually: (sub, obj, act).
         """
-        if CoreEnforcer._cache_key_order is None:
-            result, _ = self.enforce_ex(*rvals)
-        else:
-            keys = [rvals[x] for x in self._cache_key_order]
-            with fast_policy_filter(self.model.model["p"]["p"].policy, *keys):
-                result, _ = self.enforce_ex(*rvals)
-
+        result, _ = self.enforce_ex(*rvals)
         return result
 
     def enforce_ex(self, *rvals):

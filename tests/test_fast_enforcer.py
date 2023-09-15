@@ -27,7 +27,7 @@ def get_examples(path):
 
 class TestCaseBase(TestCase):
     def get_enforcer(self, model=None, adapter=None, cache_key_order: Sequence[int] = None):
-        return casbin.Enforcer(
+        return casbin.FastEnforcer(
             model,
             adapter,
             cache_key_order=cache_key_order,

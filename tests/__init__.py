@@ -19,7 +19,7 @@ from . import rbac
 from . import util
 from .test_distributed_api import TestDistributedApi
 from .test_enforcer import *
-from .test_enforcer_fast import TestFastEnforcer
+from .test_fast_enforcer import TestFastEnforcer
 from .test_filter import TestFilteredAdapter
 from .test_frontend import TestFrontend
 from .test_management_api import TestManagementApi, TestManagementApiSynced
