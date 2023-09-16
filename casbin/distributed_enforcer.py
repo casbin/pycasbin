@@ -12,12 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from casbin import SyncedEnforcer
-import logging
-
-from casbin.persist import batch_adapter
 from casbin.model.policy_op import PolicyOp
+from casbin.persist import batch_adapter
 from casbin.persist.adapters import update_adapter
+from casbin.synced_enforcer import SyncedEnforcer
 
 
 class DistributedEnforcer(SyncedEnforcer):
