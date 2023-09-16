@@ -15,6 +15,7 @@
 from .enforcer import *
 from .synced_enforcer import SyncedEnforcer
 from .distributed_enforcer import DistributedEnforcer
+from .fast_enforcer import FastEnforcer
 from .async_enforcer import AsyncEnforcer
 from . import util
 from .persist import *

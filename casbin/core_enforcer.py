@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import copy
+import logging
 
 from casbin.effect import Effector, get_effector, effect_to_bool
 from casbin.model import Model, FunctionMap
@@ -202,7 +202,6 @@ class CoreEnforcer:
         new_model.clear_policy()
 
         try:
-
             self.adapter.load_policy(new_model)
 
             new_model.sort_policies_by_subject_hierarchy()
@@ -212,7 +211,6 @@ class CoreEnforcer:
             new_model.print_policy()
 
             if self.auto_build_role_links:
-
                 need_to_rebuild = True
                 for rm in self.rm_map.values():
                     rm.clear()
@@ -222,7 +220,6 @@ class CoreEnforcer:
             self.model = new_model
 
         except Exception as e:
-
             if self.auto_build_role_links and need_to_rebuild:
                 self.build_role_links()
 
@@ -315,7 +312,6 @@ class CoreEnforcer:
         return False
 
     def new_enforce_context(self, suffix: str) -> EnforceContext:
-
         return EnforceContext(
             rtype="r" + suffix,
             ptype="p" + suffix,
