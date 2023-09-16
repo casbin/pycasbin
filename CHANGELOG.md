@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.28.0](https://github.com/casbin/pycasbin/compare/v1.27.0...v1.28.0) (2023-09-16)
+
+
+### Features
+
+* port fastbin to casbin ([#318](https://github.com/casbin/pycasbin/issues/318)) ([67537d6](https://github.com/casbin/pycasbin/commit/67537d6799d04266f5d27bc3f86fa44db1676821))
+
 # [1.27.0](https://github.com/casbin/pycasbin/compare/v1.26.0...v1.27.0) (2023-09-03)
 
 
