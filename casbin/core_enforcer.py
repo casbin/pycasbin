@@ -20,7 +20,7 @@ from casbin.model import Model, FunctionMap
 from casbin.persist import Adapter
 from casbin.persist.adapters import FileAdapter
 from casbin.rbac import default_role_manager
-from casbin.util import generate_g_function, SimpleEval, util
+from casbin.util import generate_g_function, SimpleEval, util, generate_conditional_g_function
 from casbin.util.log import configure_logging
 
 
@@ -47,6 +47,7 @@ class CoreEnforcer:
     adapter = None
     watcher = None
     rm_map = None
+    cond_rm_map = None
 
     enabled = False
     auto_save = False
@@ -102,6 +103,7 @@ class CoreEnforcer:
 
     def _initialize(self):
         self.rm_map = dict()
+        self.cond_rm_map = dict()
         self.eft = get_effector(self.model["e"]["e"].value)
         self.watcher = None
 
@@ -190,10 +192,26 @@ class CoreEnforcer:
         if "g" in self.model.keys():
             for ptype in self.model["g"]:
                 assertion = self.model["g"][ptype]
-                if assertion.value.count("_") == 2:
-                    self.rm_map[ptype] = default_role_manager.RoleManager(10)
-                else:
-                    self.rm_map[ptype] = default_role_manager.DomainManager(10)
+                if ptype in self.rm_map:
+                    rm = self.rm_map[ptype]
+                    rm.clear()
+                    continue
+
+                if assertion.value.count("_") <= 2 and len(assertion.params_tokens) == 0:
+                    assertion.rm = default_role_manager.RoleManager(10)
+                    self.rm_map[ptype] = assertion.rm
+
+                if assertion.value.count("_") <= 2 and len(assertion.params_tokens) != 0:
+                    assertion.cond_rm = default_role_manager.ConditionalRoleManager(10)
+                    self.cond_rm_map[ptype] = assertion.cond_rm
+
+                if assertion.value.count("_") > 2:
+                    if len(assertion.params_tokens) == 0:
+                        assertion.rm = default_role_manager.DomainManager(10)
+                        self.rm_map[ptype] = assertion.rm
+                    else:
+                        assertion.cond_rm = default_role_manager.ConditionalDomainManager(10)
+                        self.cond_rm_map[ptype] = assertion.cond_rm
 
     def load_policy(self):
         """reloads the policy from file/database."""
@@ -214,8 +232,11 @@ class CoreEnforcer:
                 need_to_rebuild = True
                 for rm in self.rm_map.values():
                     rm.clear()
-
                 new_model.build_role_links(self.rm_map)
+
+                for crm in self.cond_rm_map.values():
+                    crm.clear()
+                new_model.build_conditional_role_links(self.cond_rm_map)
 
             self.model = new_model
 
@@ -311,6 +332,40 @@ class CoreEnforcer:
 
         return False
 
+    def add_named_link_condition_func(self, ptype, user, role, fn):
+        """Add condition function fn for Link userName->roleName,
+        when fn returns true, Link is valid, otherwise invalid"""
+        if ptype in self.cond_rm_map:
+            rm = self.cond_rm_map[ptype]
+            rm.add_link_condition_func(user, role, fn)
+            return True
+        return False
+
+    def add_named_domain_link_condition_func(self, ptype, user, role, domain, fn):
+        """Add condition function fn for Link userName-> {roleName, domain},
+        when fn returns true, Link is valid, otherwise invalid"""
+        if ptype in self.cond_rm_map:
+            rm = self.cond_rm_map[ptype]
+            rm.add_domain_link_condition_func(user, role, domain, fn)
+            return True
+        return False
+
+    def set_named_link_condition_func_params(self, ptype, user, role, *params):
+        """Sets the parameters of the condition function fn for Link userName->roleName"""
+        if ptype in self.cond_rm_map:
+            rm = self.cond_rm_map[ptype]
+            rm.set_link_condition_func_params(user, role, *params)
+            return True
+        return False
+
+    def set_named_domain_link_condition_func_params(self, ptype, user, role, domain, *params):
+        """Sets the parameters of the condition function fn for Link userName->{roleName, domain}"""
+        if ptype in self.cond_rm_map:
+            rm = self.cond_rm_map[ptype]
+            rm.set_domain_link_condition_func_params(user, role, domain, *params)
+            return True
+        return False
+
     def new_enforce_context(self, suffix: str) -> EnforceContext:
         return EnforceContext(
             rtype="r" + suffix,
@@ -344,8 +399,10 @@ class CoreEnforcer:
 
         if "g" in self.model.keys():
             for key, ast in self.model["g"].items():
-                rm = ast.rm
-                functions[key] = generate_g_function(rm)
+                if len(self.rm_map) != 0:
+                    functions[key] = generate_g_function(ast.rm)
+                if len(self.cond_rm_map) != 0:
+                    functions[key] = generate_conditional_g_function(ast.cond_rm)
 
         if len(rvals) != 0:
             if isinstance(rvals[0], EnforceContext):
