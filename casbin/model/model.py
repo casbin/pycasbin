@@ -46,7 +46,7 @@ class Model(Policy):
 
         # Extract the captured group (inside parentheses) and split it by commas
         params_string = params_string.group(1)
-        return [param.strip() for param in params_string.split(',')]
+        return [param.strip() for param in params_string.split(",")]
 
     def add_def(self, sec, key, value):
         if value == "":
@@ -57,11 +57,13 @@ class Model(Policy):
         ast.value = value
 
         if "r" == sec or "p" == sec:
-            ast.params_tokens = self.get_params_token(ast.value)
             ast.tokens = ast.value.split(",")
-            ast.tokens = ast.tokens[:len(ast.tokens) - len(ast.params_tokens)]
             for i, token in enumerate(ast.tokens):
                 ast.tokens[i] = key + "_" + token.strip()
+        elif "g" == sec:
+            ast.params_tokens = self.get_params_token(ast.value)
+            ast.tokens = ast.value.split(",")
+            ast.tokens = ast.tokens[: len(ast.tokens) - len(ast.params_tokens)]
         else:
             ast.value = util.remove_comments(util.escape_assertion(ast.value))
 

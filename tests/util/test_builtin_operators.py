@@ -320,3 +320,12 @@ class TestBuiltinOperators(TestCase):
         self.assertTrue(util.ip_match_func("192.168.2.123", "192.168.2.123/32"))
         self.assertTrue(util.ip_match_func("10.0.0.11", "10.0.0.0/8"))
         self.assertFalse(util.ip_match_func("11.0.0.123", "10.0.0.0/8"))
+
+    def test_time_match(self):
+        self.assertFalse(util.time_match_func("0001-01-01 00:00:00", "0001-01-02 00:00:00"))
+        self.assertTrue(util.time_match_func("0001-01-01 00:00:00", "9999-12-30 00:00:00"))
+        self.assertTrue(util.time_match_func("_", "_"))
+        self.assertTrue(util.time_match_func("_", "9999-12-30 00:00:00"))
+        self.assertFalse(util.time_match_func("_", "0001-01-02 00:00:00"))
+        self.assertTrue(util.time_match_func("0001-01-01 00:00:00", "_"))
+        self.assertFalse(util.time_match_func("9999-12-30 00:00:00", "_"))

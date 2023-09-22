@@ -197,15 +197,15 @@ class CoreEnforcer:
                     rm.clear()
                     continue
 
-                if assertion.value.count("_") <= 2 and len(assertion.params_tokens) == 0:
+                if len(assertion.tokens) <= 2 and len(assertion.params_tokens) == 0:
                     assertion.rm = default_role_manager.RoleManager(10)
                     self.rm_map[ptype] = assertion.rm
 
-                if assertion.value.count("_") <= 2 and len(assertion.params_tokens) != 0:
+                if len(assertion.tokens) <= 2 and len(assertion.params_tokens) != 0:
                     assertion.cond_rm = default_role_manager.ConditionalRoleManager(10)
                     self.cond_rm_map[ptype] = assertion.cond_rm
 
-                if assertion.value.count("_") > 2:
+                if len(assertion.tokens) > 2:
                     if len(assertion.params_tokens) == 0:
                         assertion.rm = default_role_manager.DomainManager(10)
                         self.rm_map[ptype] = assertion.rm
@@ -232,11 +232,13 @@ class CoreEnforcer:
                 need_to_rebuild = True
                 for rm in self.rm_map.values():
                     rm.clear()
-                new_model.build_role_links(self.rm_map)
+                if len(self.rm_map) != 0:
+                    new_model.build_role_links(self.rm_map)
 
                 for crm in self.cond_rm_map.values():
                     crm.clear()
-                new_model.build_conditional_role_links(self.cond_rm_map)
+                if len(self.cond_rm_map) != 0:
+                    new_model.build_conditional_role_links(self.cond_rm_map)
 
             self.model = new_model
 

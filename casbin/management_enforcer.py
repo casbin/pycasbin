@@ -238,6 +238,10 @@ class ManagementEnforcer(InternalEnforcer):
 
         if self.auto_build_role_links:
             self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules)
+            if ptype in self.cond_rm_map:
+                self.model.build_incremental_conditional_role_links(
+                    self.cond_rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules
+                )
         return rule_added
 
     def add_named_grouping_policies(self, ptype, rules):

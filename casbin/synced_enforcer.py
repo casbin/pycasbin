@@ -559,10 +559,32 @@ class SyncedEnforcer:
         with self._wl:
             self._e.add_named_matching_func(ptype, fn)
 
+    def add_named_link_condition_func(self, ptype, user, role, fn):
+        """Add condition function fn for Link userName->roleName,
+        when fn returns true, Link is valid, otherwise invalid"""
+        with self._wl:
+            self._e.add_named_link_condition_func(ptype, user, role, fn)
+
     def add_named_domain_matching_func(self, ptype, fn):
         """add_named_domain_matching_func add MatchingFunc by ptype to RoleManager"""
         with self._wl:
             self._e.add_named_domain_matching_func(ptype, fn)
+
+    def add_named_domain_link_condition_func(self, ptype, user, role, domain, fn):
+        """Add condition function fn for Link userName-> {roleName, domain},
+        when fn returns true, Link is valid, otherwise invalid"""
+        with self._wl:
+            self._e.add_named_domain_link_condition_func(ptype, user, role, domain, fn)
+
+    def set_named_domain_link_condition_func_params(self, ptype, user, role, domain, *params):
+        """Sets the parameters of the condition function fn for Link userName->{roleName, domain}"""
+        with self._wl:
+            self._e.set_named_domain_link_condition_func_params(ptype, user, role, domain, *params)
+
+    def set_named_link_condition_func_params(self, ptype, user, role, *params):
+        """Sets the parameters of the condition function fn for Link userName->roleName"""
+        with self._wl:
+            self._e.set_named_link_condition_func_params(ptype, user, role, *params)
 
     def is_filtered(self):
         """returns true if the loaded policy has been filtered."""
