@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.30.0](https://github.com/casbin/pycasbin/compare/v1.29.0...v1.30.0) (2023-09-23)
+
+
+### Features
+
+* disable logger when log is not enabled ([#321](https://github.com/casbin/pycasbin/issues/321)) ([952c208](https://github.com/casbin/pycasbin/commit/952c208a9d423a86ac4ae6c7fa5ed15bc94e00dc))
+
 # [1.29.0](https://github.com/casbin/pycasbin/compare/v1.28.0...v1.29.0) (2023-09-23)
 
 
