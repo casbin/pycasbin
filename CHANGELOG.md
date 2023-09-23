@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.29.0](https://github.com/casbin/pycasbin/compare/v1.28.0...v1.29.0) (2023-09-23)
+
+
+### Features
+
+* Fixed the `subjectPriority` sorting algorithm and support for checking the subject role link loop ([#322](https://github.com/casbin/pycasbin/issues/322)) ([f964e2a](https://github.com/casbin/pycasbin/commit/f964e2aecbee28e4f9b8d1b4fba0d68cad0879fa))
+
 # [1.28.0](https://github.com/casbin/pycasbin/compare/v1.27.0...v1.28.0) (2023-09-16)
 
 
