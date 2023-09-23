@@ -45,4 +45,3 @@ class TestModel(TestCase):
             ["B3", "B1"],
         ]
         self.assertRaises(RuntimeError, self.m.get_subject_hierarchy_map, policies)
-

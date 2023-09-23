@@ -177,11 +177,7 @@ class Model(Policy):
         if len(unsorted_sub) > 0:
             sorted_sub_list.append(unsorted_sub)
         # Tree structure of subject
-        return {
-            sub: i
-            for i, subs in enumerate(sorted_sub_list)
-            for sub in subs
-        }
+        return {sub: i for i, subs in enumerate(sorted_sub_list) for sub in subs}
 
     def get_name_with_domain(self, domain, name):
         return "{}{}{}".format(domain, DEFAULT_SEPARATOR, name)
