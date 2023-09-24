@@ -70,6 +70,8 @@ class CoreEnforcer:
 
         if enable_log:
             configure_logging()
+        else:
+            logging.disable(logging.CRITICAL)
 
     def init_with_file(self, model_path, policy_path):
         """initializes an enforcer with a model file and a policy file."""
