@@ -77,7 +77,7 @@ class Assertion:
             if len(rule) > count:
                 rule = rule[:count]
 
-            domain_rule = rule[2:len(self.tokens)]
+            domain_rule = rule[2 : len(self.tokens)]
 
             if op == PolicyOp.Policy_add:
                 self.add_conditional_role_link(rule, domain_rule)
@@ -97,15 +97,15 @@ class Assertion:
             if len(rule) > count:
                 rule = rule[:count]
 
-            domain_rule = rule[2:len(self.tokens)]
+            domain_rule = rule[2 : len(self.tokens)]
 
             self.add_conditional_role_link(rule, domain_rule)
 
     def add_conditional_role_link(self, rule, domain_rule):
         if not domain_rule:
             self.cond_rm.add_link(rule[0], rule[1])
-            self.cond_rm.set_link_condition_func_params(rule[0], rule[1], *rule[len(self.tokens):])
+            self.cond_rm.set_link_condition_func_params(rule[0], rule[1], *rule[len(self.tokens) :])
         else:
             domain = domain_rule[0]
             self.cond_rm.add_link(rule[0], rule[1], domain)
-            self.cond_rm.set_domain_link_condition_func_params(rule[0], rule[1], domain, *rule[len(self.tokens):])
+            self.cond_rm.set_domain_link_condition_func_params(rule[0], rule[1], domain, *rule[len(self.tokens) :])
