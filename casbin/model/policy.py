@@ -51,6 +51,20 @@ class Policy:
         if sec == "g":
             self[sec].get(ptype).build_incremental_role_links(rm, op, rules)
 
+    def build_incremental_conditional_role_links(self, cond_rm, op, sec, ptype, rules):
+        if sec == "g":
+            return self[sec].get(ptype).build_incremental_conditional_role_links(cond_rm, op, rules)
+        return None
+
+    def build_conditional_role_links(self, cond_rm_map):
+        if "g" not in self.keys():
+            return
+        self.print_policy()
+        for ptype, ast in self["g"].items():
+            cond_rm = cond_rm_map.get(ptype)
+            if cond_rm:
+                ast.build_conditional_role_links(cond_rm)
+
     def print_policy(self):
         """Log using info"""
 

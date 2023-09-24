@@ -36,3 +36,29 @@ class RoleManager:
 
     def print_roles(self):
         pass
+
+
+class ConditionalRoleManager(RoleManager):
+    """
+    ConditionalRoleManager provides interface to define the operations for managing roles.
+    Link with conditions is supported
+    """
+
+    def add_link_condition_func(self, user_name, role_name, fn):
+        """add_link_condition_func add condition function fn for Link user_name->role_name,
+        when fn returns true, Link is valid, otherwise invalid"""
+        pass
+
+    def set_link_condition_func_params(self, user_name, role_name, *params):
+        """set_link_condition_func_params Sets the parameters of the condition function fn for Link user_name->role_name"""
+        pass
+
+    def add_domain_link_condition_func(self, user, role, domain, fn):
+        """add_domain_link_condition_func Add condition function fn for Link user_name-> {role_name, domain},
+        when fn returns true, Link is valid, otherwise invalid"""
+        pass
+
+    def set_domain_link_condition_func_params(self, user, role, domain, *params):
+        """set_domain_link_condition_func_params Sets the parameters of the condition function fn
+        for Link user_name->{role_name, domain}"""
+        pass

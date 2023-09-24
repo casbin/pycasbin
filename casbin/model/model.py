@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import re
 
 from casbin import util, config
 from . import Assertion
@@ -18,6 +19,7 @@ from .policy import Policy
 
 DEFAULT_DOMAIN = ""
 DEFAULT_SEPARATOR = "::"
+PARAMS_REGEX = re.compile(r"\((.*?)\)")
 
 
 class Model(Policy):
@@ -34,6 +36,18 @@ class Model(Policy):
 
         return self.add_def(sec, key, value)
 
+    def get_params_token(self, value):
+        """get_params_token Get params_token from Assertion.value"""
+        # Find the matching string using the regular expression
+        params_string = PARAMS_REGEX.search(value)
+
+        if params_string is None:
+            return []
+
+        # Extract the captured group (inside parentheses) and split it by commas
+        params_string = params_string.group(1)
+        return [param.strip() for param in params_string.split(",")]
+
     def add_def(self, sec, key, value):
         if value == "":
             return
@@ -46,6 +60,10 @@ class Model(Policy):
             ast.tokens = ast.value.split(",")
             for i, token in enumerate(ast.tokens):
                 ast.tokens[i] = key + "_" + token.strip()
+        elif "g" == sec:
+            ast.params_tokens = self.get_params_token(ast.value)
+            ast.tokens = ast.value.split(",")
+            ast.tokens = ast.tokens[: len(ast.tokens) - len(ast.params_tokens)]
         else:
             ast.value = util.remove_comments(util.escape_assertion(ast.value))
 

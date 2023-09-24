@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .role_manager import RoleManager
+from .role_manager import RoleManager, ConditionalRoleManager

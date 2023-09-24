@@ -35,6 +35,7 @@ class FunctionMap:
         fm.add_function("regexMatch", util.regex_match_func)
         fm.add_function("ipMatch", util.ip_match_func)
         fm.add_function("globMatch", util.glob_match_func)
+        fm.add_function("timeMatch", util.time_match_func)
 
         return fm
 

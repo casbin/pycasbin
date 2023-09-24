@@ -17,6 +17,7 @@ import time
 from unittest import TestCase, IsolatedAsyncioTestCase
 
 import casbin
+from casbin import util
 
 
 def get_examples(path):
@@ -240,7 +241,6 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("bob", "data2", "domain2", "write"))
 
     def test_multiple_policy_definitions(self):
-
         e = self.get_enforcer(
             get_examples("multiple_policy_definitions_model.conf"),
             get_examples("multiple_policy_definitions_policy.csv"),
@@ -430,6 +430,141 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("alice", "data2", "read"))
         self.assertTrue(e.enforce("alice", "data3", "scribble"))
         self.assertFalse(e.enforce("alice", "data4", "scribble"))
+
+    def test_temporal_roles_model(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_temporal_roles_model.conf"),
+            get_examples("rbac_with_temporal_roles_policy.csv"),
+        )
+
+        e.add_named_link_condition_func("g", "alice", "data2_admin", util.time_match_func)
+        e.add_named_link_condition_func("g", "alice", "data3_admin", util.time_match_func)
+        e.add_named_link_condition_func("g", "alice", "data4_admin", util.time_match_func)
+        e.add_named_link_condition_func("g", "alice", "data5_admin", util.time_match_func)
+        e.add_named_link_condition_func("g", "alice", "data6_admin", util.time_match_func)
+        e.add_named_link_condition_func("g", "alice", "data7_admin", util.time_match_func)
+        e.add_named_link_condition_func("g", "alice", "data8_admin", util.time_match_func)
+
+        self.assertTrue(e.enforce("alice", "data1", "read"))
+        self.assertTrue(e.enforce("alice", "data1", "write"))
+        self.assertFalse(e.enforce("alice", "data2", "read"))
+        self.assertFalse(e.enforce("alice", "data2", "write"))
+        self.assertTrue(e.enforce("alice", "data3", "read"))
+        self.assertTrue(e.enforce("alice", "data3", "write"))
+        self.assertTrue(e.enforce("alice", "data4", "read"))
+        self.assertTrue(e.enforce("alice", "data4", "write"))
+        self.assertTrue(e.enforce("alice", "data5", "read"))
+        self.assertTrue(e.enforce("alice", "data5", "write"))
+        self.assertFalse(e.enforce("alice", "data6", "read"))
+        self.assertFalse(e.enforce("alice", "data6", "write"))
+        self.assertTrue(e.enforce("alice", "data7", "read"))
+        self.assertTrue(e.enforce("alice", "data7", "write"))
+        self.assertFalse(e.enforce("alice", "data8", "read"))
+        self.assertFalse(e.enforce("alice", "data8", "write"))
+
+    def test_temporal_roles_model_with_domain(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domain_temporal_roles_model.conf"),
+            get_examples("rbac_with_domain_temporal_roles_policy.csv"),
+        )
+
+        e.add_named_domain_link_condition_func("g", "alice", "data2_admin", "domain2", util.time_match_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data3_admin", "domain3", util.time_match_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data4_admin", "domain4", util.time_match_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data5_admin", "domain5", util.time_match_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data6_admin", "domain6", util.time_match_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data7_admin", "domain7", util.time_match_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data8_admin", "domain8", util.time_match_func)
+
+        self.assertTrue(e.enforce("alice", "domain1", "data1", "read"))
+        self.assertTrue(e.enforce("alice", "domain1", "data1", "write"))
+        self.assertFalse(e.enforce("alice", "domain2", "data2", "read"))
+        self.assertFalse(e.enforce("alice", "domain2", "data2", "write"))
+        self.assertTrue(e.enforce("alice", "domain3", "data3", "read"))
+        self.assertTrue(e.enforce("alice", "domain3", "data3", "write"))
+        self.assertTrue(e.enforce("alice", "domain4", "data4", "read"))
+        self.assertTrue(e.enforce("alice", "domain4", "data4", "write"))
+        self.assertTrue(e.enforce("alice", "domain5", "data5", "read"))
+        self.assertTrue(e.enforce("alice", "domain5", "data5", "write"))
+        self.assertFalse(e.enforce("alice", "domain6", "data6", "read"))
+        self.assertFalse(e.enforce("alice", "domain6", "data6", "write"))
+        self.assertTrue(e.enforce("alice", "domain7", "data7", "read"))
+        self.assertTrue(e.enforce("alice", "domain7", "data7", "write"))
+        self.assertFalse(e.enforce("alice", "domain8", "data8", "read"))
+        self.assertFalse(e.enforce("alice", "domain8", "data8", "write"))
+
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data1", "read"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data1", "write"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data2", "read"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data2", "write"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data3", "read"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data3", "write"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data4", "read"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data4", "write"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data5", "read"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data5", "write"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data6", "read"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data6", "write"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data7", "read"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data7", "write"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data8", "read"))
+        self.assertFalse(e.enforce("alice", "domain_not_exist", "data8", "write"))
+
+    def test_link_condition_function(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_temporal_roles_model.conf"),
+            get_examples("rbac_with_temporal_roles_condition_policy.csv"),
+        )
+
+        true_func = lambda *args: True if args[0] == "_" or args[0] == "true" else False
+        false_func = lambda *args: True if args[0] == "_" or args[0] == "false" else False
+
+        e.add_named_link_condition_func("g", "alice", "data2_admin", true_func)
+        e.add_named_link_condition_func("g", "alice", "data3_admin", true_func)
+        e.add_named_link_condition_func("g", "alice", "data4_admin", false_func)
+        e.add_named_link_condition_func("g", "alice", "data5_admin", false_func)
+
+        e.set_named_link_condition_func_params("g", "alice", "data2_admin", "true")
+        e.set_named_link_condition_func_params("g", "alice", "data3_admin", "not true")
+        e.set_named_link_condition_func_params("g", "alice", "data4_admin", "false")
+        e.set_named_link_condition_func_params("g", "alice", "data5_admin", "not false")
+
+        self.assertTrue(e.enforce("alice", "data1", "read"))
+        self.assertTrue(e.enforce("alice", "data1", "write"))
+        self.assertTrue(e.enforce("alice", "data2", "read"))
+        self.assertTrue(e.enforce("alice", "data2", "write"))
+        self.assertFalse(e.enforce("alice", "data3", "read"))
+        self.assertFalse(e.enforce("alice", "data3", "write"))
+        self.assertTrue(e.enforce("alice", "data4", "read"))
+        self.assertTrue(e.enforce("alice", "data4", "write"))
+        self.assertFalse(e.enforce("alice", "data5", "read"))
+        self.assertFalse(e.enforce("alice", "data5", "write"))
+
+        e = self.get_enforcer(
+            get_examples("rbac_with_domain_temporal_roles_model.conf"),
+            get_examples("rbac_with_domain_temporal_roles_condition_policy.csv"),
+        )
+
+        e.add_named_domain_link_condition_func("g", "alice", "data2_admin", "domain2", true_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data3_admin", "domain3", true_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data4_admin", "domain4", false_func)
+        e.add_named_domain_link_condition_func("g", "alice", "data5_admin", "domain5", false_func)
+
+        e.set_named_domain_link_condition_func_params("g", "alice", "data2_admin", "domain2", "true")
+        e.set_named_domain_link_condition_func_params("g", "alice", "data3_admin", "domain3", "not true")
+        e.set_named_domain_link_condition_func_params("g", "alice", "data4_admin", "domain4", "false")
+        e.set_named_domain_link_condition_func_params("g", "alice", "data5_admin", "domain5", "not false")
+
+        self.assertTrue(e.enforce("alice", "domain1", "data1", "read"))
+        self.assertTrue(e.enforce("alice", "domain1", "data1", "write"))
+        self.assertTrue(e.enforce("alice", "domain2", "data2", "read"))
+        self.assertTrue(e.enforce("alice", "domain2", "data2", "write"))
+        self.assertFalse(e.enforce("alice", "domain3", "data3", "read"))
+        self.assertFalse(e.enforce("alice", "domain3", "data3", "write"))
+        self.assertTrue(e.enforce("alice", "domain4", "data4", "read"))
+        self.assertTrue(e.enforce("alice", "domain4", "data4", "write"))
+        self.assertFalse(e.enforce("alice", "domain5", "data5", "read"))
+        self.assertFalse(e.enforce("alice", "domain5", "data5", "write"))
 
 
 class TestConfigSynced(TestConfig):
@@ -690,7 +825,6 @@ class TestConfigAsync(IsolatedAsyncioTestCase):
         self.assertTrue(e.enforce("bob", "data2", "domain2", "write"))
 
     async def test_multiple_policy_definitions(self):
-
         e = self.get_enforcer(
             get_examples("multiple_policy_definitions_model.conf"),
             get_examples("multiple_policy_definitions_policy.csv"),
