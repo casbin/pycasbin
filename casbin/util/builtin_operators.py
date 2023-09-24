@@ -14,6 +14,7 @@
 
 import ipaddress
 import re
+from datetime import datetime
 
 KEY_MATCH2_PATTERN = re.compile(r"(.*?):[^\/]+(.*?)")
 KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+?}(.*?)")
@@ -401,3 +402,46 @@ def generate_g_function(rm):
             return rm.has_link(name1, name2, domain)
 
     return f
+
+
+def generate_conditional_g_function(crm):
+    """the factory method of the g(_, _[, _]) function with conditions."""
+
+    def conditional_g_function(*args):
+        name1, name2 = args[0], args[1]
+
+        if crm is None:
+            has_link = name1 == name2
+        elif len(args) == 2:
+            has_link = crm.has_link(name1, name2)
+        else:
+            domain = str(args[2])
+            has_link = crm.has_link(name1, name2, domain)
+
+        return has_link
+
+    return conditional_g_function
+
+
+def time_match_func(*args):
+    """the wrapper for TimeMatch."""
+    if len(args) != 2:
+        raise RuntimeError("time_match requires 2 arguments")
+
+    start_time, end_time = args[0], args[1]
+
+    try:
+        now = datetime.now()
+        if start_time != "_":
+            start = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
+            if not now > start:
+                return False
+
+        if end_time != "_":
+            end = datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+            if not now < end:
+                return False
+
+        return True
+    except Exception as e:
+        raise RuntimeError(e)

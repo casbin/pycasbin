@@ -23,8 +23,10 @@ class Assertion:
         self.key = ""
         self.value = ""
         self.tokens = []
+        self.params_tokens = []
         self.policy = []
         self.rm = None
+        self.cond_rm = None
         self.priority_index: int = -1
         self.policy_map: dict = {}
         self.field_index_map: dict = {}
@@ -62,3 +64,48 @@ class Assertion:
                 rm.delete_link(rule[0], rule[1], *rule[2:])
             else:
                 raise TypeError("Invalid operation: " + str(op))
+
+    def build_incremental_conditional_role_links(self, cond_rm, op, rules):
+        self.cond_rm = cond_rm
+        count = self.value.count("_")
+        if count < 2:
+            raise RuntimeError('the number of "_" in role definition should be at least 2')
+
+        for rule in rules:
+            if len(rule) < count:
+                raise TypeError("grouping policy elements do not meet role definition")
+            if len(rule) > count:
+                rule = rule[:count]
+
+            domain_rule = rule[2 : len(self.tokens)]
+
+            if op == PolicyOp.Policy_add:
+                self.add_conditional_role_link(rule, domain_rule)
+            elif op == PolicyOp.Policy_remove:
+                self.cond_rm.delete_link(rule[0], rule[1], *rule[2:])
+            else:
+                raise TypeError("Invalid operation: " + str(op))
+
+    def build_conditional_role_links(self, cond_rm):
+        self.cond_rm = cond_rm
+        count = self.value.count("_")
+        if count < 2:
+            raise RuntimeError('the number of "_" in role definition should be at least 2')
+        for rule in self.policy:
+            if len(rule) < count:
+                raise TypeError("grouping policy elements do not meet role definition")
+            if len(rule) > count:
+                rule = rule[:count]
+
+            domain_rule = rule[2 : len(self.tokens)]
+
+            self.add_conditional_role_link(rule, domain_rule)
+
+    def add_conditional_role_link(self, rule, domain_rule):
+        if not domain_rule:
+            self.cond_rm.add_link(rule[0], rule[1])
+            self.cond_rm.set_link_condition_func_params(rule[0], rule[1], *rule[len(self.tokens) :])
+        else:
+            domain = domain_rule[0]
+            self.cond_rm.add_link(rule[0], rule[1], domain)
+            self.cond_rm.set_domain_link_condition_func_params(rule[0], rule[1], domain, *rule[len(self.tokens) :])

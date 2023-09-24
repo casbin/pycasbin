@@ -17,6 +17,7 @@ from collections import namedtuple
 from enum import Enum
 
 from casbin.rbac import RoleManager as RM
+from casbin.rbac import ConditionalRoleManager as CRM
 
 Link = namedtuple("Link", ["user", "role"])
 
@@ -32,6 +33,8 @@ class Role:
         self.name = name
         self.roles = set()
         self.users = set()
+        self.link_condition_func_map = dict()
+        self.link_condition_func_params_map = dict()
 
     def add_role(self, role):
         self.roles.add(role)
@@ -73,6 +76,21 @@ class Role:
             roles.append(role.name)
 
         return roles
+
+    def add_link_condition_func(self, role, domain, fn):
+        self.link_condition_func_map[(role.name, domain)] = fn
+
+    def get_link_condition_func(self, role, domain):
+        key = (role.name, domain)
+        return self.link_condition_func_map.get(key)
+
+    def set_link_condition_func_params(self, role, domain, *params):
+        self.link_condition_func_params_map[(role.name, domain)] = params
+
+    def get_link_condition_func_params(self, role, domain):
+        key = (role.name, domain)
+        params = self.link_condition_func_params_map.get(key)
+        return list(params) if params is not None else []
 
 
 class RoleManager(RM):
@@ -349,3 +367,159 @@ def match_error_handler(fn, key1, key2):
         return fn(key1, key2)
     except:
         return False
+
+
+class ConditionalRoleManager(RoleManager, CRM):
+    def has_link(self, name1, name2, *domains):
+        """determines whether role: name1 inherits role: name2."""
+        if name1 == name2 or (self.matching_func is not None and self._matching_fn(name1, name2)):
+            return True
+
+        user = self._get_role(name1)
+        role = self._get_role(name2)
+
+        return self._has_link(role.name, [user], self.max_hierarchy_level, *domains)
+
+    def _has_link(self, target_name, roles, level, *domains):
+        """use the Breadth First Search algorithm to traverse the Role tree
+        Judging whether the user has a role (has link) is to judge whether the role node can be reached from the user node
+        """
+        if level < 0 or len(roles) == 0:
+            return False
+
+        next_roles = set()
+        for role in roles:
+            if target_name == role.name or (
+                self.matching_func is not None and self._matching_fn(role.name, target_name)
+            ):
+                return True
+
+            for next_role in role.roles:
+                linked_role = self.get_next_roles(role, next_role, domains)
+                next_roles.update(set(linked_role))
+
+        return self._has_link(target_name, next_roles, level - 1, *domains)
+
+    def get_next_roles(self, current_role, next_role, domains):
+        pass_link_condition_func = True
+        next_roles = list()
+        if not domains:
+            link_condition_func = self.get_link_condition_func(current_role.name, next_role.name)
+            if link_condition_func is not None:
+                params = self.get_link_condition_func_params(current_role.name, next_role.name)
+                pass_link_condition_func = link_condition_func(*params)
+        else:
+            link_condition_func = self.get_domain_link_condition_func(current_role.name, next_role.name, domains[0])
+            if link_condition_func is not None:
+                params = self.get_link_condition_func_params(current_role.name, next_role.name, domains)
+                pass_link_condition_func = link_condition_func(*params)
+
+        if pass_link_condition_func:
+            next_roles.append(next_role)
+
+        return next_roles
+
+    def get_link_condition_func(self, user_name, role_name):
+        """get_link_condition_func get link_condition_func based on userName, roleName"""
+        return self.get_domain_link_condition_func(user_name, role_name, "")
+
+    def get_domain_link_condition_func(self, user_name, role_name, domain):
+        """get_domain_link_condition_func get link_condition_func based on userName, roleName, domain"""
+        user = self._get_role(user_name)
+        role = self._get_role(role_name)
+
+        return user.get_link_condition_func(role, domain)
+
+    def get_link_condition_func_params(self, user_name, role_name, domains=None):
+        """get_link_condition_func_params gets parameters of link_condition_func based on userName, roleName, domain"""
+        if domains is None:
+            domains = []
+
+        user = self._get_role(user_name)
+        role = self._get_role(role_name)
+
+        domain_name = ""
+        if len(domains) != 0:
+            domain_name = domains[0]
+
+        return user.get_link_condition_func_params(role, domain_name)
+
+    def add_link_condition_func(self, user_name, role_name, fn):
+        """add_link_condition_func is based on userName, roleName, add LinkConditionFunc"""
+        self.add_domain_link_condition_func(user_name, role_name, "", fn)
+
+    def add_domain_link_condition_func(self, user_name, role_name, domain, fn):
+        """add_domain_link_condition_func is based on userName, roleName, domain, add LinkConditionFunc"""
+        user = self._get_role(user_name)
+        role = self._get_role(role_name)
+        user.add_link_condition_func(role, domain, fn)
+
+    def set_link_condition_func_params(self, user_name, role_name, *params):
+        """set_link_condition_func_params sets parameters of LinkConditionFunc based on userName, roleName, domain"""
+        self.set_domain_link_condition_func_params(user_name, role_name, "", *params)
+
+    def set_domain_link_condition_func_params(self, user_name, role_name, domain, *params):
+        """set_domain_link_condition_func_params sets parameters of LinkConditionFunc based on userName, roleName, domain"""
+        user = self._get_role(user_name)
+        role = self._get_role(role_name)
+        user.set_link_condition_func_params(role, domain, *params)
+
+
+class ConditionalDomainManager(DomainManager, ConditionalRoleManager):
+    def _get_role_manager(self, *domain):
+        domain1 = self._get_domain(*domain)
+        if domain1 not in self.rm_map:
+            self.rm_map[domain1] = self._get_conditional_role_manager(*domain)
+
+        return self.rm_map[domain1]
+
+    def _get_conditional_role_manager(self, *domain, store=False):
+        domain1 = self._get_domain(*domain)
+        domain_links = self.all_links.get(domain1, [])
+
+        rm = self.rm_map.get(domain1, None)
+
+        if rm is None:
+            rm = ConditionalRoleManager(max_hierarchy_level=self.max_hierarchy_level)
+            if store:
+                self.rm_map[domain1] = rm
+            if self.domain_matching_func is not None:
+                for domain2, links in self.all_links.items():
+                    if domain1 != domain2 and match_error_handler(self.domain_matching_func, domain1, domain2):
+                        domain_links = domain_links + links
+
+            rm.add_matching_func(self.matching_func)
+            for link in domain_links:
+                rm.add_link(link[0], link[1])
+        return rm
+
+    def has_link(self, name1, name2, *domain):
+        domain = self._get_domain(*domain)
+        rm = self._get_conditional_role_manager(domain)
+        return rm.has_link(name1, name2, domain)
+
+    def add_link(self, name1, name2, *domain):
+        domain = self._get_domain(*domain)
+        rm = self._get_conditional_role_manager(domain, store=True)
+        rm.add_link(name1, name2, domain)
+
+    def delete_link(self, name1, name2, *domain):
+        domain = self._get_domain(*domain)
+        rm = self._get_conditional_role_manager(domain, store=True)
+        rm.delete_link(name1, name2, domain)
+
+    def add_link_condition_func(self, user_name, role_name, fn):
+        for rm in self.rm_map.values():
+            rm.add_link_condition_func(user_name, role_name, fn)
+
+    def add_domain_link_condition_func(self, user_name, role_name, domain, fn):
+        for rm in self.rm_map.values():
+            rm.add_domain_link_condition_func(user_name, role_name, domain, fn)
+
+    def set_link_condition_func_params(self, user_name, role_name, *params):
+        for rm in self.rm_map.values():
+            rm.set_link_condition_func_params(user_name, role_name, *params)
+
+    def set_domain_link_condition_func_params(self, user_name, role_name, domain, *params):
+        for rm in self.rm_map.values():
+            rm.set_domain_link_condition_func_params(user_name, role_name, domain, *params)

@@ -1,0 +1,15 @@
+p, alice, domain1, data1, read
+p, alice, domain1, data1, write
+p, data2_admin, domain2, data2, read
+p, data2_admin, domain2, data2, write
+p, data3_admin, domain3, data3, read
+p, data3_admin, domain3, data3, write
+p, data4_admin, domain4, data4, read
+p, data4_admin, domain4, data4, write
+p, data5_admin, domain5, data5, read
+p, data5_admin, domain5, data5, write
+
+g, alice, data2_admin, domain2, _, _
+g, alice, data3_admin, domain3, _, _
+g, alice, data4_admin, domain4, _, _
+g, alice, data5_admin, domain5, _, _
