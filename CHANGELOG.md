@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.31.0](https://github.com/casbin/pycasbin/compare/v1.30.0...v1.31.0) (2023-09-24)
+
+
+### Features
+
+* add temporal role model ([#320](https://github.com/casbin/pycasbin/issues/320)) ([09ff119](https://github.com/casbin/pycasbin/commit/09ff1191856345b69026e5fa86a361dd5df8bab5))
+
 # [1.30.0](https://github.com/casbin/pycasbin/compare/v1.29.0...v1.30.0) (2023-09-23)
 
 
