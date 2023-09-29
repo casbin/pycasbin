@@ -21,7 +21,7 @@ from casbin.persist import Adapter
 from casbin.persist.adapters import FileAdapter
 from casbin.rbac import default_role_manager
 from casbin.util import generate_g_function, SimpleEval, util, generate_conditional_g_function
-from casbin.util.log import configure_logging
+from casbin.util.log import configure_logging, disabled_logging
 
 
 class EnforceContext:
@@ -71,7 +71,7 @@ class CoreEnforcer:
         if enable_log:
             configure_logging()
         else:
-            logging.disable(logging.CRITICAL)
+            disabled_logging()
 
     def init_with_file(self, model_path, policy_path):
         """initializes an enforcer with a model file and a policy file."""

@@ -48,3 +48,8 @@ def configure_logging(logging_config=None):
         logging.config.dictConfig(logging_config)
     else:
         logging.config.dictConfig(DEFAULT_LOGGING)
+
+
+def disabled_logging():
+    for logger_name in DEFAULT_LOGGING["loggers"].keys():
+        logging.getLogger(logger_name).disable(logging.CRITICAL)
