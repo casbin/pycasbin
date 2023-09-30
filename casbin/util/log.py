@@ -52,4 +52,4 @@ def configure_logging(logging_config=None):
 
 def disabled_logging():
     for logger_name in DEFAULT_LOGGING["loggers"].keys():
-        logging.getLogger(logger_name).disable(logging.CRITICAL)
+        logging.getLogger(logger_name).disabled = True
