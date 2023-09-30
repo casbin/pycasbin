@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.31.1](https://github.com/casbin/pycasbin/compare/v1.31.0...v1.31.1) (2023-09-30)
+
+
+### Bug Fixes
+
+* disabled all logger ([#324](https://github.com/casbin/pycasbin/issues/324)) ([ae81a52](https://github.com/casbin/pycasbin/commit/ae81a5225b4a045c6eba4f3bae6dade68b92b78a))
+
 # [1.31.0](https://github.com/casbin/pycasbin/compare/v1.30.0...v1.31.0) (2023-09-24)
 
 
