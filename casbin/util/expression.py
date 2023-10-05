@@ -31,7 +31,7 @@ class SimpleEval(EvalWithCompoundTypes):
         super(SimpleEval, self).__init__(functions=functions)
         if expr != "":
             self.expr = expr
-            self.expr_parsed_value = ast.parse(expr.strip()).body[0].value
+            self.ast_parsed_value = ast.parse(expr.strip()).body[0].value
 
     def eval(self, names=None):
         """evaluate an expresssion, using the operators, functions and
@@ -40,4 +40,4 @@ class SimpleEval(EvalWithCompoundTypes):
         if names:
             self.names = names
 
-        return self._eval(self.expr_parsed_value)
+        return self._eval(self.ast_parsed_value)
