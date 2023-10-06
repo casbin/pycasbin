@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.31.2](https://github.com/casbin/pycasbin/compare/v1.31.1...v1.31.2) (2023-10-06)
+
+
+### Bug Fixes
+
+* use pre defined member ([#325](https://github.com/casbin/pycasbin/issues/325)) ([4f191f0](https://github.com/casbin/pycasbin/commit/4f191f09a48a61b597fb73b62a841a69407dd292))
+
 ## [1.31.1](https://github.com/casbin/pycasbin/compare/v1.31.0...v1.31.1) (2023-09-30)
 
 
