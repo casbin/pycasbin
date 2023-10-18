@@ -14,52 +14,44 @@
 
 from .effector import Effector
 
-
-class AllowOverrideEffector(Effector):
+class BaseEffector(Effector):
     def intermediate_effect(self, effects):
-        """returns a intermediate effect based on the matched effects of the enforcer"""
         if Effector.ALLOW in effects:
             return Effector.ALLOW
+        if Effector.DENY in effects:
+            return Effector.DENY
         return Effector.INDETERMINATE
 
     def final_effect(self, effects):
-        """returns the final effect based on the matched effects of the enforcer"""
+        if Effector.DENY in effects:
+            return Effector.DENY
         if Effector.ALLOW in effects:
             return Effector.ALLOW
         return Effector.DENY
 
-
-class DenyOverrideEffector(Effector):
+class AllowOverrideEffector(BaseEffector):
     def intermediate_effect(self, effects):
-        """returns a intermediate effect based on the matched effects of the enforcer"""
-        if Effector.DENY in effects:
-            return Effector.DENY
-        return Effector.INDETERMINATE
+        return Effector.ALLOW if Effector.ALLOW in effects else Effector.INDETERMINATE
 
     def final_effect(self, effects):
-        """returns the final effect based on the matched effects of the enforcer"""
-        if Effector.DENY in effects:
-            return Effector.DENY
-        return Effector.ALLOW
+        return Effector.ALLOW if Effector.ALLOW in effects else Effector.DENY
 
-
-class AllowAndDenyEffector(Effector):
+class DenyOverrideEffector(BaseEffector):
     def intermediate_effect(self, effects):
-        """returns a intermediate effect based on the matched effects of the enforcer"""
-        if Effector.DENY in effects:
-            return Effector.DENY
-        return Effector.INDETERMINATE
+        return Effector.DENY if Effector.DENY in effects else Effector.INDETERMINATE
 
     def final_effect(self, effects):
-        """returns the final effect based on the matched effects of the enforcer"""
-        if Effector.DENY in effects or Effector.ALLOW not in effects:
-            return Effector.DENY
-        return Effector.ALLOW
+        return Effector.DENY if Effector.DENY in effects else Effector.ALLOW
 
-
-class PriorityEffector(Effector):
+class AllowAndDenyEffector(BaseEffector):
     def intermediate_effect(self, effects):
-        """returns a intermediate effect based on the matched effects of the enforcer"""
+        return Effector.DENY if Effector.DENY in effects else Effector.INDETERMINATE
+
+    def final_effect(self, effects):
+        return Effector.DENY if Effector.DENY in effects or Effector.ALLOW not in effects else Effector.ALLOW
+
+class PriorityEffector(BaseEffector):
+    def intermediate_effect(self, effects):
         if Effector.ALLOW in effects:
             return Effector.ALLOW
         if Effector.DENY in effects:
@@ -67,9 +59,9 @@ class PriorityEffector(Effector):
         return Effector.INDETERMINATE
 
     def final_effect(self, effects):
-        """returns the final effect based on the matched effects of the enforcer"""
         if Effector.ALLOW in effects:
             return Effector.ALLOW
         if Effector.DENY in effects:
             return Effector.DENY
         return Effector.DENY
+
