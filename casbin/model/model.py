@@ -126,8 +126,9 @@ class Model(Policy):
 
             assertion.policy = sorted(
                 assertion.policy,
-                key=lambda x: int(x[assertion.priority_index]) if x[assertion.priority_index].isdigit() else
-                x[assertion.priority_index]
+                key=lambda x: int(x[assertion.priority_index])
+                if x[assertion.priority_index].isdigit()
+                else x[assertion.priority_index],
             )
 
             for i, policy in enumerate(assertion.policy):
