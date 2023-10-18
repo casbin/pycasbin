@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.32.0](https://github.com/casbin/pycasbin/compare/v1.31.2...v1.32.0) (2023-10-18)
+
+
+### Features
+
+* fix integer priority sorting ([#327](https://github.com/casbin/pycasbin/issues/327)) ([d5cd58a](https://github.com/casbin/pycasbin/commit/d5cd58a738ad8e8ad0a5010f9cff904736e1719a))
+
 ## [1.31.2](https://github.com/casbin/pycasbin/compare/v1.31.1...v1.31.2) (2023-10-06)
 
 
