@@ -107,3 +107,6 @@ _trial_temp
 
 # vscode
 .vscode
+
+# node
+node_modules
