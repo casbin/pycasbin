@@ -512,9 +512,9 @@ class CoreEnforcer:
         if result:
             self.logger.info(req_str)
         else:
-            # leaving this in error for now, if it's very noise this can be changed to info or debug,
+            # leaving this in warning for now, if it's very noise this can be changed to info or debug,
             # or change the log level
-            self.logger.error(req_str)
+            self.logger.warning(req_str)
 
         explain_rule = []
         if explain_index != -1 and explain_index < policy_len:
