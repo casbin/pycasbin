@@ -1,2 +1,47 @@
+[project]
+name = "casbin"
+version = "1.32.0"
+authors = [
+    {name = "TechLee", email = "techlee@qq.com"},
+]
+description = "An authorization library that supports access control models like ACL, RBAC, ABAC in Python"
+readme = "README.md"
+keywords = [
+    "casbin",
+    "acl",
+    "rbac",
+    "abac",
+    "auth",
+    "authz",
+    "authorization",
+    "access control",
+    "permission",
+]
+dynamic = ["dependencies"]
+requires-python = ">=3.3"
+license = {text = "Apache 2.0"}
+classifiers = [
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Home-page" = "https://github.com/casbin/pycasbin"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests.*"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
 [tool.black]
 line-length = 120
