@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..adapter import Adapter, load_policy_line
 import os
 
+from ..adapter import load_policy_line
+from .async_adapter import AsyncAdapter
 
-class AsyncFileAdapter(Adapter):
+
+class AsyncFileAdapter(AsyncAdapter):
     """the async file adapter for Casbin.
     It can load policy from file or save policy to file.
     """
