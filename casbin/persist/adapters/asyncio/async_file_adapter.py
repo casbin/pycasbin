@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from casbin import persist
+from ..adapter import Adapter, load_policy_line
 import os
 
 
-class AsyncFileAdapter(persist.Adapter):
+class AsyncFileAdapter(Adapter):
     """the async file adapter for Casbin.
     It can load policy from file or save policy to file.
     """
@@ -42,7 +42,7 @@ class AsyncFileAdapter(persist.Adapter):
         with open(self._file_path, "rb") as file:
             line = file.readline()
             while line:
-                persist.load_policy_line(line.decode().strip(), model)
+                load_policy_line(line.decode().strip(), model)
                 line = file.readline()
 
     def _save_policy_file(self, model):

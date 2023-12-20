@@ -16,7 +16,7 @@ import copy
 from casbin.core_enforcer import CoreEnforcer
 from casbin.model import Model, FunctionMap
 from casbin.persist import Adapter
-from casbin.persist.adapters.async_file_adapter import AsyncFileAdapter
+from casbin.persist.adapters.asyncio import AsyncFileAdapter
 
 
 class AsyncInternalEnforcer(CoreEnforcer):
