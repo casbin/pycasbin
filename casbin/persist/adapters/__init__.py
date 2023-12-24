@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .filtered_file_adapter import FilteredFileAdapter
 from .file_adapter import FileAdapter
+from .filtered_file_adapter import FilteredFileAdapter
 from .update_adapter import UpdateAdapter
-from .adapter import Adapter, load_policy_line
-from .adapter_filtered import FilteredAdapter
-from .batch_adapter import BatchAdapter
-from .string_adapter import StringAdapter
-from .asyncio import *
+
+# alias import for backwards compatibility
+FilteredAdapter = FilteredFileAdapter
+
+__all__ = ["FileAdapter", "FilteredFileAdapter", "FilteredAdapter", "UpdateAdapter"]

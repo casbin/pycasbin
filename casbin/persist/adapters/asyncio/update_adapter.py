@@ -20,9 +20,7 @@ class AsyncUpdateAdapter(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    async def update_filtered_policies(
-        self, sec, ptype, new_rules, field_index, *field_values
-    ):
+    async def update_filtered_policies(self, sec, ptype, new_rules, field_index, *field_values):
         """
         update_filtered_policies deletes old rules and adds new rules.
         """

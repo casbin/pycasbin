@@ -17,7 +17,8 @@ import os
 from casbin import persist
 
 from .file_adapter import FileAdapter
-from .adapter_filtered import FilteredAdapter
+from ..adapter_filtered import FilteredAdapter
+
 
 class Filter:
     # P,G are string []

@@ -17,6 +17,7 @@ from unittest import TestCase
 from tests.test_enforcer import get_examples
 from casbin.persist.adapters import FilteredFileAdapter
 
+
 class Filter:
     # P,G are strings
     P = []

@@ -25,7 +25,7 @@ def get_examples(path):
     return os.path.abspath(examples_path + path)
 
 
-class TestSub:
+class MockSub:
     def __init__(self, name, age):
         self.name = name
         self.age = age
@@ -249,8 +249,8 @@ class TestConfig(TestCaseBase):
         enforce_context = e.new_enforce_context("2")
         enforce_context.etype = "e"
 
-        sub1 = TestSub("alice", 70)
-        sub2 = TestSub("bob", 30)
+        sub1 = MockSub("alice", 70)
+        sub2 = MockSub("bob", 30)
 
         self.assertTrue(e.enforce("alice", "data2", "read"))
         self.assertFalse(e.enforce(enforce_context, sub1, "/data1", "read"))
@@ -370,9 +370,9 @@ class TestConfig(TestCaseBase):
     def test_abac_with_sub_rule(self):
         e = self.get_enforcer(get_examples("abac_rule_model.conf"), get_examples("abac_rule_policy.csv"))
 
-        sub1 = TestSub("alice", 16)
-        sub2 = TestSub("bob", 20)
-        sub3 = TestSub("alice", 65)
+        sub1 = MockSub("alice", 16)
+        sub2 = MockSub("bob", 20)
+        sub3 = MockSub("alice", 65)
 
         self.assertFalse(e.enforce(sub1, "/data1", "read"))
         self.assertFalse(e.enforce(sub1, "/data2", "read"))
@@ -395,10 +395,10 @@ class TestConfig(TestCaseBase):
             get_examples("abac_multiple_rules_policy.csv"),
         )
 
-        sub1 = TestSub("alice", 16)
-        sub2 = TestSub("alice", 20)
-        sub3 = TestSub("bob", 65)
-        sub4 = TestSub("bob", 35)
+        sub1 = MockSub("alice", 16)
+        sub2 = MockSub("alice", 20)
+        sub3 = MockSub("bob", 65)
+        sub4 = MockSub("bob", 35)
 
         self.assertFalse(e.enforce(sub1, "/data1", "read"))
         self.assertFalse(e.enforce(sub1, "/data2", "read"))
@@ -834,8 +834,8 @@ class TestConfigAsync(IsolatedAsyncioTestCase):
         enforce_context = e.new_enforce_context("2")
         enforce_context.etype = "e"
 
-        sub1 = TestSub("alice", 70)
-        sub2 = TestSub("bob", 30)
+        sub1 = MockSub("alice", 70)
+        sub2 = MockSub("bob", 30)
 
         self.assertTrue(e.enforce("alice", "data2", "read"))
         self.assertFalse(e.enforce(enforce_context, sub1, "/data1", "read"))
@@ -970,9 +970,9 @@ class TestConfigAsync(IsolatedAsyncioTestCase):
         e = self.get_enforcer(get_examples("abac_rule_model.conf"), get_examples("abac_rule_policy.csv"))
         await e.load_policy()
 
-        sub1 = TestSub("alice", 16)
-        sub2 = TestSub("bob", 20)
-        sub3 = TestSub("alice", 65)
+        sub1 = MockSub("alice", 16)
+        sub2 = MockSub("bob", 20)
+        sub3 = MockSub("alice", 65)
 
         self.assertFalse(e.enforce(sub1, "/data1", "read"))
         self.assertFalse(e.enforce(sub1, "/data2", "read"))
@@ -996,10 +996,10 @@ class TestConfigAsync(IsolatedAsyncioTestCase):
         )
         await e.load_policy()
 
-        sub1 = TestSub("alice", 16)
-        sub2 = TestSub("alice", 20)
-        sub3 = TestSub("bob", 65)
-        sub4 = TestSub("bob", 35)
+        sub1 = MockSub("alice", 16)
+        sub2 = MockSub("alice", 20)
+        sub3 = MockSub("bob", 65)
+        sub4 = MockSub("bob", 35)
 
         self.assertFalse(e.enforce(sub1, "/data1", "read"))
         self.assertFalse(e.enforce(sub1, "/data2", "read"))

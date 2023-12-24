@@ -14,8 +14,8 @@
 
 import os
 
-from ..adapter import load_policy_line
-from .async_adapter import AsyncAdapter
+from ...adapter import load_policy_line
+from .adapter import AsyncAdapter
 
 
 class AsyncFileAdapter(AsyncAdapter):

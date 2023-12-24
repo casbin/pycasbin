@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .adapter import Adapter, load_policy_line
-
 from casbin.util import util
+
+from ..adapter import Adapter, load_policy_line
 
 
 class StringAdapter(Adapter):
