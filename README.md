@@ -232,7 +232,7 @@ https://casbin.org/docs/role-managers
 
 If your code use `async` / `await` and is heavily dependent on I/O operations, you can adopt Async Enforcer!
 
-1. Create an async engine and new a Casbin AsyncEnforcer with a model file and an async Pycasbin adapter:
+1. Create an async engine and new a Casbin AsyncEnforcer with a model file and an async Pycasbin adapter (AsyncAdapter subclass):
 
 ```python
 import asyncio
@@ -265,6 +265,8 @@ async def get_enforcer():
 ```
 
 Note: you can see all supported adapters in [Adapters | Casbin](https://casbin.org/docs/adapters).
+
+Built-in async adapters are available in `casbin.persist.adapters.asyncio`.
 
 2. Add an enforcement hook into your code right before the access happens:
 

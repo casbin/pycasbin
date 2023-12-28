@@ -11,55 +11,53 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11']
+        python-version: ["3.9", "3.10", "3.11"]
         os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-        pip install -r requirements_dev.txt
-        pip install coveralls
-        pip install pytest
-        pip install pytest-benchmark
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements_dev.txt
+          pip install coveralls
 
-    - name: Run tests
-      run: coverage run -m unittest discover -s tests -t tests
+      - name: Run tests
+        run: coverage run -m unittest discover -s tests -t tests
 
-    - name: Run benchmark
-      run: python3 -m pytest 
-            --benchmark-verbose 
-            --benchmark-columns=mean,stddev,iqr,ops,rounds 
-            tests/benchmarks/benchmark_model.py
-            tests/benchmarks/benchmark_management_api.py
-            tests/benchmarks/benchmark_role_manager.py
+      - name: Run benchmark
+        run: python3 -m pytest
+          --benchmark-verbose
+          --benchmark-columns=mean,stddev,iqr,ops,rounds
+          tests/benchmarks/benchmark_model.py
+          tests/benchmarks/benchmark_management_api.py
+          tests/benchmarks/benchmark_role_manager.py
 
-    - name: Upload coverage data to coveralls.io
-      run: coveralls --service=github
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        COVERALLS_FLAG_NAME: ${{ matrix.os }} - ${{ matrix.python-version }}
-        COVERALLS_PARALLEL: true
+      - name: Upload coverage data to coveralls.io
+        run: coveralls --service=github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.os }} - ${{ matrix.python-version }}
+          COVERALLS_PARALLEL: true
 
   lint:
     name: Run Linters
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Super-Linter
-        uses: github/super-linter@v4.9.2
+        uses: super-linter/super-linter@v5.7.2
         env:
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_PYTHON_BLACK: true
@@ -74,36 +72,36 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3-slim
     steps:
-    - name: Finished
-      run: |
-        pip3 install --upgrade coveralls
-        coveralls --finish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Finished
+        run: |
+          pip3 install --upgrade coveralls
+          coveralls --finish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: [ test, coveralls ]
+    needs: [test, coveralls]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Setup
         run: npm install
-      
+
       - name: Set up python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.11
-      
+
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

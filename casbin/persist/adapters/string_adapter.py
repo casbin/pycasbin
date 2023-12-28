@@ -12,13 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from casbin import persist, load_policy_line
-import os
-
 from casbin.util import util
 
+from ..adapter import Adapter, load_policy_line
 
-class StringAdapter(persist.Adapter):
+
+class StringAdapter(Adapter):
     """the string adapter for Casbin.
     It can load policy from string or save policy to string.
     """
