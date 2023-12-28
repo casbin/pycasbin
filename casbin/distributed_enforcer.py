@@ -13,8 +13,7 @@
 # limitations under the License.
 
 from casbin.model.policy_op import PolicyOp
-from casbin.persist import batch_adapter
-from casbin.persist.adapters import update_adapter
+from casbin.persist import batch_adapter, update_adapter
 from casbin.synced_enforcer import SyncedEnforcer
 
 

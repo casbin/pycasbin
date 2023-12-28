@@ -15,6 +15,7 @@
 import casbin
 from unittest import TestCase
 from tests.test_enforcer import get_examples
+from casbin.persist.adapters import FilteredFileAdapter
 
 
 class Filter:
@@ -23,14 +24,14 @@ class Filter:
     G = []
 
 
-class TestFilteredAdapter(TestCase):
+class TestFilteredFileAdapter(TestCase):
     def test_init_filtered_adapter(self):
-        adapter = casbin.persist.adapters.FilteredAdapter(get_examples("rbac_with_domains_policy.csv"))
+        adapter = FilteredFileAdapter(get_examples("rbac_with_domains_policy.csv"))
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
         self.assertFalse(e.has_policy(["admin", "domain1", "data1", "read"]))
 
     def test_load_filtered_policy(self):
-        adapter = casbin.persist.adapters.FilteredAdapter(get_examples("rbac_with_domains_policy.csv"))
+        adapter = FilteredFileAdapter(get_examples("rbac_with_domains_policy.csv"))
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
         filter = Filter()
         filter.P = ["", "domain1"]
@@ -59,7 +60,7 @@ class TestFilteredAdapter(TestCase):
             e.get_adapter().save_policy(e.get_model())
 
     def test_append_filtered_policy(self):
-        adapter = casbin.persist.adapters.FilteredAdapter(get_examples("rbac_with_domains_policy.csv"))
+        adapter = FilteredFileAdapter(get_examples("rbac_with_domains_policy.csv"))
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
         filter = Filter()
         filter.P = ["", "domain1"]
@@ -92,7 +93,7 @@ class TestFilteredAdapter(TestCase):
         self.assertTrue(e.has_policy(["admin", "domain2", "data2", "read"]))
 
     def test_filtered_policy_invalid_filter(self):
-        adapter = casbin.persist.adapters.FilteredAdapter(get_examples("rbac_with_domains_policy.csv"))
+        adapter = FilteredFileAdapter(get_examples("rbac_with_domains_policy.csv"))
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
         filter = ["", "domain1"]
 
@@ -100,7 +101,7 @@ class TestFilteredAdapter(TestCase):
             e.load_filtered_policy(filter)
 
     def test_filtered_policy_empty_filter(self):
-        adapter = casbin.persist.adapters.FilteredAdapter(get_examples("rbac_with_domains_policy.csv"))
+        adapter = FilteredFileAdapter(get_examples("rbac_with_domains_policy.csv"))
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
 
         try:
@@ -128,14 +129,14 @@ class TestFilteredAdapter(TestCase):
             e.load_filtered_policy(filter)
 
     def test_filtered_adapter_empty_filepath(self):
-        adapter = casbin.persist.adapters.FilteredAdapter("")
+        adapter = FilteredFileAdapter("")
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
 
         with self.assertRaises(RuntimeError):
             e.load_filtered_policy(None)
 
     def test_filtered_adapter_invalid_filepath(self):
-        adapter = casbin.persist.adapters.FilteredAdapter(get_examples("does_not_exist_policy.csv"))
+        adapter = FilteredFileAdapter(get_examples("does_not_exist_policy.csv"))
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
 
         with self.assertRaises(RuntimeError):

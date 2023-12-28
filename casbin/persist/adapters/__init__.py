@@ -13,5 +13,10 @@
 # limitations under the License.
 
 from .file_adapter import FileAdapter
-from .adapter_filtered import FilteredAdapter
-from .update_adapter import UpdateAdapter
+from .filtered_file_adapter import FilteredFileAdapter
+from ..update_adapter import UpdateAdapter
+
+# alias import for backwards compatibility
+FilteredAdapter = FilteredFileAdapter
+
+__all__ = ["FileAdapter", "FilteredFileAdapter", "FilteredAdapter", "UpdateAdapter"]

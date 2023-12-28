@@ -96,7 +96,6 @@ class Config:
                 buf.append(p)
 
     def _write(self, section, line_num, b):
-
         buf = "".join(b)
         if len(buf) <= 0:
             return
