@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.34.0](https://github.com/casbin/pycasbin/compare/v1.33.0...v1.34.0) (2023-12-28)
+
+
+### Features
+
+* add interface stubs for async adapters ([#335](https://github.com/casbin/pycasbin/issues/335)) ([d557189](https://github.com/casbin/pycasbin/commit/d557189eecee788e81d20ceae3cb1dee16a84ae7))
+
 # [1.33.0](https://github.com/casbin/pycasbin/compare/v1.32.0...v1.33.0) (2023-10-25)
 
 
