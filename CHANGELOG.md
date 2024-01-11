@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.35.0](https://github.com/casbin/pycasbin/compare/v1.34.0...v1.35.0) (2024-01-11)
+
+
+### Features
+
+* support up to Python 3.12 ([6dea204](https://github.com/casbin/pycasbin/commit/6dea20476328b947cf1e4e837acf340e371655c6))
+
 # [1.34.0](https://github.com/casbin/pycasbin/compare/v1.33.0...v1.34.0) (2023-12-28)
 
 
