@@ -16,6 +16,7 @@ import casbin
 from tests.test_enforcer import get_examples, TestCaseBase
 from unittest import IsolatedAsyncioTestCase
 
+
 class SampleWatcher:
     def __init__(self):
         self.callback = None
@@ -113,7 +114,7 @@ class SampleWatcher:
         pass
 
 
-class AsyncSampleWatcher():
+class AsyncSampleWatcher:
     def __init__(self):
         self.callback = None
         self.notify_message = None
@@ -292,7 +293,7 @@ class TestAsyncWatcherEx(IsolatedAsyncioTestCase):
             model,
             adapter,
         )
-    
+
     async def test_auto_notify_enabled(self):
         e = self.get_enforcer(
             get_examples("basic_model.conf"),
@@ -327,7 +328,6 @@ class TestAsyncWatcherEx(IsolatedAsyncioTestCase):
 
         await e.remove_policies(rules)
         self.assertEqual(w.notify_message, "called remove policies")
-
 
     async def test_auto_notify_disabled(self):
         e = self.get_enforcer(
