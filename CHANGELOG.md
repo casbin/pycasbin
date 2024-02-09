@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.36.0](https://github.com/casbin/pycasbin/compare/v1.35.0...v1.36.0) (2024-02-09)
+
+
+### Features
+
+* Added support for async watcher callbacks [#340](https://github.com/casbin/pycasbin/issues/340) ([#341](https://github.com/casbin/pycasbin/issues/341)) ([c04d832](https://github.com/casbin/pycasbin/commit/c04d83237264178624780d70ab6dee89854ac87b))
+
 # [1.35.0](https://github.com/casbin/pycasbin/compare/v1.34.0...v1.35.0) (2024-01-11)
 
 
