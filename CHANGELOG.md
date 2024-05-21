@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.36.1](https://github.com/casbin/pycasbin/compare/v1.36.0...v1.36.1) (2024-05-21)
+
+
+### Bug Fixes
+
+* FastEnforcer not fast ([#344](https://github.com/casbin/pycasbin/issues/344)) ([8aef43b](https://github.com/casbin/pycasbin/commit/8aef43bcd03943a860c2cb530f499e67eac38375))
+
 # [1.36.0](https://github.com/casbin/pycasbin/compare/v1.35.0...v1.36.0) (2024-02-09)
 
 
