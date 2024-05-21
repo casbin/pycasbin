@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import time
 from typing import Sequence
 from unittest import TestCase
 
@@ -35,6 +36,24 @@ class TestCaseBase(TestCase):
 
 
 class TestFastEnforcer(TestCaseBase):
+    def test_performance(self) -> None:
+        e1 = self.get_enforcer(
+            get_examples("performance/rbac_with_pattern_large_scale_model.conf"),
+            get_examples("performance/rbac_with_pattern_large_scale_policy.csv"),
+        )
+        e2 = self.get_enforcer(
+            get_examples("performance/rbac_with_pattern_large_scale_model.conf"),
+            get_examples("performance/rbac_with_pattern_large_scale_policy.csv"),
+            [2, 1],
+        )
+        s_e1 = time.perf_counter()
+        e1.enforce("alice", "data1", "read")
+        t_e1 = time.perf_counter() - s_e1
+        s_e2 = time.perf_counter()
+        e2.enforce("alice", "data1", "read")
+        t_e2 = time.perf_counter() - s_e2
+        assert t_e1 > t_e2 * 5
+
     def test_creates_proper_policy(self) -> None:
         e = self.get_enforcer(
             get_examples("basic_model.conf"),

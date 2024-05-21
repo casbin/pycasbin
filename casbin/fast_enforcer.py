@@ -31,7 +31,7 @@ class FastEnforcer(Enforcer):
         """decides whether a "subject" can access a "object" with the operation "action",
         input parameters are usually: (sub, obj, act).
         """
-        if FastEnforcer._cache_key_order is None:
+        if self._cache_key_order is None:
             result, _ = self.enforce_ex(*rvals)
         else:
             keys = [rvals[x] for x in self._cache_key_order]
