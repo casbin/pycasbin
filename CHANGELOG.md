@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.36.2](https://github.com/casbin/pycasbin/compare/v1.36.1...v1.36.2) (2024-06-11)
+
+
+### Bug Fixes
+
+* field_index is incorrect in RBAC with domains mode ([#345](https://github.com/casbin/pycasbin/issues/345)) ([#346](https://github.com/casbin/pycasbin/issues/346)) ([9f6a379](https://github.com/casbin/pycasbin/commit/9f6a379d27d69366c156c8536ec48904c8b321ab))
+
 ## [1.36.1](https://github.com/casbin/pycasbin/compare/v1.36.0...v1.36.1) (2024-05-21)
 
 
