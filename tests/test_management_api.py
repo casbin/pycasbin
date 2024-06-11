@@ -38,6 +38,18 @@ class TestManagementApi(TestCaseBase):
         self.assertEqual(e.get_all_actions(), ["read", "write"])
         self.assertEqual(e.get_all_roles(), ["data2_admin"])
 
+    def test_get_list_with_domains(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_domains_model.conf"),
+            get_examples("rbac_with_domains_policy.csv"),
+            # True,
+        )
+
+        self.assertEqual(e.get_all_subjects(), ["admin"])
+        self.assertEqual(e.get_all_objects(), ["data1", "data2"])
+        self.assertEqual(e.get_all_actions(), ["read", "write"])
+        self.assertEqual(e.get_all_roles(), ["admin"])
+
     def test_get_policy_api(self):
         e = self.get_enforcer(
             get_examples("rbac_model.conf"),
