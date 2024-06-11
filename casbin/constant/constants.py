@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # Index constants
+ACTION_INDEX = "act"
 DOMAIN_INDEX = "dom"
 SUBJECT_INDEX = "sub"
 OBJECT_INDEX = "obj"

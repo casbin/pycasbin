@@ -14,6 +14,7 @@
 
 from casbin.internal_enforcer import InternalEnforcer
 from casbin.model.policy_op import PolicyOp
+from casbin.constant.constants import ACTION_INDEX, SUBJECT_INDEX, OBJECT_INDEX
 
 
 class ManagementEnforcer(InternalEnforcer):
@@ -27,7 +28,7 @@ class ManagementEnforcer(InternalEnforcer):
 
     def get_all_named_subjects(self, ptype):
         """gets the list of subjects that show up in the current named policy."""
-        field_index = self.model.get_field_index(ptype, "sub")
+        field_index = self.model.get_field_index(ptype, SUBJECT_INDEX)
         return self.model.get_values_for_field_in_policy("p", ptype, field_index)
 
     def get_all_objects(self):
@@ -36,7 +37,7 @@ class ManagementEnforcer(InternalEnforcer):
 
     def get_all_named_objects(self, ptype):
         """gets the list of objects that show up in the current named policy."""
-        field_index = self.model.get_field_index(ptype, "obj")
+        field_index = self.model.get_field_index(ptype, OBJECT_INDEX)
         return self.model.get_values_for_field_in_policy("p", ptype, field_index)
 
     def get_all_actions(self):
@@ -45,7 +46,7 @@ class ManagementEnforcer(InternalEnforcer):
 
     def get_all_named_actions(self, ptype):
         """gets the list of actions that show up in the current named policy."""
-        field_index = self.model.get_field_index(ptype, "act")
+        field_index = self.model.get_field_index(ptype, ACTION_INDEX)
         return self.model.get_values_for_field_in_policy("p", ptype, field_index)
 
     def get_all_roles(self):
