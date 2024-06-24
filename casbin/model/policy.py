@@ -44,8 +44,9 @@ class Policy:
             return
 
         for ptype, ast in self["g"].items():
-            rm = rm_map[ptype]
-            ast.build_role_links(rm)
+            rm = rm_map.get(ptype)
+            if rm:
+                ast.build_role_links(rm)
 
     def build_incremental_role_links(self, rm, op, sec, ptype, rules):
         if sec == "g":
