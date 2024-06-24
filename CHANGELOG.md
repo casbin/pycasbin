@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.36.3](https://github.com/casbin/pycasbin/compare/v1.36.2...v1.36.3) (2024-06-24)
+
+
+### Bug Fixes
+
+* KeyError: 'g' when build_role_links ([bf9cb44](https://github.com/casbin/pycasbin/commit/bf9cb4403f290b1313a86a2dce1c81eb36a043b0))
+
 ## [1.36.2](https://github.com/casbin/pycasbin/compare/v1.36.1...v1.36.2) (2024-06-11)
 
 
