@@ -312,12 +312,3 @@ class AsyncInternalEnforcer(CoreEnforcer):
                 self.watcher.update()
 
         return rule_removed
-
-    async def get_field_index(self, ptype, field):
-        """gets the index of the field name."""
-        return self.model.get_field_index(ptype, field)
-
-    async def set_field_index(self, ptype, field, index):
-        """sets the index of the field name."""
-        assertion = self.model["p"][ptype]
-        assertion.field_index_map[field] = index

@@ -16,6 +16,7 @@ from functools import partial
 
 from casbin.async_management_enforcer import AsyncManagementEnforcer
 from casbin.util import join_slice, array_remove_duplicates, set_subtract
+from casbin.constant.constants import DOMAIN_INDEX, SUBJECT_INDEX, OBJECT_INDEX
 
 
 class AsyncEnforcer(AsyncManagementEnforcer):
@@ -280,8 +281,8 @@ class AsyncEnforcer(AsyncManagementEnforcer):
         get_implicit_users_for_resource("data1") will return [[alice data1 read]]
         Note: only users will be returned, roles (2nd arg in "g") will be excluded."""
         permissions = dict()
-        subject_index = await self.get_field_index("p", "sub")
-        object_index = await self.get_field_index("p", "obj")
+        subject_index = await self.get_field_index("p", SUBJECT_INDEX)
+        object_index = await self.get_field_index("p", OBJECT_INDEX)
         rm = self.get_role_manager()
         roles = self.get_all_roles()
 
@@ -304,9 +305,9 @@ class AsyncEnforcer(AsyncManagementEnforcer):
         """get implicit user based on resource and domain.
         Compared to GetImplicitUsersForResource, domain is supported"""
         permissions = dict()
-        subject_index = await self.get_field_index("p", "sub")
-        object_index = await self.get_field_index("p", "obj")
-        dom_index = await self.get_field_index("p", "dom")
+        subject_index = await self.get_field_index("p", SUBJECT_INDEX)
+        object_index = await self.get_field_index("p", OBJECT_INDEX)
+        dom_index = await self.get_field_index("p", DOMAIN_INDEX)
         rm = self.get_role_manager()
         roles = await self.get_all_roles_by_domain(domain)
 

@@ -13,6 +13,8 @@
 # limitations under the License.
 
 import logging
+from casbin.util import util
+from casbin.constant.constants import PRIORITY_INDEX
 
 DEFAULT_SEP = ","
 
@@ -119,14 +121,17 @@ class Policy:
         else:
             return False
 
-        if sec == "p" and assertion.priority_index >= 0:
+        has_priority = False
+        if assertion.field_index_map.get(PRIORITY_INDEX) is not None:
+            has_priority = True
+        if sec == "p" and has_priority:
             try:
-                idx_insert = int(rule[assertion.priority_index])
+                idx_insert = int(rule[assertion.field_index_map[PRIORITY_INDEX]])
 
                 i = len(assertion.policy) - 1
                 for i in range(i, 0, -1):
                     try:
-                        idx = int(assertion.policy[i - 1][assertion.priority_index])
+                        idx = int(assertion.policy[i - 1][assertion.field_index_map[PRIORITY_INDEX]])
                     except Exception as e:
                         print(e)
 
@@ -303,3 +308,57 @@ class Policy:
                 values.append(value)
 
         return values
+
+    def get_values_for_field_in_policy_all_types(self, sec, field_index):
+        """gets all values for a field for all rules in a policy of all ptypes, duplicated values are removed."""
+        values = []
+        if sec not in self.keys():
+            return values
+
+        for ptype in self[sec]:
+            value = self.get_values_for_field_in_policy(sec, ptype, field_index)
+            values.extend(value)
+
+        values = util.array_remove_duplicates(values)
+
+        return values
+
+    def get_values_for_field_in_policy_all_types_by_name(self, sec, field):
+        """gets all values for a field for all rules in a policy of all ptypes, duplicated values are removed."""
+        values = []
+        if sec not in self.keys():
+            return values
+
+        for ptype in self[sec]:
+            index = self.get_field_index(ptype, field)
+            value = self.get_values_for_field_in_policy(sec, ptype, index)
+            values.extend(value)
+
+        values = util.array_remove_duplicates(values)
+
+        return values
+
+    def get_field_index(self, ptype, field):
+        """get_field_index gets the index of the field for a ptype in a policy,
+        return -1 if the field does not exist."""
+        assertion = self["p"][ptype]
+        if field in assertion.field_index_map:
+            return assertion.field_index_map[field]
+
+        pattern = f"{ptype}_{field}"
+        index = -1
+        for i, token in enumerate(assertion.tokens):
+            if token == pattern:
+                index = i
+                break
+
+        if index == -1:
+            return index
+
+        assertion.field_index_map[field] = index
+        return index
+
+    def set_field_index(self, ptype, field, index):
+        """sets the index of the field name."""
+        assertion = self["p"][ptype]
+        assertion.field_index_map[field] = index
