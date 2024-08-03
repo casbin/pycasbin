@@ -14,7 +14,7 @@
 from unittest import IsolatedAsyncioTestCase
 
 import casbin
-from casbin.constant.constants import DOMAIN_INDEX
+from casbin.constant.constants import DOMAIN_INDEX, SUBJECT_INDEX, OBJECT_INDEX, PRIORITY_INDEX, ACTION_INDEX
 from tests.test_enforcer import get_examples, TestCaseBase
 
 
@@ -468,14 +468,36 @@ class TestRbacApi(TestCaseBase):
         self.assertTrue(e.enforce("bob", "domain2", "data2", "read"))
         self.assertTrue(e.enforce("bob", "domain2", "data2", "write"))
 
-    def test_set_field_index(self):
+    def test_customized_field_index(self):
         e = self.get_enforcer(
-            get_examples("rbac_with_domains_model.conf"),
-            get_examples("rbac_with_domains_policy.csv"),
+            get_examples("priority_model_explicit_customized.conf"),
+            get_examples("priority_policy_explicit_customized.csv"),
         )
-        self.assertEqual(e.get_field_index("p", DOMAIN_INDEX), 1)
-        e.set_field_index("p", DOMAIN_INDEX, 2)
-        self.assertEqual(e.get_field_index("p", DOMAIN_INDEX), 2)
+
+        self.assertEqual(0, e.get_field_index("p", "customized_priority"))
+        self.assertEqual(1, e.get_field_index("p", OBJECT_INDEX))
+        self.assertEqual(2, e.get_field_index("p", ACTION_INDEX))
+        self.assertEqual(3, e.get_field_index("p", "eft"))
+        self.assertEqual(4, e.get_field_index("p", "subject"))
+
+        self.assertTrue(e.enforce("bob", "data2", "read"))
+        e.set_field_index("p", PRIORITY_INDEX, 0)
+        e.load_policy()
+        self.assertFalse(e.enforce("bob", "data2", "read"))
+
+        self.assertTrue(e.enforce("bob", "data2", "write"))
+        e.add_policy("1", "data2", "write", "deny", "bob")
+        self.assertFalse(e.enforce("bob", "data2", "write"))
+
+        self.assertFalse(e.delete_permissions_for_user("bob"))
+
+        e.set_field_index("p", SUBJECT_INDEX, 4)
+
+        self.assertTrue(e.delete_permissions_for_user("bob"))
+        self.assertTrue(e.enforce("bob", "data2", "write"))
+
+        self.assertTrue(e.delete_role("data2_allow_group"))
+        self.assertFalse(e.enforce("bob", "data2", "write"))
 
 
 class TestRbacApiSynced(TestRbacApi):

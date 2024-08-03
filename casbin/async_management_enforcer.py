@@ -13,6 +13,7 @@
 # limitations under the License.
 from casbin.async_internal_enforcer import AsyncInternalEnforcer
 from casbin.model.policy_op import PolicyOp
+from casbin.constant.constants import ACTION_INDEX, SUBJECT_INDEX, OBJECT_INDEX
 
 
 class AsyncManagementEnforcer(AsyncInternalEnforcer):
@@ -22,27 +23,30 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
 
     def get_all_subjects(self):
         """gets the list of subjects that show up in the current policy."""
-        return self.get_all_named_subjects("p")
+        return self.model.get_values_for_field_in_policy_all_types_by_name("p", SUBJECT_INDEX)
 
     def get_all_named_subjects(self, ptype):
         """gets the list of subjects that show up in the current named policy."""
-        return self.model.get_values_for_field_in_policy("p", ptype, 0)
+        field_index = self.model.get_field_index(ptype, SUBJECT_INDEX)
+        return self.model.get_values_for_field_in_policy("p", ptype, field_index)
 
     def get_all_objects(self):
         """gets the list of objects that show up in the current policy."""
-        return self.get_all_named_objects("p")
+        return self.model.get_values_for_field_in_policy_all_types_by_name("p", OBJECT_INDEX)
 
     def get_all_named_objects(self, ptype):
         """gets the list of objects that show up in the current named policy."""
-        return self.model.get_values_for_field_in_policy("p", ptype, 1)
+        field_index = self.model.get_field_index(ptype, OBJECT_INDEX)
+        return self.model.get_values_for_field_in_policy("p", ptype, field_index)
 
     def get_all_actions(self):
         """gets the list of actions that show up in the current policy."""
-        return self.get_all_named_actions("p")
+        return self.model.get_values_for_field_in_policy_all_types_by_name("p", ACTION_INDEX)
 
     def get_all_named_actions(self, ptype):
         """gets the list of actions that show up in the current named policy."""
-        return self.model.get_values_for_field_in_policy("p", ptype, 2)
+        field_index = self.model.get_field_index(ptype, ACTION_INDEX)
+        return self.model.get_values_for_field_in_policy("p", ptype, field_index)
 
     def get_all_roles(self):
         """gets the list of roles that show up in the current named policy."""
@@ -302,3 +306,12 @@ class AsyncManagementEnforcer(AsyncInternalEnforcer):
     def add_function(self, name, func):
         """adds a customized function."""
         self.fm.add_function(name, func)
+
+    async def get_field_index(self, ptype, field):
+        """gets the index of the field name."""
+        return self.model.get_field_index(ptype, field)
+
+    async def set_field_index(self, ptype, field, index):
+        """sets the index of the field name."""
+        assertion = self.model["p"][ptype]
+        assertion.field_index_map[field] = index
