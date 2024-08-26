@@ -47,13 +47,12 @@ def _extract_tokens(line):
         elif not stack:
             # must be a comma outside of any nesting: we've found the end of a top level token so
             # save that and start a new one
-            tokens.append(line[start_idx : match.start()])
+            tokens.append(line[start_idx : match.start()].strip())
             start_idx = match.end()
 
     # trailing token after the last ,
-    tokens.append(line[start_idx:])
+    tokens.append(line[start_idx:].strip())
 
-    tokens = [x.strip() for x in tokens]
     return tokens
 
 
