@@ -44,7 +44,7 @@ def _extract_tokens(line):
             stack.append(c)
         elif c == "]" or c == ")":
             stack.pop()
-        elif len(stack) == 0:
+        elif not stack:
             # must be a comma outside of any nesting: we've found the end of a top level token so
             # save that and start a new one
             tokens.append(line[start_idx : match.start()])
