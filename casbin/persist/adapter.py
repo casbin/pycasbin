@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def load_policy_line(line, model):
-    """loads a text line as a policy rule to model."""
+def _extract_tokens(line):
+    """Return the list of 'tokens' from the line, or None if this line has none"""
 
     if line == "":
-        return
+        return None
 
     if line[:1] == "#":
-        return
+        return None
 
     stack = []
     tokens = []
@@ -40,6 +40,15 @@ def load_policy_line(line, model):
                 tokens[-1] += c
 
     tokens = [x.strip() for x in tokens]
+    return tokens
+
+
+def load_policy_line(line, model):
+    """loads a text line as a policy rule to model."""
+
+    tokens = _extract_tokens(line)
+    if tokens is None:
+        return
 
     key = tokens[0]
     sec = key[0]
