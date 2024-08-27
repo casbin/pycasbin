@@ -39,6 +39,7 @@ jobs:
           tests/benchmarks/benchmark_model.py
           tests/benchmarks/benchmark_management_api.py
           tests/benchmarks/benchmark_role_manager.py
+          tests/benchmarks/benchmark_adapter.py
 
       - name: Upload coverage data to coveralls.io
         run: coveralls --service=github
