@@ -64,7 +64,7 @@ class FilteredFileAdapter(FileAdapter, FilteredAdapter):
                 line = line.decode().strip()
                 if not line or line == "\n":
                     continue
-                    
+
                 if filter_line(line, filter):
                     continue
 
@@ -96,8 +96,9 @@ def filter_line(line, filter):
         filter_slice = filter[1]
     elif p[0].strip() == "p":
         filter_slice = filter[0]
-    
+
     return filter_words(p, filter_slice)
+
 
 def filter_words(line, filter):
     if len(line) < len(filter) + 1:
@@ -107,5 +108,5 @@ def filter_words(line, filter):
         if v and v.strip() and (v.strip() != line[i + 1].strip()):
             skip_line = True
             break
-    
+
     return skip_line
