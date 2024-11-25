@@ -52,25 +52,28 @@ class FilteredFileAdapter(FileAdapter, FilteredAdapter):
 
         try:
             filter_value = [filter.__dict__["P"]] + [filter.__dict__["G"]]
+            is_empty_filter = all(not f for f in filter_value) or all(
+                all(not x.strip() for x in f) if f else True for f in filter_value
+            )
+            if is_empty_filter:
+                return self.load_policy(model)
         except:
             raise RuntimeError("invalid filter type")
 
         self.load_filtered_policy_file(model, filter_value, persist.load_policy_line)
         self.filtered = True
 
-    def load_filtered_policy_file(self, model, filter, hanlder):
+    def load_filtered_policy_file(self, model, filter, handler):
         with open(self._file_path, "rb") as file:
-            while True:
-                line = file.readline()
+            for line in file:
                 line = line.decode().strip()
-                if line == "\n":
+                if not line or line == "\n":
                     continue
-                if not line:
-                    break
+
                 if filter_line(line, filter):
                     continue
 
-                hanlder(line, model)
+                handler(line, model)
 
     # is_filtered returns true if the loaded policy has been filtered.
     def is_filtered(self):
@@ -92,10 +95,13 @@ def filter_line(line, filter):
         return True
     filter_slice = []
 
-    if p[0].strip() == "p":
-        filter_slice = filter[0]
-    elif p[0].strip() == "g":
+    if p[0].strip() == "g":
+        if not filter[1] or all(not x.strip() for x in filter[1]):
+            return False
         filter_slice = filter[1]
+    elif p[0].strip() == "p":
+        filter_slice = filter[0]
+
     return filter_words(p, filter_slice)
 
 
@@ -104,7 +110,7 @@ def filter_words(line, filter):
         return True
     skip_line = False
     for i, v in enumerate(filter):
-        if len(v) > 0 and (v.strip() != line[i + 1].strip()):
+        if v and v.strip() and (v.strip() != line[i + 1].strip()):
             skip_line = True
             break
 
