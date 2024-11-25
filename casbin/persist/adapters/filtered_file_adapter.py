@@ -52,6 +52,11 @@ class FilteredFileAdapter(FileAdapter, FilteredAdapter):
 
         try:
             filter_value = [filter.__dict__["P"]] + [filter.__dict__["G"]]
+            is_empty_filter = all(not f for f in filter_value) or all(
+                all(not x.strip() for x in f) if f else True for f in filter_value
+            )
+            if is_empty_filter:
+                return self.load_policy(model)
         except:
             raise RuntimeError("invalid filter type")
 
