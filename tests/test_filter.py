@@ -12,14 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import casbin
+import os
 from unittest import TestCase
+import casbin
 from tests.test_enforcer import get_examples
 from casbin.persist.adapters import FilteredFileAdapter
 from casbin.persist.adapters.filtered_file_adapter import filter_line, filter_words
-import tempfile
-import shutil
-import os
 
 
 class Filter:
@@ -171,7 +169,7 @@ class TestFilteredFileAdapter(TestCase):
         self.assertTrue(e.has_policy(["admin", "domain2", "data2", "read"]))
 
     def test_mixed_empty_filter(self):
-        """测试混合空字符串和非空字符串的过滤器"""
+        """Test the filter for mixed empty and non-empty strings."""
         adapter = FilteredFileAdapter(get_examples("rbac_with_domains_policy.csv"))
         e = casbin.Enforcer(get_examples("rbac_with_domains_model.conf"), adapter)
         filter = Filter()
