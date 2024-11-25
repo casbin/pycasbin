@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.37.0](https://github.com/casbin/pycasbin/compare/v1.36.3...v1.37.0) (2024-11-25)
+
+
+### Features
+
+* enhance FilteredFileAdapter to handle flexible filtering for policies and roles ([#360](https://github.com/casbin/pycasbin/issues/360)) ([936d5f6](https://github.com/casbin/pycasbin/commit/936d5f68df1d60b233f411489cc69f8b095c899a))
+
 ## [1.36.3](https://github.com/casbin/pycasbin/compare/v1.36.2...v1.36.3) (2024-06-24)
 
 
