@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .string_adapter import StringAdapter
 from .file_adapter import FileAdapter
 from .filtered_file_adapter import FilteredFileAdapter
 from ..update_adapter import UpdateAdapter
@@ -19,4 +20,4 @@ from ..update_adapter import UpdateAdapter
 # alias import for backwards compatibility
 FilteredAdapter = FilteredFileAdapter
 
-__all__ = ["FileAdapter", "FilteredFileAdapter", "FilteredAdapter", "UpdateAdapter"]
+__all__ = ["StringAdapter", "FileAdapter", "FilteredFileAdapter", "FilteredAdapter", "UpdateAdapter"]
