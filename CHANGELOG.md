@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.38.0](https://github.com/casbin/pycasbin/compare/v1.37.0...v1.38.0) (2025-01-12)
+
+
+### Features
+
+* add StringAdapter's statement in init.py ([#367](https://github.com/casbin/pycasbin/issues/367)) ([bf84eed](https://github.com/casbin/pycasbin/commit/bf84eed7305d22338aae185a7d65e0d429927e89))
+
 # [1.37.0](https://github.com/casbin/pycasbin/compare/v1.36.3...v1.37.0) (2024-11-25)
 
 
