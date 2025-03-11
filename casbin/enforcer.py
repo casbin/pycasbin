@@ -335,3 +335,22 @@ class Enforcer(ManagementEnforcer):
 
         permissions = [list(t) for t in (list(key) for key in permissions.keys())]
         return permissions
+    
+    def get_allowed_object_conditions(self, user, action, prefix):
+            """
+            GetAllowedObjectConditions returns a string array of object conditions that the user can access.
+            """
+            Permissions = self.get_implicit_permissions_for_user(user)
+
+            object_conditions = []
+
+            for policy in Permissions:
+                if policy[2] == action:
+                    if not policy[1].startswith(prefix):
+                        return None
+                    object_conditions.append(policy[1].removeprefix(prefix))
+            
+            if len(object_conditions) == 0:
+                return None
+            
+            return object_conditions
