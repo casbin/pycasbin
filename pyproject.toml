@@ -1,6 +1,6 @@
 [project]
 name = "casbin"
-version = "1.38.0"
+version = "1.39.0"
 authors = [
     {name = "TechLee", email = "techlee@qq.com"},
 ]
