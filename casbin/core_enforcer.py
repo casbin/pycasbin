@@ -539,6 +539,6 @@ class CoreEnforcer:
     def _get_expression(expr, functions=None):
         expr = expr.replace("&&", "and")
         expr = expr.replace("||", "or")
-        expr = expr.replace("!", "not")
+        # expr = expr.replace("!", "not")
 
         return SimpleEval(expr, functions)
