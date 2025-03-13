@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.39.0](https://github.com/casbin/pycasbin/compare/v1.38.0...v1.39.0) (2025-03-11)
+
+
+### Features
+
+* Port get_allowed_object_conditions() from Golang to Python ([#373](https://github.com/casbin/pycasbin/issues/373)) ([c433a59](https://github.com/casbin/pycasbin/commit/c433a5996f5819f750f628625fd2a1f8f556e8db))
+
 # [1.38.0](https://github.com/casbin/pycasbin/compare/v1.37.0...v1.38.0) (2025-01-12)
 
 
