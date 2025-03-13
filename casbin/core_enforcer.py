@@ -14,6 +14,7 @@
 
 import copy
 import logging
+import re
 
 from casbin.effect import Effector, get_effector, effect_to_bool
 from casbin.model import Model, FunctionMap
@@ -539,6 +540,6 @@ class CoreEnforcer:
     def _get_expression(expr, functions=None):
         expr = expr.replace("&&", "and")
         expr = expr.replace("||", "or")
-        expr = expr.replace("!", "not")
+        expr = re.sub(r"!(?!=)", "not ", expr)
 
         return SimpleEval(expr, functions)
