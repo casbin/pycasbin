@@ -62,6 +62,7 @@ production-ready | production-ready | beta-test | production-ready
 - [Role manager](#role-manager)
 - [Async Enforcer](#async-enforcer)
 - [Benchmarks](#benchmarks)
+- [Logging](#logging)
 - [Examples](#examples)
 - [Middlewares](#middlewares)
 - [Our adopters](#our-adopters)
@@ -290,6 +291,10 @@ asyncio.run(main())
 ## Benchmarks
 
 https://casbin.org/docs/benchmark
+
+## Logging
+
+pycasbin leverages the default Python logging mechanism. The pycasbin package makes a call to `logging.getLogger()` to set the logger. No special logging configuration is needed other than initializing the logger in the parent application. If no logging is initialized within the parent application, you will not see any log messages from pycasbin. At the same time, When you enable log in pycasbin, you can specify the logging configuration through the parameter `logging_config`. If no configuration is specified, it will use the [default log configuration](https://github.com/casbin/pycasbin/blob/c33cabfa0ac65cd09cf812a65e71794d64cb5132/casbin/util/log.py#L6C1-L6C1). For other pycasbin extensions, you can refer to the [Django logging docs](https://docs.djangoproject.com/en/4.2/topics/logging/) if you are a Django user. For other Python users, you should refer to the [Python logging docs](https://docs.python.org/3/library/logging.config.html) to configure the logger.
 
 ## Examples
 
