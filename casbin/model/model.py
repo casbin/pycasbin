@@ -16,6 +16,7 @@ import re
 from casbin import util, config
 from . import Assertion
 from .policy import Policy
+from casbin.constant.constants import DOMAIN_INDEX, PRIORITY_INDEX, SUBJECT_PRIORITY_EFFECT
 
 DEFAULT_DOMAIN = ""
 DEFAULT_SEPARATOR = "::"
@@ -116,19 +117,16 @@ class Model(Policy):
 
     def sort_policies_by_priority(self):
         for ptype, assertion in self["p"].items():
-            for index, token in enumerate(assertion.tokens):
-                if token == f"{ptype}_priority":
-                    assertion.priority_index = index
-                    break
+            priority_index = self.get_field_index(ptype, PRIORITY_INDEX)
 
-            if assertion.priority_index == -1:
+            if priority_index == -1:
                 continue
 
             assertion.policy = sorted(
                 assertion.policy,
-                key=lambda x: int(x[assertion.priority_index])
-                if x[assertion.priority_index].isdigit()
-                else x[assertion.priority_index],
+                key=lambda x: int(x[priority_index])
+                if x[priority_index].isdigit()
+                else x[priority_index],
             )
 
             for i, policy in enumerate(assertion.policy):
@@ -137,16 +135,12 @@ class Model(Policy):
         return None
 
     def sort_policies_by_subject_hierarchy(self):
-        if self["e"]["e"].value != "subjectPriority(p_eft) || deny":
+        if self["e"]["e"].value != SUBJECT_PRIORITY_EFFECT:
             return
 
         sub_index = 0
-        domain_index = -1
         for ptype, assertion in self["p"].items():
-            for index, token in enumerate(assertion.tokens):
-                if token == "{}_dom".format(ptype):
-                    domain_index = index
-                    break
+            domain_index = self.get_field_index(ptype, DOMAIN_INDEX)
 
             subject_hierarchy_map = self.get_subject_hierarchy_map(self["g"]["g"].policy)
 
@@ -230,23 +224,3 @@ class Model(Policy):
         s[-1] = s[-1].strip()
 
         return "".join(s)
-
-    def get_field_index(self, ptype, field):
-        """get_field_index gets the index of the field for a ptype in a policy,
-        return -1 if the field does not exist."""
-        assertion = self["p"][ptype]
-        if field in assertion.field_index_map:
-            return assertion.field_index_map[field]
-
-        pattern = f"{ptype}_{field}"
-        index = -1
-        for i, token in enumerate(assertion.tokens):
-            if token == pattern:
-                index = i
-                break
-
-        if index == -1:
-            return index
-
-        assertion.field_index_map[field] = index
-        return index
