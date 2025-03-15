@@ -10,9 +10,16 @@ from casbin.util.log import configure_logging
 class FastEnforcer(Enforcer):
     _cache_key_order: Sequence[int] = None
 
-    def __init__(self, model=None, adapter=None, enable_log=False, cache_key_order: Sequence[int] = None):
+    def __init__(
+        self,
+        model=None,
+        adapter=None,
+        enable_log=False,
+        logging_config: dict = None,
+        cache_key_order: Sequence[int] = None,
+    ):
         self._cache_key_order = cache_key_order
-        super().__init__(model, adapter, enable_log)
+        super().__init__(model, adapter, enable_log, logging_config)
 
     def new_model(self, path="", text=""):
         """creates a model."""
