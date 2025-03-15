@@ -55,7 +55,7 @@ class CoreEnforcer:
     auto_build_role_links = False
     auto_notify_watcher = False
 
-    def __init__(self, model=None, adapter=None, enable_log=False):
+    def __init__(self, model=None, adapter=None, enable_log=False, logging_config: dict = None):
         self.logger = logging.getLogger("casbin.enforcer")
         if isinstance(model, str):
             if isinstance(adapter, str):
@@ -70,7 +70,7 @@ class CoreEnforcer:
                 self.init_with_model_and_adapter(model, adapter)
 
         if enable_log:
-            configure_logging()
+            configure_logging(logging_config)
         else:
             disabled_logging()
 
