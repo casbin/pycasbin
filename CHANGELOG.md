@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.41.0](https://github.com/casbin/pycasbin/compare/v1.40.0...v1.41.0) (2025-03-15)
+
+
+### Features
+
+* add "logging_config" for PyCasbin logging ([#376](https://github.com/casbin/pycasbin/issues/376)) ([f39ace2](https://github.com/casbin/pycasbin/commit/f39ace2f0a185bccd2a3722f0265c488f304f200))
+
 # [1.40.0](https://github.com/casbin/pycasbin/compare/v1.39.0...v1.40.0) (2025-03-13)
 
 
