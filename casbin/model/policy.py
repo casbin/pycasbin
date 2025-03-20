@@ -39,10 +39,8 @@ class Policy:
 
     def build_role_links(self, rm_map):
         """initializes the roles in RBAC."""
-
         if "g" not in self.keys():
             return
-
         for ptype, ast in self["g"].items():
             rm = rm_map.get(ptype)
             if rm:
@@ -68,28 +66,23 @@ class Policy:
 
     def print_policy(self):
         """Log using info"""
-
         self.logger.info("Policy:")
         for sec in ["p", "g"]:
             if sec not in self.keys():
                 continue
-
             for key, ast in self[sec].items():
                 self.logger.info("{} : {} : {}".format(key, ast.value, ast.policy))
 
     def clear_policy(self):
         """clears all current policy."""
-
         for sec in ["p", "g"]:
             if sec not in self.keys():
                 continue
-
             for key in self[sec].keys():
                 self[sec][key].policy = []
 
     def get_policy(self, sec, ptype):
         """gets all rules in a policy."""
-
         return self[sec][ptype].policy
 
     def get_filtered_policy(self, sec, ptype, field_index, *field_values):
@@ -109,7 +102,6 @@ class Policy:
             return False
         if ptype not in self[sec]:
             return False
-
         return rule in self[sec][ptype].policy
 
     def add_policy(self, sec, ptype, rule):
@@ -123,23 +115,19 @@ class Policy:
         if sec == "p" and assertion.priority_index >= 0:
             try:
                 idx_insert = int(rule[assertion.priority_index])
-
                 i = len(assertion.policy) - 1
                 for i in range(i, 0, -1):
                     try:
                         idx = int(assertion.policy[i - 1][assertion.priority_index])
                     except Exception as e:
                         print(e)
-
                     if idx > idx_insert:
                         tmp = assertion.policy[i]
                         assertion.policy[i] = assertion.policy[i - 1]
                         assertion.policy[i - 1] = tmp
                     else:
                         break
-
                 assertion.policy_map[DEFAULT_SEP.join(rule)] = i
-
             except Exception as e:
                 print(e)
 
@@ -148,19 +136,16 @@ class Policy:
 
     def add_policies(self, sec, ptype, rules):
         """adds policy rules to the model."""
-
         for rule in rules:
             if self.has_policy(sec, ptype, rule):
                 return False
-
         for rule in rules:
-            self[sec][ptype].policy.append(rule)
-
+            if not self.add_policy(sec, ptype, rule):
+                return False
         return True
 
     def update_policy(self, sec, ptype, old_rule, new_rule):
         """update a policy rule from the model."""
-
         if sec not in self.keys():
             return False
         if ptype not in self[sec]:
@@ -175,18 +160,21 @@ class Policy:
 
         if "p_priority" in ast.tokens:
             priority_index = ast.tokens.index("p_priority")
-            if old_rule[priority_index] == new_rule[priority_index]:
-                ast.policy[rule_index] = new_rule
-            else:
+            if old_rule[priority_index] != new_rule[priority_index]:
                 raise Exception("New rule should have the same priority with old rule.")
-        else:
-            ast.policy[rule_index] = new_rule
+        # 替换列表中的规则
+        ast.policy[rule_index] = new_rule
+        # 更新映射：删除旧键，添加新键
+        old_key = DEFAULT_SEP.join(old_rule)
+        new_key = DEFAULT_SEP.join(new_rule)
+        if old_key in ast.policy_map:
+            del ast.policy_map[old_key]
+        ast.policy_map[new_key] = rule_index
 
         return True
 
     def update_policies(self, sec, ptype, old_rules, new_rules):
         """update policy rules from the model."""
-
         if sec not in self.keys():
             return False
         if ptype not in self[sec]:
@@ -206,13 +194,22 @@ class Policy:
         if "p_priority" in ast.tokens:
             priority_index = ast.tokens.index("p_priority")
             for idx, old_rule, new_rule in zip(old_rules_index, old_rules, new_rules):
-                if old_rule[priority_index] == new_rule[priority_index]:
-                    ast.policy[idx] = new_rule
-                else:
+                if old_rule[priority_index] != new_rule[priority_index]:
                     raise Exception("New rule should have the same priority with old rule.")
+                ast.policy[idx] = new_rule
+                old_key = DEFAULT_SEP.join(old_rule)
+                new_key = DEFAULT_SEP.join(new_rule)
+                if old_key in ast.policy_map:
+                    del ast.policy_map[old_key]
+                ast.policy_map[new_key] = idx
         else:
             for idx, old_rule, new_rule in zip(old_rules_index, old_rules, new_rules):
                 ast.policy[idx] = new_rule
+                old_key = DEFAULT_SEP.join(old_rule)
+                new_key = DEFAULT_SEP.join(new_rule)
+                if old_key in ast.policy_map:
+                    del ast.policy_map[old_key]
+                ast.policy_map[new_key] = idx
 
         return True
 
@@ -221,19 +218,30 @@ class Policy:
         if not self.has_policy(sec, ptype, rule):
             return False
 
-        self[sec][ptype].policy.remove(rule)
+        assertion = self[sec][ptype]
+        assertion.policy.remove(rule)
+        # 重新构建映射
+        new_map = {}
+        for idx, r in enumerate(assertion.policy):
+            new_map[DEFAULT_SEP.join(r)] = idx
+        assertion.policy_map = new_map
 
-        return rule not in self[sec][ptype].policy
+        return rule not in assertion.policy
 
     def remove_policies(self, sec, ptype, rules):
         """RemovePolicies removes policy rules from the model."""
-
+        assertion = self[sec][ptype]
         for rule in rules:
             if not self.has_policy(sec, ptype, rule):
                 return False
-            self[sec][ptype].policy.remove(rule)
-            if rule in self[sec][ptype].policy:
+            assertion.policy.remove(rule)
+            if rule in assertion.policy:
                 return False
+        # 重新构建映射
+        new_map = {}
+        for idx, r in enumerate(assertion.policy):
+            new_map[DEFAULT_SEP.join(r)] = idx
+        assertion.policy_map = new_map
 
         return True
 
@@ -243,7 +251,6 @@ class Policy:
             if self.has_policy(sec, ptype, rule):
                 effected.append(rule)
                 self.remove_policy(sec, ptype, rule)
-
         return effected
 
     def remove_filtered_policy_returns_effects(self, sec, ptype, field_index, *field_values):
@@ -266,7 +273,13 @@ class Policy:
             else:
                 tmp.append(rule)
 
-        self[sec][ptype].policy = tmp
+        assertion = self[sec][ptype]
+        assertion.policy = tmp
+        # 重新构建映射
+        new_map = {}
+        for idx, r in enumerate(assertion.policy):
+            new_map[DEFAULT_SEP.join(r)] = idx
+        assertion.policy_map = new_map
 
         return effects
 
@@ -286,7 +299,13 @@ class Policy:
             else:
                 tmp.append(rule)
 
-        self[sec][ptype].policy = tmp
+        assertion = self[sec][ptype]
+        assertion.policy = tmp
+        # 重新构建映射
+        new_map = {}
+        for idx, r in enumerate(assertion.policy):
+            new_map[DEFAULT_SEP.join(r)] = idx
+        assertion.policy_map = new_map
 
         return res
 
@@ -297,10 +316,8 @@ class Policy:
             return values
         if ptype not in self[sec]:
             return values
-
         for rule in self[sec][ptype].policy:
             value = rule[field_index]
             if value not in values:
                 values.append(value)
-
         return values
