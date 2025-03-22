@@ -172,11 +172,6 @@ class Policy:
         else:
             return False
 
-        if ast.tokens and "p_priority" in ast.tokens:
-            priority_index = ast.tokens.index("p_priority")
-            if old_rule[priority_index] != new_rule[priority_index]:
-                raise Exception("New rule should have the same priority with old rule.")
-
         ast.policy[rule_index] = new_rule
 
         old_key = DEFAULT_SEP.join(old_rule)
@@ -186,8 +181,6 @@ class Policy:
         ast.policy_map[new_key] = rule_index
 
         return True
-
-
 
     def update_policies(self, sec, ptype, old_rules, new_rules):
         """update policy rules from the model using update_policy for each rule.
@@ -212,8 +205,6 @@ class Policy:
 
         return True
 
-
-
     def remove_policy(self, sec, ptype, rule):
         """removes a policy rule from the model."""
         if not self.has_policy(sec, ptype, rule):
@@ -229,14 +220,12 @@ class Policy:
 
         return rule not in assertion.policy
 
-
     def remove_policies(self, sec, ptype, rules):
         """Remove multiple policy rules by sequentially calling remove_policy."""
         for rule in rules:
             if not self.remove_policy(sec, ptype, rule):
                 return False
         return True
-
 
     def remove_policies_with_effected(self, sec, ptype, rules):
         effected = []
@@ -270,14 +259,13 @@ class Policy:
 
         assertion = self[sec][ptype]
         assertion.policy = tmp
-   
+
         new_map = {}
         for idx, r in enumerate(assertion.policy):
             new_map[DEFAULT_SEP.join(r)] = idx
         assertion.policy_map = new_map
 
         return effects
-
 
     def remove_filtered_policy(self, sec, ptype, field_index, *field_values):
         """removes policy rules based on field filters from the model."""
@@ -297,14 +285,13 @@ class Policy:
 
         assertion = self[sec][ptype]
         assertion.policy = tmp
-    
+
         new_map = {}
         for idx, r in enumerate(assertion.policy):
             new_map[DEFAULT_SEP.join(r)] = idx
         assertion.policy_map = new_map
 
         return res
-
 
     def get_values_for_field_in_policy(self, sec, ptype, field_index):
         """gets all values for a field for all rules in a policy, duplicated values are removed."""
