@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.42.0](https://github.com/casbin/pycasbin/compare/v1.41.0...v1.42.0) (2025-04-21)
+
+
+### Features
+
+* fix missing await in load_increment_filtered_policy() in async_internal_enforcer.py ([#378](https://github.com/casbin/pycasbin/issues/378)) ([ca26402](https://github.com/casbin/pycasbin/commit/ca264023f60ab83c2f852578ccfb8e567b0d7e0c))
+
 # [1.41.0](https://github.com/casbin/pycasbin/compare/v1.40.0...v1.41.0) (2025-03-15)
 
 
