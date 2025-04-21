@@ -94,7 +94,7 @@ class AsyncInternalEnforcer(CoreEnforcer):
         if not hasattr(self.adapter, "is_filtered"):
             raise ValueError("filtered policies are not supported by this adapter")
 
-        self.adapter.load_filtered_policy(self.model, filter)
+        await self.adapter.load_filtered_policy(self.model, filter)
         self.model.print_policy()
         if self.auto_build_role_links:
             self.build_role_links()
