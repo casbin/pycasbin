@@ -154,13 +154,12 @@ class Policy:
                 return False
 
         for rule in rules:
-            self[sec][ptype].policy.append(rule)
-
+            if not self.add_policy(sec, ptype, rule):
+                return False
         return True
 
     def update_policy(self, sec, ptype, old_rule, new_rule):
         """update a policy rule from the model."""
-
         if sec not in self.keys():
             return False
         if ptype not in self[sec]:
@@ -173,20 +172,19 @@ class Policy:
         else:
             return False
 
-        if "p_priority" in ast.tokens:
-            priority_index = ast.tokens.index("p_priority")
-            if old_rule[priority_index] == new_rule[priority_index]:
-                ast.policy[rule_index] = new_rule
-            else:
-                raise Exception("New rule should have the same priority with old rule.")
-        else:
-            ast.policy[rule_index] = new_rule
+        ast.policy[rule_index] = new_rule
+
+        old_key = DEFAULT_SEP.join(old_rule)
+        new_key = DEFAULT_SEP.join(new_rule)
+        if old_key in ast.policy_map:
+            del ast.policy_map[old_key]
+        ast.policy_map[new_key] = rule_index
 
         return True
 
     def update_policies(self, sec, ptype, old_rules, new_rules):
-        """update policy rules from the model."""
-
+        """update policy rules from the model using update_policy for each rule.
+        If any update fails, roll back all changes."""
         if sec not in self.keys():
             return False
         if ptype not in self[sec]:
@@ -195,24 +193,15 @@ class Policy:
             return False
 
         ast = self[sec][ptype]
-        old_rules_index = []
 
-        for old_rule in old_rules:
-            if old_rule in ast.policy:
-                old_rules_index.append(ast.policy.index(old_rule))
-            else:
+        original_policy = [rule[:] for rule in ast.policy]
+        original_policy_map = ast.policy_map.copy()
+
+        for old_rule, new_rule in zip(old_rules, new_rules):
+            if not self.update_policy(sec, ptype, old_rule, new_rule):
+                ast.policy = original_policy
+                ast.policy_map = original_policy_map
                 return False
-
-        if "p_priority" in ast.tokens:
-            priority_index = ast.tokens.index("p_priority")
-            for idx, old_rule, new_rule in zip(old_rules_index, old_rules, new_rules):
-                if old_rule[priority_index] == new_rule[priority_index]:
-                    ast.policy[idx] = new_rule
-                else:
-                    raise Exception("New rule should have the same priority with old rule.")
-        else:
-            for idx, old_rule, new_rule in zip(old_rules_index, old_rules, new_rules):
-                ast.policy[idx] = new_rule
 
         return True
 
@@ -221,20 +210,21 @@ class Policy:
         if not self.has_policy(sec, ptype, rule):
             return False
 
-        self[sec][ptype].policy.remove(rule)
+        assertion = self[sec][ptype]
+        assertion.policy.remove(rule)
 
-        return rule not in self[sec][ptype].policy
+        new_map = {}
+        for idx, r in enumerate(assertion.policy):
+            new_map[DEFAULT_SEP.join(r)] = idx
+        assertion.policy_map = new_map
+
+        return rule not in assertion.policy
 
     def remove_policies(self, sec, ptype, rules):
-        """RemovePolicies removes policy rules from the model."""
-
+        """Remove multiple policy rules by sequentially calling remove_policy."""
         for rule in rules:
-            if not self.has_policy(sec, ptype, rule):
+            if not self.remove_policy(sec, ptype, rule):
                 return False
-            self[sec][ptype].policy.remove(rule)
-            if rule in self[sec][ptype].policy:
-                return False
-
         return True
 
     def remove_policies_with_effected(self, sec, ptype, rules):
@@ -249,6 +239,7 @@ class Policy:
     def remove_filtered_policy_returns_effects(self, sec, ptype, field_index, *field_values):
         """
         remove_filtered_policy_returns_effects removes policy rules based on field filters from the model.
+        Returns a list of rules that were removed.
         """
         tmp = []
         effects = []
@@ -266,7 +257,13 @@ class Policy:
             else:
                 tmp.append(rule)
 
-        self[sec][ptype].policy = tmp
+        assertion = self[sec][ptype]
+        assertion.policy = tmp
+
+        new_map = {}
+        for idx, r in enumerate(assertion.policy):
+            new_map[DEFAULT_SEP.join(r)] = idx
+        assertion.policy_map = new_map
 
         return effects
 
@@ -286,7 +283,13 @@ class Policy:
             else:
                 tmp.append(rule)
 
-        self[sec][ptype].policy = tmp
+        assertion = self[sec][ptype]
+        assertion.policy = tmp
+
+        new_map = {}
+        for idx, r in enumerate(assertion.policy):
+            new_map[DEFAULT_SEP.join(r)] = idx
+        assertion.policy_map = new_map
 
         return res
 
