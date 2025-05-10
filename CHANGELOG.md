@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.43.0](https://github.com/casbin/pycasbin/compare/v1.42.0...v1.43.0) (2025-05-10)
+
+
+### Features
+
+* fix CI error ([20719ab](https://github.com/casbin/pycasbin/commit/20719ab63528edcb6243f3d66e26729e5be42679))
+
 # [1.42.0](https://github.com/casbin/pycasbin/compare/v1.41.0...v1.42.0) (2025-04-21)
 
 
