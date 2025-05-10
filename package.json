@@ -3,6 +3,6 @@
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
         "semantic-release": "^22.0.5",
-        "semantic-release-pypi": "^3.0.0"
+        "semantic-release-pypi": "^5.1.0"
     }
 }
