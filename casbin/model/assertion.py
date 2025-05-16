@@ -27,7 +27,6 @@ class Assertion:
         self.policy = []
         self.rm = None
         self.cond_rm = None
-        self.priority_index: int = -1
         self.policy_map: dict = {}
         self.field_index_map: dict = {}
 
