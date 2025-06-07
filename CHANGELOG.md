@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.44.0](https://github.com/casbin/pycasbin/compare/v1.43.0...v1.44.0) (2025-06-07)
+
+
+### Features
+
+* update info ([ed77f0e](https://github.com/casbin/pycasbin/commit/ed77f0e153357e32ca5c50319ea82cdb34da3338))
+
 # [1.43.0](https://github.com/casbin/pycasbin/compare/v1.42.0...v1.43.0) (2025-05-10)
 
 
