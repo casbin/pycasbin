@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.45.0](https://github.com/casbin/pycasbin/compare/v1.44.0...v1.45.0) (2025-06-07)
+
+
+### Features
+
+* Optimize `load_policy_line` to avoid quadratic individual-character loop ([#355](https://github.com/casbin/pycasbin/issues/355)) ([d3149e8](https://github.com/casbin/pycasbin/commit/d3149e81c36d29e96ebdf3484897461ab86d8afb))
+
 # [1.44.0](https://github.com/casbin/pycasbin/compare/v1.43.0...v1.44.0) (2025-06-07)
 
 
