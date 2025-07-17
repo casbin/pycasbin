@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from functools import partial
+import asyncio
 
 from casbin.async_management_enforcer import AsyncManagementEnforcer
 from casbin.util import join_slice, array_remove_duplicates, set_subtract
@@ -22,6 +23,15 @@ class AsyncEnforcer(AsyncManagementEnforcer):
     """
     AsyncEnforcer = AsyncManagementEnforcer + RBAC_API + RBAC_WITH_DOMAIN_API
     """
+    async def async_enforce(self, *rvals):
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(None, super().enforce, *rvals)
+        return result
+        
+    async def async_batch_enforce(self, rvals):
+        """batch_enforce enforce in batches"""
+        tasks = [self.async_enforce(*request) for request in rvals]
+        return await asyncio.gather(*tasks)
 
     async def get_roles_for_user(self, name):
         """gets the roles that a user has."""

@@ -15,6 +15,7 @@
 import copy
 import logging
 import re
+import asyncio
 
 from casbin.effect import Effector, get_effector, effect_to_bool
 from casbin.model import Model, FunctionMap
@@ -457,6 +458,8 @@ class CoreEnforcer:
                     expression = self._get_expression(exp_with_rule, functions)
 
                 result = expression.eval(parameters)
+                if asyncio.iscoroutine(result):
+                    result = asyncio.run(result)
 
                 if isinstance(result, bool):
                     if not result:
