@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.46.0](https://github.com/casbin/pycasbin/compare/v1.45.0...v1.46.0) (2025-07-20)
+
+
+### Features
+
+* upgrade Python version to 3.8~3.13 ([#387](https://github.com/casbin/pycasbin/issues/387)) ([7c2f2f5](https://github.com/casbin/pycasbin/commit/7c2f2f5303b5f7eea692ea9de4ff62845633a6c1))
+
 # [1.45.0](https://github.com/casbin/pycasbin/compare/v1.44.0...v1.45.0) (2025-06-07)
 
 

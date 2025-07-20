@@ -1,6 +1,6 @@
 [project]
 name = "pycasbin"
-version = "1.45.0"
+version = "1.46.0"
 authors = [
     {name = "Casbin", email = "admin@casbin.org"},
 ]
