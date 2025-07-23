@@ -600,6 +600,14 @@ class SyncedEnforcer:
         with self._wl:
             return self._e.add_policies(rules)
 
+    def add_policies_ex(self, rules):
+        """Adds authorization rules to the current policy,skipping existing rules instead of returning an error.
+
+        If a rule already exists, it will be skipped,
+        and other non-existent rules will be added."""
+        with self._wl:
+            return self._e.add_policies_ex(rules)
+
     def add_named_policies(self, ptype, rules):
         """adds authorization rules to the current named policy.
 
@@ -607,6 +615,15 @@ class SyncedEnforcer:
         Otherwise the function returns true for the corresponding by adding the new rule."""
         with self._wl:
             return self._e.add_named_policies(ptype, rules)
+
+    def add_named_policies_ex(self, ptype, rules):
+        """adds authorization rules to the current named policy, ignoring duplicates.
+
+        If the rule already exists, it will be skipped.
+        Other non-existent rules are added.
+        """
+        with self._wl:
+            return self._e.add_named_policies_ex(ptype, rules)
 
     def remove_policies(self, rules):
         """removes authorization rules from the current policy."""
@@ -627,6 +644,16 @@ class SyncedEnforcer:
         with self._wl:
             return self._e.add_grouping_policies(rules)
 
+    def add_grouping_policies_ex(self, rules):
+        """adds grouping rules to the current policy, ignoring duplicates.
+
+        This is a wrapper for add_named_grouping_policies_ex with policy type "g".
+        If the rule already exists, it will be skipped.
+        Other non-existent rules are added.
+        """
+        with self._wl:
+            return self._e.add_named_grouping_policies_ex("g", rules)
+
     def add_named_grouping_policies(self, ptype, rules):
         """ "adds named role inheritance rules to the current policy.
 
@@ -634,6 +661,15 @@ class SyncedEnforcer:
         Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
         with self._wl:
             return self._e.add_named_grouping_policies(ptype, rules)
+
+    def add_named_grouping_policies_ex(self, ptype, rules):
+        """adds grouping rules to the specified policy type, ignoring duplicates.
+
+        If the rule already exists, it will be skipped.
+        Other non-existent rules are added.
+        """
+        with self._wl:
+            return self._e.add_named_grouping_policies_ex(ptype, rules)
 
     def remove_grouping_policies(self, rules):
         """removes role inheritance rules from the current policy."""
@@ -685,3 +721,12 @@ class SyncedEnforcer:
         Compared to GetImplicitUsersForResource, domain is supported"""
         with self._rl:
             return self._e.get_implicit_users_for_resource_by_domain(resource, domain)
+
+    def self_add_policies_ex(self, sec, ptype, rules):
+        """adds authorization rules to the internal model without notifying the watcher.
+
+        If the rule already exists, it will be skipped.
+        Other non-existent rules are added.
+        """
+        with self._wl:
+            return self._e.self_add_policies_ex(sec, ptype, rules)

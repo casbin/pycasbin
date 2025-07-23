@@ -125,7 +125,6 @@ class ManagementEnforcer(InternalEnforcer):
         """
         return self.add_named_policies_ex("p", rules)
 
-
     def add_named_policy(self, ptype, *params):
         """adds an authorization rule to the current named policy.
 
@@ -248,6 +247,7 @@ class ManagementEnforcer(InternalEnforcer):
         But unlike AddGroupingPolicies, other non-existent rules are added instead of returning false directly.
         """
         return self.add_named_grouping_policies_ex("g", rules)
+
     def add_named_grouping_policy(self, ptype, *params):
         """adds a named role inheritance rule to the current policy.
 
