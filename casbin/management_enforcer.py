@@ -24,7 +24,7 @@ class ManagementEnforcer(InternalEnforcer):
 
     def get_all_subjects(self):
         """gets the list of subjects that show up in the current policy."""
-        return self.get_all_named_subjects("p")
+        return self.model.get_values_for_field_in_policy_all_types_by_name("p", SUBJECT_INDEX)
 
     def get_all_named_subjects(self, ptype):
         """gets the list of subjects that show up in the current named policy."""
@@ -33,7 +33,7 @@ class ManagementEnforcer(InternalEnforcer):
 
     def get_all_objects(self):
         """gets the list of objects that show up in the current policy."""
-        return self.get_all_named_objects("p")
+        return self.model.get_values_for_field_in_policy_all_types_by_name("p", OBJECT_INDEX)
 
     def get_all_named_objects(self, ptype):
         """gets the list of objects that show up in the current named policy."""
@@ -42,7 +42,7 @@ class ManagementEnforcer(InternalEnforcer):
 
     def get_all_actions(self):
         """gets the list of actions that show up in the current policy."""
-        return self.get_all_named_actions("p")
+        return self.model.get_values_for_field_in_policy_all_types_by_name("p", ACTION_INDEX)
 
     def get_all_named_actions(self, ptype):
         """gets the list of actions that show up in the current named policy."""
@@ -309,3 +309,12 @@ class ManagementEnforcer(InternalEnforcer):
     def add_function(self, name, func):
         """adds a customized function."""
         self.fm.add_function(name, func)
+
+    def get_field_index(self, ptype, field):
+        """gets the index of the field name."""
+        return self.model.get_field_index(ptype, field)
+
+    def set_field_index(self, ptype, field, index):
+        """sets the index of the field name."""
+        assertion = self.model["p"][ptype]
+        assertion.field_index_map[field] = index
