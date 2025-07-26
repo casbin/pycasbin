@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.47.0](https://github.com/casbin/pycasbin/compare/v1.46.0...v1.47.0) (2025-07-26)
+
+
+### Features
+
+* fix the bug that add_policies does not update policy_map ([#390](https://github.com/casbin/pycasbin/issues/390)) ([c0c6065](https://github.com/casbin/pycasbin/commit/c0c6065e038224bc9e06c89d0782a6bf01664d8e))
+
 # [1.46.0](https://github.com/casbin/pycasbin/compare/v1.45.0...v1.46.0) (2025-07-20)
 
 
