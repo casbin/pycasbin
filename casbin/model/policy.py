@@ -154,7 +154,7 @@ class Policy:
                 return False
 
         for rule in rules:
-            self[sec][ptype].policy.append(rule)
+            self.add_policy(sec, ptype, rule)
 
         return True
 
