@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.48.0](https://github.com/casbin/pycasbin/compare/v1.47.0...v1.48.0) (2025-08-01)
+
+
+### Features
+
+* add new APIs: add_policies_ex() and add_named_policies_ex() ([#391](https://github.com/casbin/pycasbin/issues/391)) ([e0a64f9](https://github.com/casbin/pycasbin/commit/e0a64f92463b56e17c1acf49b26d82d166d19c37))
+
 # [1.47.0](https://github.com/casbin/pycasbin/compare/v1.46.0...v1.47.0) (2025-07-26)
 
 
