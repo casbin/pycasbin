@@ -117,6 +117,14 @@ class ManagementEnforcer(InternalEnforcer):
         """
         return self.add_named_policies("p", rules)
 
+    def add_policies_ex(self, rules):
+        """add_policies_ex adds authorization rules to the current policy.
+
+        If the rule already exists, the rule will not be added.
+        But unlike add_policies, other non-existent rules are added instead of returning false directly.
+        """
+        return self.add_named_policies_ex("p", rules)
+
     def add_named_policy(self, ptype, *params):
         """adds an authorization rule to the current named policy.
 
@@ -138,6 +146,14 @@ class ManagementEnforcer(InternalEnforcer):
         If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
         Otherwise the function returns true for the corresponding by adding the new rule."""
         return self._add_policies("p", ptype, rules)
+
+    def add_named_policies_ex(self, ptype, rules):
+        """add_named_policies_ex adds authorization rules to the current policy.
+
+        If the rule already exists, the rule will not be added.
+        But unlike add_named_policies, other non-existent rules are added instead of returning false directly.
+        """
+        return self._add_policies_ex("p", ptype, rules)
 
     def update_policy(self, old_rule, new_rule):
         """updates an authorization rule from the current policy."""
