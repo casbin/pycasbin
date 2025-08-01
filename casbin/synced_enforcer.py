@@ -600,6 +600,24 @@ class SyncedEnforcer:
         with self._wl:
             return self._e.add_policies(rules)
 
+    def add_policies_Ex(self, rules):
+        """add_policies_Ex adds authorization rules to the current policy.
+
+        If the rule already exists, the rule will not be added.
+        But unlike add_policies, other non-existent rules are added instead of returning false directly.
+        """
+        with self._wl:
+            return self._e.add_policies_Ex(rules)
+
+    def add_named_policies_Ex(self, ptype, rules):
+        """add_named_policies_Ex adds authorization rules to the current policy.
+
+        If the rule already exists, the rule will not be added.
+        But unlike add_named_policies, other non-existent rules are added instead of returning false directly.
+        """
+        with self._wl:
+            return self._e.add_named_policies_Ex(ptype, rules)
+
     def add_named_policies(self, ptype, rules):
         """adds authorization rules to the current named policy.
 

@@ -317,6 +317,25 @@ class TestManagementApi(TestCaseBase):
             ],
         )
 
+        e.clear_policy()
+        e.add_policies_Ex([["user1", "data1", "read"], ["user1", "data1", "read"]])
+        self.assertEqual(
+            e.get_policy(),
+            [["user1", "data1", "read"]],
+        )
+        e.add_policies_Ex([["user1", "data1", "read"], ["user2", "data2", "read"]])
+        self.assertEqual(
+            e.get_policy(),
+            [["user1", "data1", "read"], ["user2", "data2", "read"]],
+        )
+        e.add_named_policies_Ex(
+            "p", [["user1", "data1", "read"], ["user2", "data2", "read"], ["user3", "data3", "read"]]
+        )
+        self.assertEqual(
+            e.get_policy(),
+            [["user1", "data1", "read"], ["user2", "data2", "read"], ["user3", "data3", "read"]],
+        )
+
 
 class TestManagementApiSynced(TestManagementApi):
     def get_enforcer(self, model=None, adapter=None):

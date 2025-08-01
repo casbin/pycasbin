@@ -158,6 +158,20 @@ class Policy:
 
         return True
 
+    def add_policies_Ex(self, sec, ptype, rules):
+        """
+        add_policies_Ex adds authorization rules to the current policy.
+        If the rule already exists, the rule will not be added.
+        But unlike add_policies, other non-existent rules are added instead of returning false directly.
+        """
+        rules_added = False
+        for rule in rules:
+            if self.has_policy(sec, ptype, rule):
+                continue
+            self.add_policy(sec, ptype, rule)
+            rules_added = True
+        return rules_added
+
     def update_policy(self, sec, ptype, old_rule, new_rule):
         """update a policy rule from the model."""
 
