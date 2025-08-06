@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.49.0](https://github.com/casbin/pycasbin/compare/v1.48.0...v1.49.0) (2025-08-06)
+
+
+### Features
+
+* add add_grouping_policies_ex and add_named_grouping_policies_ex APIs ([#392](https://github.com/casbin/pycasbin/issues/392)) ([cc34db6](https://github.com/casbin/pycasbin/commit/cc34db6218fb4a13b12672ae5971cfa14a9658f1))
+
 # [1.48.0](https://github.com/casbin/pycasbin/compare/v1.47.0...v1.48.0) (2025-08-01)
 
 
