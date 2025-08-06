@@ -336,6 +336,29 @@ class TestManagementApi(TestCaseBase):
             [["user1", "data1", "read"], ["user2", "data2", "read"], ["user3", "data3", "read"]],
         )
 
+    def test_modify_grouping_policy_api(self):
+        e = self.get_enforcer(
+            get_examples("rbac_model.conf"),
+            get_examples("rbac_policy.csv"),
+            # True,
+        )
+        e.clear_policy()
+        e.add_grouping_policies_ex([["user1", "member"]])
+        self.assertCountEqual(
+            e.get_users_for_role("member"),
+            ["user1"],
+        )
+        e.add_grouping_policies_ex([["user1", "member"], ["user2", "member"]])
+        self.assertCountEqual(
+            e.get_users_for_role("member"),
+            ["user1", "user2"],
+        )
+        e.add_named_grouping_policies_ex("g", [["user1", "member"], ["user2", "member"], ["user3", "member"]])
+        self.assertCountEqual(
+            e.get_users_for_role("member"),
+            ["user1", "user2", "user3"],
+        )
+
 
 class TestManagementApiSynced(TestManagementApi):
     def get_enforcer(self, model=None, adapter=None):

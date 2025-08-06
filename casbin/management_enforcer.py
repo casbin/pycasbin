@@ -240,6 +240,14 @@ class ManagementEnforcer(InternalEnforcer):
         """
         return self.add_named_grouping_policies("g", rules)
 
+    def add_grouping_policies_ex(self, rules):
+        """add_grouping_policies_ex adds role inheritance rules to the current policy.
+
+        If the rule already exists, the rule will not be added.
+        But unlike add_grouping_policies, other non-existent rules are added instead of returning false directly.
+        """
+        return self.add_named_grouping_policies_ex("g", rules)
+
     def add_named_grouping_policy(self, ptype, *params):
         """adds a named role inheritance rule to the current policy.
 
@@ -271,6 +279,18 @@ class ManagementEnforcer(InternalEnforcer):
         Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
         rules_added = self._add_policies("g", ptype, rules)
         if self.auto_build_role_links:
+            self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules)
+
+        return rules_added
+
+    def add_named_grouping_policies_ex(self, ptype, rules):
+        """add_named_grouping_policies_ex adds role inheritance rules to the current policy.
+
+        If the rule already exists, the rule will not be added.
+        But unlike add_named_grouping_policies, other non-existent rules are added instead of returning false directly.
+        """
+        rules_added = self._add_policies_ex("g", ptype, rules)
+        if rules_added and self.auto_build_role_links:
             self.model.build_incremental_role_links(self.rm_map[ptype], PolicyOp.Policy_add, "g", ptype, rules)
 
         return rules_added
