@@ -72,6 +72,9 @@ class FileAdapter(Adapter):
     def add_policies(self, sec, ptype, rules):
         pass
 
+    def add_policies_ex(self, sec, ptype, rules):
+        pass
+
     def remove_policy(self, sec, ptype, rule):
         pass
 

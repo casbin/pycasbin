@@ -645,6 +645,15 @@ class SyncedEnforcer:
         with self._wl:
             return self._e.add_grouping_policies(rules)
 
+    def add_grouping_policies_ex(self, rules):
+        """add_grouping_policies_ex adds role inheritance rules to the current policy.
+
+        If the rule already exists, the rule will not be added.
+        But unlike add_grouping_policies, other non-existent rules are added instead of returning false directly.
+        """
+        with self._wl:
+            return self._e.add_grouping_policies_ex(rules)
+
     def add_named_grouping_policies(self, ptype, rules):
         """ "adds named role inheritance rules to the current policy.
 
@@ -652,6 +661,15 @@ class SyncedEnforcer:
         Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
         with self._wl:
             return self._e.add_named_grouping_policies(ptype, rules)
+
+    def add_named_grouping_policies_ex(self, ptype, rules):
+        """add_named_grouping_policies_ex adds role inheritance rules to the current named policy.
+
+        If the rule already exists, the rule will not be added.
+        But unlike add_named_grouping_policies, other non-existent rules are added instead of returning false directly.
+        """
+        with self._wl:
+            return self._e.add_named_grouping_policies_ex(ptype, rules)
 
     def remove_grouping_policies(self, rules):
         """removes role inheritance rules from the current policy."""
