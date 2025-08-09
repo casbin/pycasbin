@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.50.0](https://github.com/casbin/pycasbin/compare/v1.49.0...v1.50.0) (2025-08-09)
+
+
+### Features
+
+* upgrade dependencies to latest ([#393](https://github.com/casbin/pycasbin/issues/393)) ([731fcac](https://github.com/casbin/pycasbin/commit/731fcacf5a262a795ce0b931065a0ae8fa67a903))
+
 # [1.49.0](https://github.com/casbin/pycasbin/compare/v1.48.0...v1.49.0) (2025-08-06)
 
 
