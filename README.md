@@ -1,12 +1,12 @@
 PyCasbin
 ====
 
-[![GitHub Action](https://github.com/casbin/pycasbin/workflows/build/badge.svg?branch=master)](https://github.com/casbin/pycasbin/actions)
+[![build](https://github.com/casbin/pycasbin/actions/workflows/build.yml/badge.svg)](https://github.com/casbin/pycasbin/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/casbin/pycasbin/badge.svg)](https://coveralls.io/github/casbin/pycasbin)
 [![Version](https://img.shields.io/pypi/v/pycasbin.svg)](https://pypi.org/project/pycasbin/)
 [![PyPI - Wheel](https://img.shields.io/pypi/wheel/pycasbin.svg)](https://pypi.org/project/pycasbin/)
 [![Pyversions](https://img.shields.io/pypi/pyversions/pycasbin.svg)](https://pypi.org/project/pycasbin/)
-[![Download](https://img.shields.io/pypi/dm/pycasbin.svg)](https://pypi.org/project/pycasbin/)
+[![Download](https://static.pepy.tech/badge/pycasbin)](https://pypi.org/project/pycasbin/)
 [![Discord](https://img.shields.io/discord/1022748306096537660?logo=discord&label=discord&color=5865F2)](https://discord.gg/S5UjpzGZjN)
 
 <p align="center">
