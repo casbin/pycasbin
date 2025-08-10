@@ -46,13 +46,19 @@ class TestFastEnforcer(TestCaseBase):
             get_examples("performance/rbac_with_pattern_large_scale_policy.csv"),
             [2, 1],
         )
-        s_e1 = time.perf_counter()
-        e1.enforce("alice", "data1", "read")
-        t_e1 = time.perf_counter() - s_e1
-        s_e2 = time.perf_counter()
-        e2.enforce("alice", "data1", "read")
-        t_e2 = time.perf_counter() - s_e2
-        assert t_e1 > t_e2 * 5
+        N = 5
+        t_e1_list = []
+        t_e2_list = []
+        for _ in range(N):
+            s_e1 = time.perf_counter()
+            e1.enforce("alice", "data1", "read")
+            t_e1_list.append(time.perf_counter() - s_e1)
+            s_e2 = time.perf_counter()
+            e2.enforce("alice", "data1", "read")
+            t_e2_list.append(time.perf_counter() - s_e2)
+        avg_t_e1 = sum(t_e1_list) / N
+        avg_t_e2 = sum(t_e2_list) / N
+        assert avg_t_e1 > avg_t_e2 * 5
 
     def test_creates_proper_policy(self) -> None:
         e = self.get_enforcer(
