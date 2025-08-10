@@ -1,5 +1,19 @@
 # Semantic Versioning Changelog
 
+# [2.0.0](https://github.com/casbin/pycasbin/compare/v1.50.0...v2.0.0) (2025-08-10)
+
+
+### Features
+
+* update README.md status badges and improve TestFastEnforcer() ([#396](https://github.com/casbin/pycasbin/issues/396)) ([79105a0](https://github.com/casbin/pycasbin/commit/79105a0e6fad65ee8d8b736557246f7cd21f2371)), closes [#395](https://github.com/casbin/pycasbin/issues/395)
+
+
+### BREAKING CHANGES
+
+* this work for release PyCasbin v2
+
+* docs: change status badge
+
 # [1.50.0](https://github.com/casbin/pycasbin/compare/v1.49.0...v1.50.0) (2025-08-09)
 
 
