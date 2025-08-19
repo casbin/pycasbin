@@ -22,9 +22,8 @@ class InternalEnforcer(CoreEnforcer):
 
     def _add_policy(self, sec, ptype, rule):
         """adds a rule to the current policy."""
-        rule_added = self.model.add_policy(sec, ptype, rule)
-        if not rule_added:
-            return rule_added
+        if self.model.has_policy(sec, ptype, rule):
+            return False
 
         if self.adapter and self.auto_save:
             if self.adapter.add_policy(sec, ptype, rule) is False:
@@ -36,13 +35,15 @@ class InternalEnforcer(CoreEnforcer):
                 else:
                     self.watcher.update()
 
+        rule_added = self.model.add_policy(sec, ptype, rule)
+
         return rule_added
 
     def _add_policies(self, sec, ptype, rules):
         """adds rules to the current policy."""
-        rules_added = self.model.add_policies(sec, ptype, rules)
-        if not rules_added:
-            return rules_added
+        for rule in rules:
+            if self.model.has_policy(sec, ptype, rule):
+                return False
 
         if self.adapter and self.auto_save:
             if hasattr(self.adapter, "add_policies") is False:
@@ -57,14 +58,12 @@ class InternalEnforcer(CoreEnforcer):
                 else:
                     self.watcher.update()
 
+        rules_added = self.model.add_policies(sec, ptype, rules)
+
         return rules_added
 
     def _add_policies_ex(self, sec, ptype, rules):
         """adds rules to the current policy."""
-        rules_added = self.model.add_policies_ex(sec, ptype, rules)
-        if not rules_added:
-            return rules_added
-
         if self.adapter and self.auto_save:
             if hasattr(self.adapter, "add_policies_ex") is False:
                 return False
@@ -77,6 +76,8 @@ class InternalEnforcer(CoreEnforcer):
                     self.watcher.update_for_add_policies_ex(sec, ptype, rules)
                 else:
                     self.watcher.update()
+
+        rules_added = self.model.add_policies_ex(sec, ptype, rules)
 
         return rules_added
 
