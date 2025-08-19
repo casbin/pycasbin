@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.1.0](https://github.com/casbin/pycasbin/compare/v2.0.0...v2.1.0) (2025-08-19)
+
+
+### Features
+
+* align add_policy API with Golang Casbin ([#398](https://github.com/casbin/pycasbin/issues/398)) ([937b649](https://github.com/casbin/pycasbin/commit/937b64936cdce128ebd9f967b263549f26f1f42f))
+
 # [2.0.0](https://github.com/casbin/pycasbin/compare/v1.50.0...v2.0.0) (2025-08-10)
 
 
