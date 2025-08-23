@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import logging
+from casbin.util import util
 
 DEFAULT_SEP = ","
 
@@ -316,5 +317,20 @@ class Policy:
             value = rule[field_index]
             if value not in values:
                 values.append(value)
+
+        return values
+
+    def get_values_for_field_in_policy_all_types_by_name(self, sec, field):
+        """gets all values for a field for all rules in a policy of all ptypes, duplicated values are removed."""
+        values = []
+        if sec not in self.keys():
+            return values
+
+        for ptype in self[sec]:
+            index = self.get_field_index(ptype, field)
+            value = self.get_values_for_field_in_policy(sec, ptype, index)
+            values.extend(value)
+
+        values = util.array_remove_duplicates(values)
 
         return values
