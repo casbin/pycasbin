@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.2.0](https://github.com/casbin/pycasbin/compare/v2.1.0...v2.2.0) (2025-08-24)
+
+
+### Features
+
+* fix bug that get_all_subjects() and similar APIs get wrong result ([#399](https://github.com/casbin/pycasbin/issues/399)) ([cd76b7c](https://github.com/casbin/pycasbin/commit/cd76b7cc6f01146a70258146d326e36cb08de991))
+
 # [2.1.0](https://github.com/casbin/pycasbin/compare/v2.0.0...v2.1.0) (2025-08-19)
 
 
