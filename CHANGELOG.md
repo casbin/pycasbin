@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.3.0](https://github.com/casbin/pycasbin/compare/v2.2.0...v2.3.0) (2025-10-04)
+
+
+### Features
+
+* use wcmatch.glob for glob_match with "**" support ([#402](https://github.com/casbin/pycasbin/issues/402)) ([0ff7cd8](https://github.com/casbin/pycasbin/commit/0ff7cd86b6d5756a39e1a6ed37e4e505c81210d0))
+
 # [2.2.0](https://github.com/casbin/pycasbin/compare/v2.1.0...v2.2.0) (2025-08-24)
 
 
