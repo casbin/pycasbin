@@ -15,6 +15,7 @@
 import ipaddress
 import re
 from datetime import datetime
+import wcmatch.glob as glob
 
 KEY_MATCH2_PATTERN = re.compile(r"(.*?):[^\/]+(.*?)")
 KEY_MATCH3_PATTERN = re.compile(r"(.*?){[^\/]+?}(.*?)")
@@ -290,70 +291,31 @@ def range_match(pattern, pattern_index, test):
 def glob_match(string, pattern):
     """determines whether string matches the pattern in glob expression."""
 
-    pattern_len = len(pattern)
-    string_len = len(string)
-    if pattern_len == 0:
-        return string_len == 0
-    pattern_index = 0
-    string_index = 0
-    while True:
-        if pattern_index == pattern_len:
-            return string_len == string_index
-        c = pattern[pattern_index]
-        pattern_index += 1
-        if c == "?":
-            if string_index == string_len:
-                return False
-            if string[string_index] == "/":
-                return False
-            string_index += 1
-            continue
-        if c == "*":
-            while (pattern_index != pattern_len) and (c == "*"):
-                c = pattern[pattern_index]
-                pattern_index += 1
-            if pattern_index == pattern_len:
-                return string.find("/", string_index) == -1
+    def doublestar_to_wcmatch(pattern):
+        """
+        Converts glob patterns with double stars (**) to wcmatch-compatible format.
+        """
+        parts = pattern.split("/")
+        new_parts = []
+        for part in parts:
+            if part == "**":
+                new_parts.append("**")
             else:
-                if c == "/":
-                    string_index = string.find("/", string_index)
-                    if string_index == -1:
-                        return False
-                    else:
-                        string_index += 1
-            # General case, use recursion.
-            while string_index != string_len:
-                if glob_match(string[string_index:], pattern[pattern_index:]):
-                    return True
-                if string[string_index] == "/":
-                    break
-                string_index += 1
-            continue
-        if c == "[":
-            if string_index == string_len:
-                return False
-            if string[string_index] == "/":
-                return False
-            pattern_index = range_match(pattern, pattern_index, string[string_index])
-            if pattern_index == -1:
-                return False
-            string_index += 1
-            continue
-        if c == "\\":
-            if pattern_index == pattern_len:
-                c = "\\"
-            else:
-                c = pattern[pattern_index]
-                pattern_index += 1
-            # fall through
-        # other cases and c == "\\"
-        if string_index == string_len:
-            return False
-        else:
-            if c == string[string_index]:
-                string_index += 1
-            else:
-                return False
+                part = re.sub(r"\*{2,}", "*", part)
+                new_parts.append(part)
+        result_pattern = "/".join(new_parts)
+
+        if result_pattern.endswith("/**"):
+            base_pattern = result_pattern[:-3]
+            result_pattern = "{" + base_pattern + "," + result_pattern + "}"
+
+        return result_pattern
+
+    if pattern.startswith("*/"):
+        return glob_match(string, pattern[1:])
+
+    pattern = doublestar_to_wcmatch(pattern)
+    return glob.globmatch(string, pattern, flags=glob.GLOBSTAR | glob.BRACE)
 
 
 def glob_match_func(*args):
