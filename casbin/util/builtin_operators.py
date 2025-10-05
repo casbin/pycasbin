@@ -289,7 +289,6 @@ def range_match(pattern, pattern_index, test):
 
 def glob_match(string, pattern):
     """determines whether string matches the pattern in glob expression."""
-
     pattern_len = len(pattern)
     string_len = len(string)
     if pattern_len == 0:
@@ -309,9 +308,23 @@ def glob_match(string, pattern):
             string_index += 1
             continue
         if c == "*":
+            star_num = 1
+            if pattern_index < pattern_len:
+                c = pattern[pattern_index]
             while (pattern_index != pattern_len) and (c == "*"):
                 c = pattern[pattern_index]
+                star_num += 1
                 pattern_index += 1
+            # Solve ** case
+            if star_num > 1:
+                if pattern_index == pattern_len:
+                    return True
+                pattern_remain = pattern[pattern_index:]
+                for i in range(string_index, string_len + 1):
+                    if glob_match(string[i:], pattern_remain):
+                        return True
+                return False
+            # Original * case
             if pattern_index == pattern_len:
                 return string.find("/", string_index) == -1
             else:
@@ -319,8 +332,6 @@ def glob_match(string, pattern):
                     string_index = string.find("/", string_index)
                     if string_index == -1:
                         return False
-                    else:
-                        string_index += 1
             # General case, use recursion.
             while string_index != string_len:
                 if glob_match(string[string_index:], pattern[pattern_index:]):
@@ -354,7 +365,6 @@ def glob_match(string, pattern):
                 string_index += 1
             else:
                 return False
-
 
 def glob_match_func(*args):
     """the wrapper for globMatch."""
