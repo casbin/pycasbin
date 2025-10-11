@@ -287,6 +287,23 @@ class TestWatcherEx(TestCaseBase):
         self.assertEqual(w.notify_message, None)
 
 
+class AsyncMinimalWatcher:
+    """A minimal async watcher that only implements async update() method."""
+    def __init__(self):
+        self.update_count = 0
+
+    async def update(self):
+        """update the policy"""
+        self.update_count += 1
+        return True
+
+    async def close(self):
+        pass
+
+    async def set_update_callback(self, callback):
+        pass
+
+
 class TestAsyncWatcherEx(IsolatedAsyncioTestCase):
     def get_enforcer(self, model=None, adapter=None):
         return casbin.AsyncEnforcer(
@@ -365,3 +382,43 @@ class TestAsyncWatcherEx(IsolatedAsyncioTestCase):
 
         await e.remove_policies(rules)
         self.assertEqual(w.notify_message, None)
+
+    async def test_async_minimal_watcher(self):
+        """Test that a watcher with only async update() method works properly."""
+        e = self.get_enforcer(
+            get_examples("basic_model.conf"),
+            get_examples("basic_policy.csv"),
+        )
+        await e.load_policy()
+
+        w = AsyncMinimalWatcher()
+        e.set_watcher(w)
+        e.enable_auto_notify_watcher(True)
+
+        # Test save_policy
+        await e.save_policy()
+        self.assertEqual(w.update_count, 1)
+
+        # Test add_policy - fallback to update()
+        await e.add_policy("admin", "data1", "read")
+        self.assertEqual(w.update_count, 2)
+
+        # Test remove_policy - fallback to update()
+        await e.remove_policy("admin", "data1", "read")
+        self.assertEqual(w.update_count, 3)
+
+        # Test remove_filtered_policy - fallback to update()
+        await e.remove_filtered_policy(1, "data1")
+        self.assertEqual(w.update_count, 4)
+
+        # Test add_policies - fallback to update()
+        rules = [
+            ["jack", "data4", "read"],
+            ["katy", "data4", "write"],
+        ]
+        await e.add_policies(rules)
+        self.assertEqual(w.update_count, 5)
+
+        # Test remove_policies - fallback to update()
+        await e.remove_policies(rules)
+        self.assertEqual(w.update_count, 6)
