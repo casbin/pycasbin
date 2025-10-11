@@ -289,6 +289,7 @@ class TestWatcherEx(TestCaseBase):
 
 class AsyncMinimalWatcher:
     """A minimal async watcher that only implements async update() method."""
+
     def __init__(self):
         self.update_count = 0
 
