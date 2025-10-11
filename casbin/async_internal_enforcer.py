@@ -113,7 +113,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                 else:
                     update_for_save_policy(self.model)
             else:
-                self.watcher.update()
+                if inspect.iscoroutinefunction(self.watcher.update):
+                    await self.watcher.update()
+                else:
+                    self.watcher.update()
 
     async def _add_policy(self, sec, ptype, rule):
         """async adds a rule to the current policy."""
@@ -133,7 +136,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                     else:
                         update_for_add_policy(sec, ptype, rule)
                 else:
-                    self.watcher.update()
+                    if inspect.iscoroutinefunction(self.watcher.update):
+                        await self.watcher.update()
+                    else:
+                        self.watcher.update()
 
         rule_added = self.model.add_policy(sec, ptype, rule)
 
@@ -161,7 +167,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                     else:
                         update_for_add_policies(sec, ptype, rules)
                 else:
-                    self.watcher.update()
+                    if inspect.iscoroutinefunction(self.watcher.update):
+                        await self.watcher.update()
+                    else:
+                        self.watcher.update()
 
         rules_added = self.model.add_policies(sec, ptype, rules)
 
@@ -180,7 +189,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                 return False
 
             if self.watcher and self.auto_notify_watcher:
-                self.watcher.update()
+                if inspect.iscoroutinefunction(self.watcher.update):
+                    await self.watcher.update()
+                else:
+                    self.watcher.update()
 
         return rule_updated
 
@@ -197,7 +209,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                 return False
 
             if self.watcher and self.auto_notify_watcher:
-                self.watcher.update()
+                if inspect.iscoroutinefunction(self.watcher.update):
+                    await self.watcher.update()
+                else:
+                    self.watcher.update()
 
         return rules_updated
 
@@ -225,7 +240,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
         if sec == "g":
             self.build_role_links()
         if self.watcher and self.auto_notify_watcher:
-            self.watcher.update()
+            if inspect.iscoroutinefunction(self.watcher.update):
+                await self.watcher.update()
+            else:
+                self.watcher.update()
         return is_rule_changed
 
     async def _remove_policy(self, sec, ptype, rule):
@@ -247,7 +265,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                     else:
                         update_for_remove_policy(sec, ptype, rule)
                 else:
-                    self.watcher.update()
+                    if inspect.iscoroutinefunction(self.watcher.update):
+                        await self.watcher.update()
+                    else:
+                        self.watcher.update()
 
         return rule_removed
 
@@ -273,7 +294,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                     else:
                         update_for_remove_policies(sec, ptype, rules)
                 else:
-                    self.watcher.update()
+                    if inspect.iscoroutinefunction(self.watcher.update):
+                        await self.watcher.update()
+                    else:
+                        self.watcher.update()
 
         return rules_removed
 
@@ -296,7 +320,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                     else:
                         update_for_remove_filtered_policy(sec, ptype, field_index, *field_values)
                 else:
-                    self.watcher.update()
+                    if inspect.iscoroutinefunction(self.watcher.update):
+                        await self.watcher.update()
+                    else:
+                        self.watcher.update()
 
         return rule_removed
 
@@ -312,7 +339,10 @@ class AsyncInternalEnforcer(CoreEnforcer):
                 return False
 
             if self.watcher and self.auto_notify_watcher:
-                self.watcher.update()
+                if inspect.iscoroutinefunction(self.watcher.update):
+                    await self.watcher.update()
+                else:
+                    self.watcher.update()
 
         return rule_removed
 
