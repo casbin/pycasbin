@@ -22,3 +22,4 @@ from .persist import *
 from .effect import *
 from .model import *
 from .frontend import *
+from . import integrations

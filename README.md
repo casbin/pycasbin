@@ -64,6 +64,7 @@ Casbin is a powerful and efficient open-source access control library for Python
 - [Benchmarks](#benchmarks)
 - [Logging](#logging)
 - [Examples](#examples)
+- [Integrations](#integrations)
 - [Middlewares](#middlewares)
 - [Our adopters](#our-adopters)
 
@@ -311,6 +312,42 @@ pycasbin leverages the default Python logging mechanism. The pycasbin package ma
 | RESTful                   | [keymatch_model.conf](https://github.com/casbin/casbin/blob/master/examples/keymatch_model.conf)                                 | [keymatch_policy.csv](https://github.com/casbin/casbin/blob/master/examples/keymatch_policy.csv)                                 |
 | Deny-override             | [rbac_model_with_deny.conf](https://github.com/casbin/casbin/blob/master/examples/rbac_with_deny_model.conf)                     | [rbac_policy_with_deny.csv](https://github.com/casbin/casbin/blob/master/examples/rbac_with_deny_policy.csv)                     |
 | Priority                  | [priority_model.conf](https://github.com/casbin/casbin/blob/master/examples/priority_model.conf)                                 | [priority_policy.csv](https://github.com/casbin/casbin/blob/master/examples/priority_policy.csv)                                 |
+
+## Integrations
+
+### Langchain Integration
+
+PyCasbin now supports authorization for Langchain applications, including RAG (Retrieval-Augmented Generation) systems. This integration provides:
+
+- **Document Access Control**: Control which documents users can access in RAG systems
+- **Tool Usage Authorization**: Restrict which Langchain tools users can execute
+- **Agent Execution Control**: Manage permissions for running different Langchain agents
+- **Multi-tenant Support**: Implement authorization across different tenants/domains
+
+**Quick Example:**
+
+```python
+from casbin import Enforcer
+from casbin.integrations import LangchainEnforcer
+
+# Initialize with Langchain RAG model
+enforcer = Enforcer("langchain_rag_model.conf", "langchain_rag_policy.csv")
+lc_enforcer = LangchainEnforcer(enforcer)
+
+# Check document access
+can_read = lc_enforcer.can_access_document("alice", "document:public:readme", "read")
+
+# Check tool usage
+can_use = lc_enforcer.can_use_tool("bob", "search")
+
+# Filter documents for RAG (remove unauthorized documents before sending to LLM)
+filtered_docs = lc_enforcer.filter_documents_by_permission("user", retrieved_docs)
+```
+
+**Learn More:**
+- [Langchain Integration Documentation](examples/langchain/README.md)
+- [Basic RAG Example](examples/langchain/basic_rag_example.py)
+- [Multi-tenant Example](examples/langchain/multi_tenant_example.py)
 
 ## Middlewares
 
