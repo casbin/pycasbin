@@ -1,0 +1,20 @@
+p, admin, document:*, read
+p, admin, document:*, write
+p, admin, tool:*, use
+p, admin, agent:*, execute
+
+p, data_analyst, document:public:*, read
+p, data_analyst, document:analytics:*, read
+p, data_analyst, tool:search, use
+p, data_analyst, tool:calculator, use
+
+p, basic_user, document:public:*, read
+p, basic_user, tool:search, use
+
+p, agent_user, agent:chatbot, execute
+p, agent_user, document:public:*, read
+
+g, alice, admin
+g, bob, data_analyst
+g, charlie, basic_user
+g, dave, agent_user
