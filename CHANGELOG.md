@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.4.0](https://github.com/casbin/pycasbin/compare/v2.3.0...v2.4.0) (2025-10-14)
+
+
+### Features
+
+* fix inconsistent async handling bug for watcher.update() API ([#406](https://github.com/casbin/pycasbin/issues/406)) ([7875d02](https://github.com/casbin/pycasbin/commit/7875d022249cf94338ef7921a8253f577fafa7ee))
+
 # [2.3.0](https://github.com/casbin/pycasbin/compare/v2.2.0...v2.3.0) (2025-10-04)
 
 
