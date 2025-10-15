@@ -1,0 +1,18 @@
+p, admin, tenant1, document:*, read
+p, admin, tenant1, document:*, write
+p, admin, tenant1, tool:*, use
+p, admin, tenant1, agent:*, execute
+
+p, user, tenant1, document:public:*, read
+p, user, tenant1, tool:search, use
+
+p, admin, tenant2, document:*, read
+p, admin, tenant2, document:*, write
+p, admin, tenant2, tool:*, use
+
+p, user, tenant2, document:shared:*, read
+
+g, alice, admin, tenant1
+g, bob, user, tenant1
+g, carol, admin, tenant2
+g, dave, user, tenant2
