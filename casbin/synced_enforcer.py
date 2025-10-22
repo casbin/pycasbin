@@ -36,7 +36,6 @@ class AtomicBool:
 
 
 class SyncedEnforcer:
-
     """SyncedEnforcer wraps Enforcer and provides synchronized access.
     It's also a drop-in replacement for Enforcer"""
 
@@ -279,11 +278,11 @@ class SyncedEnforcer:
                 result = self._e.add_policy(*params)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policy", "p", "p", list(params))
-        
+
         return result
 
     def add_named_policy(self, ptype, *params):
@@ -299,11 +298,11 @@ class SyncedEnforcer:
                 result = self._e.add_named_policy(ptype, *params)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policy", "p", ptype, list(params))
-        
+
         return result
 
     def remove_policy(self, *params):
@@ -316,11 +315,11 @@ class SyncedEnforcer:
                 result = self._e.remove_policy(*params)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_policy", "p", "p", list(params))
-        
+
         return result
 
     def remove_filtered_policy(self, field_index, *field_values):
@@ -333,11 +332,11 @@ class SyncedEnforcer:
                 result = self._e.remove_filtered_policy(field_index, *field_values)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_filtered_policy", "p", "p", field_index, *field_values)
-        
+
         return result
 
     def remove_named_policy(self, ptype, *params):
@@ -350,11 +349,11 @@ class SyncedEnforcer:
                 result = self._e.remove_named_policy(ptype, *params)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_policy", "p", ptype, list(params))
-        
+
         return result
 
     def remove_filtered_named_policy(self, ptype, field_index, *field_values):
@@ -367,11 +366,11 @@ class SyncedEnforcer:
                 result = self._e.remove_filtered_named_policy(ptype, field_index, *field_values)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_filtered_policy", "p", ptype, field_index, *field_values)
-        
+
         return result
 
     def has_grouping_policy(self, *params):
@@ -397,11 +396,11 @@ class SyncedEnforcer:
                 result = self._e.add_grouping_policy(*params)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policy", "g", "g", list(params))
-        
+
         return result
 
     def add_named_grouping_policy(self, ptype, *params):
@@ -417,11 +416,11 @@ class SyncedEnforcer:
                 result = self._e.add_named_grouping_policy(ptype, *params)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policy", "g", ptype, list(params))
-        
+
         return result
 
     def remove_grouping_policy(self, *params):
@@ -434,11 +433,11 @@ class SyncedEnforcer:
                 result = self._e.remove_grouping_policy(*params)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_policy", "g", "g", list(params))
-        
+
         return result
 
     def remove_filtered_grouping_policy(self, field_index, *field_values):
@@ -451,11 +450,11 @@ class SyncedEnforcer:
                 result = self._e.remove_filtered_grouping_policy(field_index, *field_values)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_filtered_policy", "g", "g", field_index, *field_values)
-        
+
         return result
 
     def remove_named_grouping_policy(self, ptype, *params):
@@ -468,11 +467,11 @@ class SyncedEnforcer:
                 result = self._e.remove_named_grouping_policy(ptype, *params)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_policy", "g", ptype, list(params))
-        
+
         return result
 
     def remove_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
@@ -485,11 +484,11 @@ class SyncedEnforcer:
                 result = self._e.remove_filtered_named_grouping_policy(ptype, field_index, *field_values)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_filtered_policy", "g", ptype, field_index, *field_values)
-        
+
         return result
 
     def add_function(self, name, func):
@@ -765,11 +764,11 @@ class SyncedEnforcer:
                 result = self._e.add_policies(rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policies", "p", "p", rules)
-        
+
         return result
 
     def add_policies_ex(self, rules):
@@ -786,11 +785,11 @@ class SyncedEnforcer:
                 result = self._e.add_policies_ex(rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policies_ex", "p", "p", rules)
-        
+
         return result
 
     def add_named_policies_ex(self, ptype, rules):
@@ -807,11 +806,11 @@ class SyncedEnforcer:
                 result = self._e.add_named_policies_ex(ptype, rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policies_ex", "p", ptype, rules)
-        
+
         return result
 
     def add_named_policies(self, ptype, rules):
@@ -827,11 +826,11 @@ class SyncedEnforcer:
                 result = self._e.add_named_policies(ptype, rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policies", "p", ptype, rules)
-        
+
         return result
 
     def remove_policies(self, rules):
@@ -844,11 +843,11 @@ class SyncedEnforcer:
                 result = self._e.remove_policies(rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_policies", "p", "p", rules)
-        
+
         return result
 
     def remove_named_policies(self, ptype, rules):
@@ -861,11 +860,11 @@ class SyncedEnforcer:
                 result = self._e.remove_named_policies(ptype, rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_policies", "p", ptype, rules)
-        
+
         return result
 
     def add_grouping_policies(self, rules):
@@ -882,11 +881,11 @@ class SyncedEnforcer:
                 result = self._e.add_grouping_policies(rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policies", "g", "g", rules)
-        
+
         return result
 
     def add_grouping_policies_ex(self, rules):
@@ -903,11 +902,11 @@ class SyncedEnforcer:
                 result = self._e.add_grouping_policies_ex(rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policies_ex", "g", "g", rules)
-        
+
         return result
 
     def add_named_grouping_policies(self, ptype, rules):
@@ -923,11 +922,11 @@ class SyncedEnforcer:
                 result = self._e.add_named_grouping_policies(ptype, rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policies", "g", ptype, rules)
-        
+
         return result
 
     def add_named_grouping_policies_ex(self, ptype, rules):
@@ -944,11 +943,11 @@ class SyncedEnforcer:
                 result = self._e.add_named_grouping_policies_ex(ptype, rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_add_policies_ex", "g", ptype, rules)
-        
+
         return result
 
     def remove_grouping_policies(self, rules):
@@ -961,11 +960,11 @@ class SyncedEnforcer:
                 result = self._e.remove_grouping_policies(rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_policies", "g", "g", rules)
-        
+
         return result
 
     def remove_named_grouping_policies(self, ptype, rules):
@@ -978,11 +977,11 @@ class SyncedEnforcer:
                 result = self._e.remove_named_grouping_policies(ptype, rules)
         finally:
             self._e.auto_notify_watcher = old_auto_notify
-        
+
         # Notify watcher outside of lock to prevent deadlock
         if result and old_auto_notify:
             self._notify_watcher("update_for_remove_policies", "g", ptype, rules)
-        
+
         return result
 
     def build_incremental_role_links(self, op, ptype, rules):
