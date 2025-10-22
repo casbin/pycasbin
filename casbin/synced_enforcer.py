@@ -48,6 +48,14 @@ class SyncedEnforcer:
         self._auto_loading = AtomicBool(False)
         self._auto_loading_thread = None
 
+    def _notify_watcher(self, method_name, *args):
+        """Helper method to notify watcher outside of locks to prevent deadlock."""
+        if self._e.watcher and self._e.auto_notify_watcher:
+            if callable(getattr(self._e.watcher, method_name, None)):
+                getattr(self._e.watcher, method_name)(*args)
+            else:
+                self._e.watcher.update()
+
     def is_auto_loading_running(self):
         """check if SyncedEnforcer is auto loading policies"""
         return self._auto_loading.value
@@ -113,6 +121,9 @@ class SyncedEnforcer:
         """sets the current watcher."""
         with self._wl:
             self._e.set_watcher(watcher)
+            # Set the callback to use load_policy which will properly acquire locks
+            if watcher and callable(getattr(watcher, "set_update_callback", None)):
+                watcher.set_update_callback(self.load_policy)
 
     def set_effector(self, eft):
         """sets the current effector."""
@@ -260,36 +271,108 @@ class SyncedEnforcer:
         If the rule already exists, the function returns false and the rule will not be added.
         Otherwise the function returns true by adding the new rule.
         """
-        with self._wl:
-            return self._e.add_policy(*params)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_policy(*params)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policy", "p", "p", list(params))
+        
+        return result
 
     def add_named_policy(self, ptype, *params):
         """adds an authorization rule to the current named policy.
         If the rule already exists, the function returns false and the rule will not be added.
         Otherwise the function returns true by adding the new rule.
         """
-        with self._wl:
-            return self._e.add_named_policy(ptype, *params)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_named_policy(ptype, *params)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policy", "p", ptype, list(params))
+        
+        return result
 
     def remove_policy(self, *params):
         """removes an authorization rule from the current policy."""
-        with self._wl:
-            return self._e.remove_policy(*params)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_policy(*params)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_policy", "p", "p", list(params))
+        
+        return result
 
     def remove_filtered_policy(self, field_index, *field_values):
         """removes an authorization rule from the current policy, field filters can be specified."""
-        with self._wl:
-            return self._e.remove_filtered_policy(field_index, *field_values)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_filtered_policy(field_index, *field_values)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_filtered_policy", "p", "p", field_index, *field_values)
+        
+        return result
 
     def remove_named_policy(self, ptype, *params):
         """removes an authorization rule from the current named policy."""
-        with self._wl:
-            return self._e.remove_named_policy(ptype, *params)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_named_policy(ptype, *params)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_policy", "p", ptype, list(params))
+        
+        return result
 
     def remove_filtered_named_policy(self, ptype, field_index, *field_values):
         """removes an authorization rule from the current named policy, field filters can be specified."""
-        with self._wl:
-            return self._e.remove_filtered_named_policy(ptype, field_index, *field_values)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_filtered_named_policy(ptype, field_index, *field_values)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_filtered_policy", "p", ptype, field_index, *field_values)
+        
+        return result
 
     def has_grouping_policy(self, *params):
         """determines whether a role inheritance rule exists."""
@@ -306,36 +389,108 @@ class SyncedEnforcer:
         If the rule already exists, the function returns false and the rule will not be added.
         Otherwise the function returns true by adding the new rule.
         """
-        with self._wl:
-            return self._e.add_grouping_policy(*params)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_grouping_policy(*params)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policy", "g", "g", list(params))
+        
+        return result
 
     def add_named_grouping_policy(self, ptype, *params):
         """adds a named role inheritance rule to the current policy.
         If the rule already exists, the function returns false and the rule will not be added.
         Otherwise the function returns true by adding the new rule.
         """
-        with self._wl:
-            return self._e.add_named_grouping_policy(ptype, *params)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_named_grouping_policy(ptype, *params)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policy", "g", ptype, list(params))
+        
+        return result
 
     def remove_grouping_policy(self, *params):
         """removes a role inheritance rule from the current policy."""
-        with self._wl:
-            return self._e.remove_grouping_policy(*params)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_grouping_policy(*params)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_policy", "g", "g", list(params))
+        
+        return result
 
     def remove_filtered_grouping_policy(self, field_index, *field_values):
         """removes a role inheritance rule from the current policy, field filters can be specified."""
-        with self._wl:
-            return self._e.remove_filtered_grouping_policy(field_index, *field_values)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_filtered_grouping_policy(field_index, *field_values)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_filtered_policy", "g", "g", field_index, *field_values)
+        
+        return result
 
     def remove_named_grouping_policy(self, ptype, *params):
         """removes a role inheritance rule from the current named policy."""
-        with self._wl:
-            return self._e.remove_named_grouping_policy(ptype, *params)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_named_grouping_policy(ptype, *params)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_policy", "g", ptype, list(params))
+        
+        return result
 
     def remove_filtered_named_grouping_policy(self, ptype, field_index, *field_values):
         """removes a role inheritance rule from the current named policy, field filters can be specified."""
-        with self._wl:
-            return self._e.remove_filtered_named_grouping_policy(ptype, field_index, *field_values)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_filtered_named_grouping_policy(ptype, field_index, *field_values)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_filtered_policy", "g", ptype, field_index, *field_values)
+        
+        return result
 
     def add_function(self, name, func):
         """adds a customized function."""
@@ -547,6 +702,11 @@ class SyncedEnforcer:
         with self._wl:
             return self._e.enable_auto_save(auto_save)
 
+    def enable_auto_notify_watcher(self, auto_notify_watcher):
+        """controls whether to notify the watcher automatically when a policy rule is added or removed."""
+        with self._wl:
+            self._e.auto_notify_watcher = auto_notify_watcher
+
     def enable_enforce(self, enabled=True):
         """changes the enforcing state of Casbin,
         when Casbin is disabled, all access will be allowed by the Enforce() function.
@@ -597,8 +757,20 @@ class SyncedEnforcer:
         If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
         Otherwise the function returns true for the corresponding rule by adding the new rule.
         """
-        with self._wl:
-            return self._e.add_policies(rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_policies(rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policies", "p", "p", rules)
+        
+        return result
 
     def add_policies_ex(self, rules):
         """add_policies_ex adds authorization rules to the current policy.
@@ -606,8 +778,20 @@ class SyncedEnforcer:
         If the rule already exists, the rule will not be added.
         But unlike add_policies, other non-existent rules are added instead of returning false directly.
         """
-        with self._wl:
-            return self._e.add_policies_ex(rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_policies_ex(rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policies_ex", "p", "p", rules)
+        
+        return result
 
     def add_named_policies_ex(self, ptype, rules):
         """add_named_policies_ex adds authorization rules to the current policy.
@@ -615,26 +799,74 @@ class SyncedEnforcer:
         If the rule already exists, the rule will not be added.
         But unlike add_named_policies, other non-existent rules are added instead of returning false directly.
         """
-        with self._wl:
-            return self._e.add_named_policies_ex(ptype, rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_named_policies_ex(ptype, rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policies_ex", "p", ptype, rules)
+        
+        return result
 
     def add_named_policies(self, ptype, rules):
         """adds authorization rules to the current named policy.
 
         If the rule already exists, the function returns false for the corresponding rule and the rule will not be added.
         Otherwise the function returns true for the corresponding by adding the new rule."""
-        with self._wl:
-            return self._e.add_named_policies(ptype, rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_named_policies(ptype, rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policies", "p", ptype, rules)
+        
+        return result
 
     def remove_policies(self, rules):
         """removes authorization rules from the current policy."""
-        with self._wl:
-            return self._e.remove_policies(rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_policies(rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_policies", "p", "p", rules)
+        
+        return result
 
     def remove_named_policies(self, ptype, rules):
         """removes authorization rules from the current named policy."""
-        with self._wl:
-            return self._e.remove_named_policies(ptype, rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_named_policies(ptype, rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_policies", "p", ptype, rules)
+        
+        return result
 
     def add_grouping_policies(self, rules):
         """adds role inheritance rules to the current policy.
@@ -642,8 +874,20 @@ class SyncedEnforcer:
         If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
         Otherwise the function returns true for the corresponding policy rule by adding the new rule.
         """
-        with self._wl:
-            return self._e.add_grouping_policies(rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_grouping_policies(rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policies", "g", "g", rules)
+        
+        return result
 
     def add_grouping_policies_ex(self, rules):
         """add_grouping_policies_ex adds role inheritance rules to the current policy.
@@ -651,16 +895,40 @@ class SyncedEnforcer:
         If the rule already exists, the rule will not be added.
         But unlike add_grouping_policies, other non-existent rules are added instead of returning false directly.
         """
-        with self._wl:
-            return self._e.add_grouping_policies_ex(rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_grouping_policies_ex(rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policies_ex", "g", "g", rules)
+        
+        return result
 
     def add_named_grouping_policies(self, ptype, rules):
         """ "adds named role inheritance rules to the current policy.
 
         If the rule already exists, the function returns false for the corresponding policy rule and the rule will not be added.
         Otherwise the function returns true for the corresponding policy rule by adding the new rule."""
-        with self._wl:
-            return self._e.add_named_grouping_policies(ptype, rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_named_grouping_policies(ptype, rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policies", "g", ptype, rules)
+        
+        return result
 
     def add_named_grouping_policies_ex(self, ptype, rules):
         """add_named_grouping_policies_ex adds role inheritance rules to the current named policy.
@@ -668,18 +936,54 @@ class SyncedEnforcer:
         If the rule already exists, the rule will not be added.
         But unlike add_named_grouping_policies, other non-existent rules are added instead of returning false directly.
         """
-        with self._wl:
-            return self._e.add_named_grouping_policies_ex(ptype, rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.add_named_grouping_policies_ex(ptype, rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_add_policies_ex", "g", ptype, rules)
+        
+        return result
 
     def remove_grouping_policies(self, rules):
         """removes role inheritance rules from the current policy."""
-        with self._wl:
-            return self._e.remove_grouping_policies(rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_grouping_policies(rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_policies", "g", "g", rules)
+        
+        return result
 
     def remove_named_grouping_policies(self, ptype, rules):
         """removes role inheritance rules from the current named policy."""
-        with self._wl:
-            return self._e.remove_named_grouping_policies(ptype, rules)
+        # Temporarily disable auto_notify to prevent deadlock
+        old_auto_notify = self._e.auto_notify_watcher
+        self._e.auto_notify_watcher = False
+        try:
+            with self._wl:
+                result = self._e.remove_named_grouping_policies(ptype, rules)
+        finally:
+            self._e.auto_notify_watcher = old_auto_notify
+        
+        # Notify watcher outside of lock to prevent deadlock
+        if result and old_auto_notify:
+            self._notify_watcher("update_for_remove_policies", "g", ptype, rules)
+        
+        return result
 
     def build_incremental_role_links(self, op, ptype, rules):
         self.get_model().build_incremental_role_links(self.get_role_manager(), op, "g", ptype, rules)
