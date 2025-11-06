@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.6.0](https://github.com/casbin/pycasbin/compare/v2.5.0...v2.6.0) (2025-11-06)
+
+
+### Features
+
+* fix enforce_ex() API returning empty explanations for allow rules in deny models ([#412](https://github.com/casbin/pycasbin/issues/412)) ([dbd28b7](https://github.com/casbin/pycasbin/commit/dbd28b728c617c28f34478bd9dde3f712fc1c37e))
+
 # [2.5.0](https://github.com/casbin/pycasbin/compare/v2.4.0...v2.5.0) (2025-11-06)
 
 
