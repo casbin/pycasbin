@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+# [2.5.0](https://github.com/casbin/pycasbin/compare/v2.4.0...v2.5.0) (2025-11-06)
+
+
+### Features
+
+* only run CI for Python "3.12", "3.13" ([2e5783c](https://github.com/casbin/pycasbin/commit/2e5783cd1c9131c57da78dcacc992d637985b3c9))
+* update CI Node.js version to 20 ([5bd7a08](https://github.com/casbin/pycasbin/commit/5bd7a081bb2c1da1415fdfc7b904105de79ef38e))
+
 # [2.4.0](https://github.com/casbin/pycasbin/compare/v2.3.0...v2.4.0) (2025-10-14)
 
 
