@@ -481,7 +481,8 @@ class CoreEnforcer:
                 else:
                     policy_effects.add(Effector.ALLOW)
 
-                # Update explain_index for any matching policy
+                # Update explain_index for any matching policy before checking early break condition
+                # to ensure explanations are captured for allow rules in deny models
                 explain_index = i
 
                 if self.eft.intermediate_effect(policy_effects) != Effector.INDETERMINATE:
