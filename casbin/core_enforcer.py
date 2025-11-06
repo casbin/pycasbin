@@ -481,8 +481,10 @@ class CoreEnforcer:
                 else:
                     policy_effects.add(Effector.ALLOW)
 
+                # Update explain_index for any matching policy
+                explain_index = i
+
                 if self.eft.intermediate_effect(policy_effects) != Effector.INDETERMINATE:
-                    explain_index = i
                     break
 
         else:

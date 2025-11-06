@@ -285,6 +285,15 @@ class TestConfig(TestCaseBase):
         self.assertTrue(e.enforce("alice", "data2", "read"))
         self.assertFalse(e.enforce("alice", "data2", "write"))
 
+    def test_enforce_ex_rbac_with_deny(self):
+        e = self.get_enforcer(
+            get_examples("rbac_with_deny_model.conf"),
+            get_examples("rbac_with_deny_policy.csv"),
+        )
+        # Test that enforce_ex returns explanations for both allow and deny cases
+        self.assertTupleEqual(e.enforce_ex("alice", "data2", "read"), (True, ["data2_admin", "data2", "read", "allow"]))
+        self.assertTupleEqual(e.enforce_ex("alice", "data2", "write"), (False, ["alice", "data2", "write", "deny"]))
+
     def test_enforce_rbac_with_domains(self):
         e = self.get_enforcer(
             get_examples("rbac_with_domains_model.conf"),
