@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.6.1](https://github.com/casbin/pycasbin/compare/v2.6.0...v2.6.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* remove irrelevant links in README ([6c3df05](https://github.com/casbin/pycasbin/commit/6c3df05bde9e733d1f76f2db219b9c820014f0c8))
+
 # [2.6.0](https://github.com/casbin/pycasbin/compare/v2.5.0...v2.6.0) (2025-11-06)
 
 
