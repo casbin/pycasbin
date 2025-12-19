@@ -23,10 +23,6 @@ PyCasbin
   <br>
 </p>
 
-💖 [**Looking for an open-source identity and access management solution like Okta, Auth0, Keycloak ? Learn more about: Casdoor**](https://casdoor.org/)
-
-<a href="https://casdoor.org/"><img src="https://user-images.githubusercontent.com/3787410/147868267-6ac74908-5654-4f9c-ac79-8852af9ff925.png" alt="casdoor" style="width: 50%; height: 50%"/></a>
-
 **News**: 🔥 How to use it with `Django` ? Try [Django Authorization](https://github.com/pycasbin/django-authorization), an authorization library for `Django` framework.
 
 **News**: Async is now supported by Pycasbin >= 1.23.0!
