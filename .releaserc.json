@@ -4,20 +4,6 @@
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "semantic-release-pypi",
-    "@semantic-release/github",
-    [
-      "@semantic-release/changelog",
-      {
-        "changelogFile": "CHANGELOG.md",
-        "changelogTitle": "# Semantic Versioning Changelog"
-      }
-    ],     
-	  [
-      "@semantic-release/git",
-      {
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
-        "assets": ["CHANGELOG.md", "pyproject.toml"]
-      }
-    ]
+    "@semantic-release/github"
   ]
 }
