@@ -9,7 +9,7 @@ PyCasbin
 [![Download](https://static.pepy.tech/badge/pycasbin)](https://pypi.org/project/pycasbin/)
 [![Discord](https://img.shields.io/discord/1022748306096537660?logo=discord&label=discord&color=5865F2)](https://discord.gg/S5UjpzGZjN)
 
-**News**: 🔥 How to use it with `Django` ? Try [Django Authorization](https://github.com/pycasbin/django-authorization), an authorization library for `Django` framework.
+**News**: 🔥 How to use it with `Django` ? Try [Django Authorization](https://github.com/officialpycasbin/django-authorization), an authorization library for `Django` framework.
 
 **News**: Async is now supported by Pycasbin >= 1.23.0!
 
