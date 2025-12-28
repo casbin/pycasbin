@@ -9,20 +9,6 @@ PyCasbin
 [![Download](https://static.pepy.tech/badge/pycasbin)](https://pypi.org/project/pycasbin/)
 [![Discord](https://img.shields.io/discord/1022748306096537660?logo=discord&label=discord&color=5865F2)](https://discord.gg/S5UjpzGZjN)
 
-<p align="center">
-  <sup>Sponsored by</sup>
-  <br>
-  <a href="https://stytch.com/docs?utm_source=oss-sponsorship&utm_medium=paid_sponsorship&utm_campaign=casbin">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://cdn.casbin.org/img/stytch-white.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://cdn.casbin.org/img/stytch-charcoal.png">
-      <img src="https://cdn.casbin.org/img/stytch-charcoal.png" width="275">
-    </picture>
-  </a><br/>
-  <a href="https://stytch.com/docs?utm_source=oss-sponsorship&utm_medium=paid_sponsorship&utm_campaign=casbin"><b>Build auth with fraud prevention, faster.</b><br/> Try Stytch for API-first authentication, user & org management, multi-tenant SSO, MFA, device fingerprinting, and more.</a>
-  <br>
-</p>
-
 **News**: 🔥 How to use it with `Django` ? Try [Django Authorization](https://github.com/pycasbin/django-authorization), an authorization library for `Django` framework.
 
 **News**: Async is now supported by Pycasbin >= 1.23.0!
