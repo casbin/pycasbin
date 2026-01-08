@@ -26,6 +26,8 @@ permissions:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
+    env:
+      BENCHMARK_PATH: tests/benchmarks/
     steps:
       - name: Checkout PR branch
         uses: actions/checkout@v4
@@ -46,7 +48,7 @@ jobs:
             --benchmark-only \
             --benchmark-json=pr-benchmark.json \
             --benchmark-columns=mean,stddev,iqr,ops,rounds \
-            tests/benchmarks/
+            ${{ env.BENCHMARK_PATH }}
 
       - name: Store PR benchmark result
         uses: actions/upload-artifact@v4
@@ -70,7 +72,7 @@ jobs:
             --benchmark-only \
             --benchmark-json=base-benchmark.json \
             --benchmark-columns=mean,stddev,iqr,ops,rounds \
-            tests/benchmarks/
+            ${{ env.BENCHMARK_PATH }}
 
       - name: Store base benchmark result
         uses: actions/upload-artifact@v4
@@ -78,6 +80,7 @@ jobs:
           name: base-benchmark
           path: base-benchmark.json
 
+      # Checkout PR branch again to ensure artifact downloads happen in correct context
       - name: Checkout PR branch again
         uses: actions/checkout@v4
 
@@ -172,8 +175,14 @@ jobs:
             comment += '\n---\n';
             comment += `**Base Branch:** \`${context.payload.pull_request.base.ref}\` (${context.payload.pull_request.base.sha.substring(0, 7)})\n`;
             comment += `**PR Branch:** \`${context.payload.pull_request.head.ref}\` (${context.payload.pull_request.head.sha.substring(0, 7)})\n`;
-            comment += `**Python Version:** ${prBenchmark.machine_info.python_version}\n`;
-            comment += `**Platform:** ${prBenchmark.machine_info.system} ${prBenchmark.machine_info.release}\n`;
+            if (prBenchmark.machine_info) {
+              if (prBenchmark.machine_info.python_version) {
+                comment += `**Python Version:** ${prBenchmark.machine_info.python_version}\n`;
+              }
+              if (prBenchmark.machine_info.system && prBenchmark.machine_info.release) {
+                comment += `**Platform:** ${prBenchmark.machine_info.system} ${prBenchmark.machine_info.release}\n`;
+              }
+            }
             
             // Post comment
             await github.rest.issues.createComment({
