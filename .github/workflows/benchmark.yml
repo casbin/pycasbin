@@ -44,6 +44,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.ref }}
 
+      - name: Install dependencies for base branch
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements_dev.txt
+
       - name: Run benchmarks on base branch
         run: |
           python3 -m pytest \
