@@ -1,0 +1,164 @@
+name: Performance Benchmark
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements_dev.txt
+
+      - name: Run benchmarks on PR branch
+        run: |
+          python3 -m pytest \
+            --benchmark-only \
+            --benchmark-json=pr-benchmark.json \
+            --benchmark-columns=mean,stddev,iqr,ops,rounds \
+            tests/benchmarks/
+
+      - name: Store PR benchmark result
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-benchmark
+          path: pr-benchmark.json
+
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      - name: Run benchmarks on base branch
+        run: |
+          python3 -m pytest \
+            --benchmark-only \
+            --benchmark-json=base-benchmark.json \
+            --benchmark-columns=mean,stddev,iqr,ops,rounds \
+            tests/benchmarks/
+
+      - name: Store base benchmark result
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-benchmark
+          path: base-benchmark.json
+
+      - name: Checkout PR branch again
+        uses: actions/checkout@v4
+
+      - name: Download PR benchmark result
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-benchmark
+
+      - name: Download base benchmark result
+        uses: actions/download-artifact@v4
+        with:
+          name: base-benchmark
+
+      - name: Compare benchmarks and comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Read benchmark results
+            const prBenchmark = JSON.parse(fs.readFileSync('pr-benchmark.json', 'utf8'));
+            const baseBenchmark = JSON.parse(fs.readFileSync('base-benchmark.json', 'utf8'));
+            
+            // Create a map of base benchmarks for easy lookup
+            const baseMap = {};
+            baseBenchmark.benchmarks.forEach(bench => {
+              baseMap[bench.name] = bench;
+            });
+            
+            // Build comparison table
+            let tableRows = [];
+            let significantChanges = [];
+            
+            prBenchmark.benchmarks.forEach(prBench => {
+              const baseBench = baseMap[prBench.name];
+              if (!baseBench) {
+                tableRows.push({
+                  name: prBench.name,
+                  status: '🆕 NEW',
+                  prMean: prBench.stats.mean,
+                  baseMean: '-',
+                  change: '-'
+                });
+                return;
+              }
+              
+              const prMean = prBench.stats.mean;
+              const baseMean = baseBench.stats.mean;
+              const changePercent = ((prMean - baseMean) / baseMean) * 100;
+              
+              let status = '✅';
+              let changeStr = changePercent.toFixed(2) + '%';
+              
+              // Flag significant changes (> 10% regression)
+              if (changePercent > 10) {
+                status = '⚠️ SLOWER';
+                significantChanges.push(`${prBench.name}: ${changePercent.toFixed(2)}% slower`);
+              } else if (changePercent < -10) {
+                status = '🚀 FASTER';
+              }
+              
+              tableRows.push({
+                name: prBench.name,
+                status: status,
+                prMean: prMean,
+                baseMean: baseMean,
+                change: changeStr
+              });
+            });
+            
+            // Format table
+            let comment = '## 📊 Performance Benchmark Results\n\n';
+            
+            if (significantChanges.length > 0) {
+              comment += '### ⚠️ Significant Performance Changes Detected\n\n';
+              significantChanges.forEach(change => {
+                comment += `- ${change}\n`;
+              });
+              comment += '\n';
+            }
+            
+            comment += '### Detailed Comparison\n\n';
+            comment += '| Benchmark | Status | PR Mean (s) | Base Mean (s) | Change |\n';
+            comment += '|-----------|--------|-------------|---------------|--------|\n';
+            
+            tableRows.forEach(row => {
+              const prMeanStr = typeof row.prMean === 'number' ? row.prMean.toExponential(4) : row.prMean;
+              const baseMeanStr = typeof row.baseMean === 'number' ? row.baseMean.toExponential(4) : row.baseMean;
+              comment += `| ${row.name} | ${row.status} | ${prMeanStr} | ${baseMeanStr} | ${row.change} |\n`;
+            });
+            
+            comment += '\n---\n';
+            comment += `**Base Branch:** \`${context.payload.pull_request.base.ref}\` (${context.payload.pull_request.base.sha.substring(0, 7)})\n`;
+            comment += `**PR Branch:** \`${context.payload.pull_request.head.ref}\` (${context.payload.pull_request.head.sha.substring(0, 7)})\n`;
+            comment += `**Python Version:** ${prBenchmark.machine_info.python_version}\n`;
+            comment += `**Platform:** ${prBenchmark.machine_info.system} ${prBenchmark.machine_info.release}\n`;
+            
+            // Post comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
