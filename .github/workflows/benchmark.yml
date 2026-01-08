@@ -1,3 +1,18 @@
+# Performance Benchmark CI Workflow
+#
+# This workflow automatically runs performance benchmarks on pull requests
+# and posts a comparison comment showing speed differences between the PR
+# and the base branch (master).
+#
+# The workflow:
+# 1. Runs benchmarks on the PR branch
+# 2. Runs benchmarks on the base branch (master)
+# 3. Compares the results and identifies performance regressions/improvements
+# 4. Posts a detailed comparison table as a PR comment
+#
+# Performance changes > 10% are flagged as significant to help maintainers
+# catch performance regressions before merging.
+
 name: Performance Benchmark
 
 on:
