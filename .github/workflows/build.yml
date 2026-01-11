@@ -82,6 +82,7 @@ jobs:
 
   release:
     name: Release
+    if: github.repository == 'casbin/pycasbin'
     runs-on: ubuntu-latest
     needs: [test, coveralls]
     steps:
