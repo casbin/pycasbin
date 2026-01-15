@@ -120,12 +120,7 @@ def main():
             if rounds < 2 or std == 0:
                 std_str = "± ∞"
             else:
-                # Calculate percentage or absolute? benchstat uses absolute if small, or %?
-                # benchstat: 8.768n ± ∞
-                # Let's try to show absolute or %?
-                # The input example shows "± ∞".
-                # If we have valid stddev, benchstat usually shows "± 2%" or similar if using -html?
-                # Text output of benchstat usually is "± 2%".
+              
                 pct = (std / val) * 100
                 std_str = f"± {pct:.0f}%"
 
@@ -142,38 +137,23 @@ def main():
         pr_str = format_cell(pr_mean, pr_std, pr_rounds) if pr else "N/A"
 
         # Delta column (Statistical Significance)
-        # Without scipy, we can't do a real T-test easily.
-        # We will emulate the output format: "~ (p=1.000 n=1) ²"
-        # If n=1, p=1.000.
-        # If we assume no significant difference for now (safe default), we use "~".
+
         delta_str = ""
         if base and pr:
             # Simple check: do intervals overlap?
-            # But let's just stick to the requested format with n count.
-            # "n=1" if rounds are different? usually min(n1, n2)?
+   
             n = min(base_rounds, pr_rounds)
 
             # Mock p-value logic for display
             # If n < 4, benchstat says it can't detect difference usually?
             p_val = 1.000  # Placeholder
 
-            # If we want to be fancy, we could try to implement Welchs t-test, but maybe overkill.
-            # Let's just output the n and p=?.
-            # User wants "Reference ... add superscripts ... and statistical indicators".
-            # The indicators in the example are "~ (p=1.000 n=1) ²".
-            # The footnote says: "² need >= 4 samples to detect a difference at alpha level 0.05"
-
+ 
             if n < 4:
                 delta_str = f"~ (p={p_val:.3f} n={n}) ²"
                 need_insignificant_note = True
             else:
-                # If we have enough samples, we should ideally show the % change and p-value.
-                # But since we are calculating % change in the NEXT step (benchmark_formatter),
-                # maybe we just output the p-value info here?
-                # Or we can output the simple delta here too?
-                # Let's stick to the "insufficient samples" warning style if n is low.
-                # If n is high, we might not output ² but we still need a p-value.
-                # Let's default to "~" (no diff) if we can't calculate p.
+  
                 delta_str = f"~ (p=? n={n})"
 
         display_name = normalize_name(name)
@@ -203,8 +183,7 @@ def main():
         print("¹ need >= 6 samples for confidence interval at level 0.95")
     if need_insignificant_note:
         print("² need >= 4 samples to detect a difference at alpha level 0.05")
-    # if need_geomean_note:
-    #     print("⁴ summaries must be >0 to compute geomean")
+
 
 
 if __name__ == "__main__":
