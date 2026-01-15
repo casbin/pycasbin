@@ -148,8 +148,6 @@ try:
             if padding < 2:
                 padding = 2  # minimum spacing
                 # If header is wider than data (unlikely but possible), adjust diff_col_start
-                # But for now let's trust max_content_width or just append
-
             if len(stripped_header) < diff_col_start:
                 new_header = stripped_header + " " * (diff_col_start - len(stripped_header))
             else:
@@ -191,10 +189,6 @@ try:
                 aligned = left_part + "  "
 
             # Ensure content doesn't exceed right boundary (visual check only, we don't truncate)
-            # But users asked not to exceed header pipe.
-            # Header pipe is at right_boundary.
-            # Content starts at diff_col_start.
-            # So content length should be <= right_boundary - diff_col_start
             return f"{aligned}{content}"
 
         # Special handling for geomean when values missing or zero

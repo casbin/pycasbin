@@ -196,10 +196,6 @@ def main():
             g_pr = math.exp(sum(math.log(x) for x in pr_geo_input) / len(pr_geo_input))
             g_pr_str = f"{format_val(g_pr)}"
 
-        # If we had zeros, we might want to indicate it, but for now just print what we have
-        # benchmark_formatter.py handles "n/a (has zero)" if it detects issues,
-        # but here we output the calculated mean of non-zeroes or N/A.
-
         print(f"{'geomean':<{w_name}} {g_base_str:<{w_val}} {g_pr_str:<{w_val}}")
 
     # Print Footnotes
