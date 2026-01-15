@@ -120,7 +120,7 @@ def main():
             if rounds < 2 or std == 0:
                 std_str = "± ∞"
             else:
-              
+
                 pct = (std / val) * 100
                 std_str = f"± {pct:.0f}%"
 
@@ -141,19 +141,18 @@ def main():
         delta_str = ""
         if base and pr:
             # Simple check: do intervals overlap?
-   
+
             n = min(base_rounds, pr_rounds)
 
             # Mock p-value logic for display
             # If n < 4, benchstat says it can't detect difference usually?
             p_val = 1.000  # Placeholder
 
- 
             if n < 4:
                 delta_str = f"~ (p={p_val:.3f} n={n}) ²"
                 need_insignificant_note = True
             else:
-  
+
                 delta_str = f"~ (p=? n={n})"
 
         display_name = normalize_name(name)
@@ -183,7 +182,6 @@ def main():
         print("¹ need >= 6 samples for confidence interval at level 0.95")
     if need_insignificant_note:
         print("² need >= 4 samples to detect a difference at alpha level 0.05")
-
 
 
 if __name__ == "__main__":
