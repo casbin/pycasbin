@@ -120,7 +120,6 @@ def main():
             if rounds < 2 or std == 0:
                 std_str = "± ∞"
             else:
-
                 pct = (std / val) * 100
                 std_str = f"± {pct:.0f}%"
 
@@ -152,7 +151,6 @@ def main():
                 delta_str = f"~ (p={p_val:.3f} n={n}) ²"
                 need_insignificant_note = True
             else:
-
                 delta_str = f"~ (p=? n={n})"
 
         display_name = normalize_name(name)
