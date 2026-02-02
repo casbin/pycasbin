@@ -575,6 +575,83 @@ class TestConfig(TestCaseBase):
         self.assertFalse(e.enforce("alice", "domain5", "data5", "read"))
         self.assertFalse(e.enforce("alice", "domain5", "data5", "write"))
 
+    def test_enforce_ex_no_str_call_when_logging_disabled(self):
+        """Test that str() is not called on rvals when logging is disabled."""
+        import logging
+
+        # Create a custom class that tracks str() calls
+        class TrackedObject(str):
+            """A string subclass that tracks when str() is called."""
+            str_call_count = 0
+
+            def __new__(cls, value):
+                instance = super().__new__(cls, value)
+                return instance
+
+            def __str__(self):
+                TrackedObject.str_call_count += 1
+                return super().__str__()
+
+        e = self.get_enforcer(
+            get_examples("basic_model.conf"),
+            get_examples("basic_policy.csv"),
+        )
+
+        # Get the actual enforcer (for SyncedEnforcer, it's wrapped in _e)
+        actual_enforcer = e._e if hasattr(e, '_e') else e
+
+        # Set logger to ERROR level (above INFO and WARNING)
+        actual_enforcer.logger.disabled = False
+        actual_enforcer.logger.setLevel(logging.ERROR)
+
+        # Reset counter
+        TrackedObject.str_call_count = 0
+
+        # Call enforce_ex with TrackedObject instances
+        obj1 = TrackedObject("alice")
+        obj2 = TrackedObject("data1")
+        obj3 = TrackedObject("read")
+
+        result, explain = e.enforce_ex(obj1, obj2, obj3)
+
+        # str() should not be called when logging is disabled
+        self.assertEqual(TrackedObject.str_call_count, 0, "str() should not be called when logging is disabled")
+        self.assertTrue(result)
+
+        # Now enable INFO level logging
+        actual_enforcer.logger.setLevel(logging.INFO)
+        TrackedObject.str_call_count = 0
+
+        result, explain = e.enforce_ex(obj1, obj2, obj3)
+
+        # str() should be called when logging is enabled
+        self.assertGreater(TrackedObject.str_call_count, 0, "str() should be called when logging is enabled")
+        self.assertTrue(result)
+
+        # Test with WARNING level (for failed enforce)
+        actual_enforcer.logger.setLevel(logging.WARNING)
+        TrackedObject.str_call_count = 0
+
+        obj4 = TrackedObject("alice")
+        obj5 = TrackedObject("data2")
+        obj6 = TrackedObject("read")
+
+        result, explain = e.enforce_ex(obj4, obj5, obj6)
+
+        # str() should be called for WARNING level
+        self.assertGreater(TrackedObject.str_call_count, 0, "str() should be called for WARNING level")
+        self.assertFalse(result)
+
+        # Test with ERROR level (logging disabled for WARNING)
+        actual_enforcer.logger.setLevel(logging.ERROR)
+        TrackedObject.str_call_count = 0
+
+        result, explain = e.enforce_ex(obj4, obj5, obj6)
+
+        # str() should not be called when logging is disabled
+        self.assertEqual(TrackedObject.str_call_count, 0, "str() should not be called when WARNING logging is disabled")
+        self.assertFalse(result)
+
 
 class TestConfigSynced(TestConfig):
     def get_enforcer(self, model=None, adapter=None):
