@@ -508,17 +508,15 @@ class CoreEnforcer:
         result = effect_to_bool(final_effect)
 
         # Log request.
-        if result:
-            if self.logger.isEnabledFor(logging.INFO):
-                req_str = "Request: "
-                req_str = req_str + ", ".join([str(v) for v in rvals])
-                req_str = req_str + " ---> %s" % result
+        if (result and self.logger.isEnabledFor(logging.INFO)) or (
+            not result and self.logger.isEnabledFor(logging.WARNING)
+        ):
+            req_str = "Request: "
+            req_str = req_str + ", ".join([str(v) for v in rvals])
+            req_str = req_str + " ---> %s" % result
+            if result:
                 self.logger.info(req_str)
-        else:
-            if self.logger.isEnabledFor(logging.WARNING):
-                req_str = "Request: "
-                req_str = req_str + ", ".join([str(v) for v in rvals])
-                req_str = req_str + " ---> %s" % result
+            else:
                 # leaving this in warning for now, if it's very noise this can be changed to info or debug,
                 # or change the log level
                 self.logger.warning(req_str)
