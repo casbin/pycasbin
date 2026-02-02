@@ -582,6 +582,7 @@ class TestConfig(TestCaseBase):
         # Create a custom class that tracks str() calls
         class TrackedObject(str):
             """A string subclass that tracks when str() is called."""
+
             str_call_count = 0
 
             def __new__(cls, value):
@@ -598,7 +599,7 @@ class TestConfig(TestCaseBase):
         )
 
         # Get the actual enforcer (for SyncedEnforcer, it's wrapped in _e)
-        actual_enforcer = e._e if hasattr(e, '_e') else e
+        actual_enforcer = e._e if hasattr(e, "_e") else e
 
         # Set logger to ERROR level (above INFO and WARNING)
         actual_enforcer.logger.disabled = False
