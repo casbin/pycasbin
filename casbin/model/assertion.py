@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import logging
-
+import copy
 from casbin.model.policy_op import PolicyOp
 
 
