@@ -109,3 +109,17 @@ class Assertion:
             domain = domain_rule[0]
             self.cond_rm.add_link(rule[0], rule[1], domain)
             self.cond_rm.set_domain_link_condition_func_params(rule[0], rule[1], domain, *rule[len(self.tokens) :])
+
+    def __deepcopy__(self, memo):
+        """Custom deepcopy implementation that excludes rm and cond_rm attributes.
+        This stems from an issue with the watcher concurrent reloading causing an edge case of deepcopy error.
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            if k in ("rm", "cond_rm"):
+                setattr(result, k, None)
+            else:
+                setattr(result, k, copy.deepcopy(v, memo))
+        return result
